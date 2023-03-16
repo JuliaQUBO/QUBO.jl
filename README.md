@@ -41,7 +41,7 @@ More features are available in the documentation.
 
 ### Instalation
 ```julia
-julia> ]add https://github.com/psrenergy/ToQUBO.jl#master
+julia> ]add https://github.com/psrenergy/QUBO.jl#master
 ```
 ### Example
 
