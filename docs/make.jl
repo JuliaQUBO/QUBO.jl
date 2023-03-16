@@ -2,10 +2,6 @@ using MultiDocumenter
 
 clonedir = mktempdir()
 
-DocMeta.setdocmeta!(
-    QUBO, :DocTestSetup, :(using QUBO); recursive=true
-)
-
 docs = [
     MultiDocumenter.DropdownNav("Packages", [
         MultiDocumenter.MultiDocRef(
