@@ -25,7 +25,7 @@ docs = [
     ]),
 ]
 
-outpath = joinpath(@__DIR__, "build")
+outpath = mktempdir()
 
 MultiDocumenter.make(
     outpath,
