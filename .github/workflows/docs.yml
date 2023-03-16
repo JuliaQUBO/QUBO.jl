@@ -1,30 +1,23 @@
-name: Docs
+name: Documentation
 on:
   push:
-    branches:
-      - main
+    branches: [master]
+    tags: '*'
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
 jobs:
-  aggregate:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: julia-actions/setup-julia@v1
+      - uses: julia-actions/setup-julia@latest
         with:
-          version: '1.8'
-      - uses: actions/cache@v1
+          version: '1.6'
+      - uses: julia-actions/julia-buildpkg@latest
+        with: 
+            project: "docs/"
+      - name: Build and deploy
         env:
-          cache-name: cache-artifacts
-        with:
-          path: ~/.julia/artifacts
-          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ hashFiles('**/Project.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-test-${{ env.cache-name }}-
-            ${{ runner.os }}-test-
-            ${{ runner.os }}-
-      - name: Install dependencies
-        run: julia --project=. -e 'using Pkg; Pkg.instantiate()'
-      - name: Aggregate and deploy
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          julia --project=. docs/make.jl
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # For authentication with GitHub Actions token
+        run: julia --project=docs/ docs/make.jl
