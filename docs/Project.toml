@@ -1,4 +1,6 @@
 [deps]
+Anneal = "e4d9eb7f-b088-426e-aeb5-1c0dae3d8abb"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 MultiDocumenter = "87ed4bf0-c935-4a67-83c3-2a03bee4197c"
-QUBO = "ce8c2e91-a970-4681-856b-16178c24a30c"
+QUBOTools = "60eb5b62-0a39-4ddc-84c5-97d2adff9319"
+ToQUBO = "9a412ddf-83fa-43b6-9748-7843c851aa65"

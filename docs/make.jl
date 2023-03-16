@@ -1,5 +1,4 @@
 using MultiDocumenter
-using QUBO
 
 clonedir = mktempdir()
 
