@@ -1,4 +1,4 @@
-name: Aggregate
+name: Documentation
 on:
   push:
     branches:
