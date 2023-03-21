@@ -5,39 +5,40 @@ using MultiDocumenter
 clonedir = mktempdir()
 
 docs = [
-    MultiDocumenter.DropdownNav("Packages", [
-        MultiDocumenter.MultiDocRef(
-            upstream = joinpath(clonedir, "ToQUBO"),
-            path = "ToQUBO.jl",
-            name = "ToQUBO.jl",
-            giturl = "https://github.com/psrenergy/ToQUBO.jl.git",
-        ),
-        MultiDocumenter.MultiDocRef(
-            upstream = joinpath(clonedir, "Anneal.jl"),
-            path = "Anneal",
-            name = "Anneal.jl",
-            giturl = "https://github.com/psrenergy/Anneal.jl.git",
-        ),
-        MultiDocumenter.MultiDocRef(
-            upstream = joinpath(clonedir, "QUBOTools.jl"),
-            path = "QUBOTools",
-            name = "QUBOTools.jl",
-            giturl = "https://github.com/psrenergy/QUBOTools.jl.git",
-        ),
-    ]),
+
+    MultiDocumenter.MultiDocRef(
+        upstream = joinpath(clonedir, "ToQUBO"),
+        path = "ToQUBO.jl",
+        name = "ToQUBO.jl",
+        giturl = "https://github.com/psrenergy/ToQUBO.jl.git",
+    ),
+    MultiDocumenter.MultiDocRef(
+        upstream = joinpath(clonedir, "Anneal.jl"),
+        path = "Anneal.jl",
+        name = "Anneal.jl",
+        giturl = "https://github.com/psrenergy/Anneal.jl.git",
+    ),
+    MultiDocumenter.MultiDocRef(
+        upstream = joinpath(clonedir, "QUBOTools.jl"),
+        path = "QUBOTools.jl",
+        name = "QUBOTools.jl",
+        giturl = "https://github.com/psrenergy/QUBOTools.jl.git",
+    ),
+    
 ]
 
 
 outpath = mktempdir()
+
 
 MultiDocumenter.make(
     outpath,
     docs;
     search_engine = MultiDocumenter.SearchConfig(
         index_versions = ["stable"],
-        engine = MultiDocumenter.FlexSearch,
+        engine = MultiDocumenter.FlexSearch
     ),
-    rootpath = "/MultiDocumenter.jl/",
+    rootpath = "/QUBO.jl/",
 )
 
 gitroot = normpath(joinpath(@__DIR__, ".."))
