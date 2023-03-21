@@ -1,5 +1,5 @@
 using Test
-using QUBO
+import QUBO: QUBO
 
 function main()
     @test true
