@@ -1,6 +1,6 @@
 using MultiDocumenter
 
-import QUBO: QUBO
+# import QUBO: QUBO
 
 clonedir = mktempdir()
 
