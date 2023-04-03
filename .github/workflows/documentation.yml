@@ -23,7 +23,7 @@ jobs:
             ${{ runner.os }}-
       - name: Install dependencies
         run: julia --project=docs/ -e 'using Pkg; Pkg.instantiate()'
-      name: Build and deploy
+      - name: Build and deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # For authentication with GitHub Actions token
         run: julia --project=docs/ docs/make.jl
