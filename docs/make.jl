@@ -41,6 +41,7 @@ MultiDocumenter.make(
     rootpath = "/QUBO.jl/",
 )
 
+
 gitroot = normpath(joinpath(@__DIR__, ".."))
 run(`git pull`)
 outbranch = "gh-pages"
