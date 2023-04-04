@@ -1,4 +1,4 @@
-# QUBO.jl <img src="https://raw.githubusercontent.com/JuliaLang/julia/master/doc/src/assets/julia.ico" height="26"/> :left_right_arrow:	 :atom_symbol:	
+# QUBO.jl Documentation
 
 
 ## Introduction

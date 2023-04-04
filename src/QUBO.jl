@@ -1,7 +1,7 @@
 module QUBO
 
 import ToQUBO
-import Anneal
+import QUBODrivers
 import QUBOTools
 
 end # module QUBO
