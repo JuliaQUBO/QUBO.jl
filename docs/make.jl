@@ -2,24 +2,24 @@ using MultiDocumenter
 
 # import QUBO: QUBO
 
-clonedir = mktempdir()
+temp_dir = mktempdir()
 
 docs = [
 
     MultiDocumenter.MultiDocRef(
-        upstream = joinpath(clonedir, "ToQUBO"),
+        upstream = joinpath(temp_dir, "ToQUBO"),
         path = "ToQUBO.jl",
         name = "ToQUBO.jl",
         giturl = "https://github.com/psrenergy/ToQUBO.jl.git",
     ),
     MultiDocumenter.MultiDocRef(
-        upstream = joinpath(clonedir, "Anneal.jl"),
+        upstream = joinpath(temp_dir, "Anneal.jl"),
         path = "Anneal.jl",
         name = "Anneal.jl",
         giturl = "https://github.com/psrenergy/Anneal.jl.git",
     ),
     MultiDocumenter.MultiDocRef(
-        upstream = joinpath(clonedir, "QUBOTools.jl"),
+        upstream = joinpath(temp_dir, "QUBOTools.jl"),
         path = "QUBOTools.jl",
         name = "QUBOTools.jl",
         giturl = "https://github.com/psrenergy/QUBOTools.jl.git",
@@ -28,7 +28,7 @@ docs = [
 ]
 
 
-outpath = mktempdir()
+outpath = joinpath(@__DIR__, "build")
 
 
 MultiDocumenter.make(
@@ -42,7 +42,7 @@ MultiDocumenter.make(
 )
 
 
-gitroot = normpath(joinpath(@__DIR__, ".."))
+gitroot = joinpath(tempdir(), "build")
 run(`git pull`)
 outbranch = "gh-pages"
 has_outbranch = true
