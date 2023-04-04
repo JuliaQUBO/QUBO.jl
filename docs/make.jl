@@ -48,7 +48,7 @@ outbranch = "gh-pages"
 has_outbranch = true
 if !success(`git checkout $outbranch`)
     has_outbranch = false
-    if !success(`git switch --orphan $outbranch`)
+    if !success(`git checkout -b $outbranch`)
         @error "Cannot create new orphaned branch $outbranch."
         exit(1)
     end
