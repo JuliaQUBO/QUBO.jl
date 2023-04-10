@@ -1,6 +1,5 @@
 using Documenter
 
-
 makedocs(;
     doctest=true,
     clean=true,
