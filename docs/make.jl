@@ -1,6 +1,5 @@
 using Documenter
 using MultiDocumenter
-using QUBO
 
 temp_dir = mktempdir()
 

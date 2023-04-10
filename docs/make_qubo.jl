@@ -1,11 +1,7 @@
 using Documenter
-using QUBO
-DocMeta.setdocmeta!(
-    QUBO, :DocTestSetup, :(using QUBO); recursive=true
-)
+
 
 makedocs(;
-    modules=[QUBO],
     doctest=true,
     clean=true,
     format=Documenter.HTML(
