@@ -1,4 +1,6 @@
-# Set up to run docstrings with jldoctest
+using Documenter
+import QUBO: QUBO
+
 DocMeta.setdocmeta!(
     QUBO, :DocTestSetup, :(using QUBO); recursive=true
 )
@@ -8,7 +10,7 @@ makedocs(;
     doctest=true,
     clean=true,
     format=Documenter.HTML(
-        assets = ["assets/extra_styles.css", "assets/favicon.ico"],
+        # assets = ["assets/extra_styles.css", "assets/favicon.ico"],
         mathengine=Documenter.MathJax2(),
         sidebar_sitename=false,
     ), 
