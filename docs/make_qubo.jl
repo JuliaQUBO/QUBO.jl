@@ -1,6 +1,5 @@
 using Documenter
-import QUBO: QUBO
-
+using QUBO
 DocMeta.setdocmeta!(
     QUBO, :DocTestSetup, :(using QUBO); recursive=true
 )

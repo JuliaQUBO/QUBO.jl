@@ -1,7 +1,6 @@
 using Documenter
 using MultiDocumenter
-import QUBO: QUBO
-# import QUBO: QUBO
+using QUBO
 
 temp_dir = mktempdir()
 
