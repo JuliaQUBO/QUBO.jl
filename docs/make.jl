@@ -33,7 +33,7 @@ docs = [
     
 ]
 
-outpath = joinpath(@__DIR__, "build")
+outpath = mktempdir()
 
 
 MultiDocumenter.make(
@@ -46,7 +46,7 @@ MultiDocumenter.make(
     rootpath = "/QUBO.jl",
 )
 
-gitroot = joinpath(tempdir(), "build")
+gitroot = normpath(joinpath(@__DIR__, ".."))
 run(`git pull`)
 outbranch = "gh-multi-pages"
 has_outbranch = true
