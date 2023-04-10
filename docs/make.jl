@@ -57,6 +57,7 @@ if !success(`git checkout $outbranch`)
         exit(1)
     end
 end
+
 for file in readdir(gitroot; join = true)
     endswith(file, ".git") && continue
     rm(file; force = true, recursive = true)
