@@ -9,7 +9,7 @@ docs = [
         upstream = joinpath(temp_dir, "QUBO.jl"),
         path = "QUBO.jl",
         name = "QUBO.jl",
-        giturl = "https://github.com/psrenergy/ToQUBO.jl.git",
+        giturl = "https://github.com/psrenergy/QUBO.jl.git",
         branch ="gh-pages"
     ),
     MultiDocumenter.MultiDocRef(
