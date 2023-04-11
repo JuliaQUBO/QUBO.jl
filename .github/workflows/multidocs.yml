@@ -1,11 +1,9 @@
-name: Documentation
+name: MultiDocumentation
 on:
-  push:
-    branches: [master]
-    tags: '*'
-  pull_request:
-    types: [opened, synchronize, reopened]
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Documentation"]
+    types:
+      - completed
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,4 +17,4 @@ jobs:
       - name: Build and deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # For authentication with GitHub Actions token
-        run: julia --project=docs/ docs/make_qubo.jl
+        run: julia --project=docs/ docs/multimake.jl

@@ -1,9 +1,11 @@
-name: MultiDocumentation
+name: Documentation
 on:
-  workflow_run:
-    workflows: ["Documentation"]
-    types:
-      - completed
+  push:
+    branches: [master]
+    tags: '*'
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
