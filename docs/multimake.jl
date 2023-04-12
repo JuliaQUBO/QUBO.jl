@@ -68,6 +68,8 @@ function deploymultidocs(path::AbstractString; branch::String="gh-multi-pages", 
         rm(file; force=true, recursive=true)
     end
 
+    mkpath(path) # creates if not exists
+
     for file in readdir(path)
         cp(joinpath(path, file), joinpath(root_path, file))
     end
@@ -91,8 +93,7 @@ function deploymultidocs(path::AbstractString; branch::String="gh-multi-pages", 
     return nothing
 end
 
-# creates if not exists
-build_path = mkpath(joinpath(@__DIR__, "build_path"))
+build_path = joinpath(@__DIR__, "build")
 
 buildmultidocs(build_path, docs)
 
