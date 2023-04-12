@@ -42,7 +42,7 @@ function buildmultidocs(path::AbstractString, docs)
             index_versions=["stable"],
             engine=MultiDocumenter.FlexSearch
         ),
-        rootpath="/QUBO.jl"
+        # rootpath="/QUBO.jl"
     )
 
     return nothing
@@ -57,6 +57,7 @@ function deploymultidocs(path::AbstractString; branch::String="gh-multi-pages", 
 
     if !success(`git checkout $branch`)
         has_branch = false
+
         if !success(`git checkout -b $branch`)
             @error "Cannot create new orphaned branch $branch"
             exit(1)
@@ -65,6 +66,7 @@ function deploymultidocs(path::AbstractString; branch::String="gh-multi-pages", 
 
     for file in readdir(root_path; join=true)
         endswith(file, ".git") && continue
+
         rm(file; force=true, recursive=true)
     end
 
