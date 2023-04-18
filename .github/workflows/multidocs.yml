@@ -14,7 +14,8 @@ jobs:
           version: '1.6'
       - name: Install dependencies
         run: julia --project=docs/ -e 'using Pkg; Pkg.instantiate()'
-      - name: Build and deploy
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # For authentication with GitHub Actions token
-        run: julia --project=docs/ docs/multimake.jl
+      - name: Aggregate and deploy
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          julia --project=. docs/make.jl
