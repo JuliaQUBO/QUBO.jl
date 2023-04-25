@@ -38,7 +38,7 @@ function buildmultidocs(path::AbstractString, docs)
             index_versions=["stable"],
             engine=MultiDocumenter.FlexSearch
         ),
-        # rootpath="/QUBO.jl"
+        rootpath="/QUBO.jl"
     )
 
     return nothing
