@@ -72,7 +72,7 @@ function deploymultidocs(path::AbstractString; branch::String="gh-multi-pages", 
         cp(joinpath(path, file), joinpath(root_path, file))
     end
 
-    run(`git add .`)
+    run(`git add --all`)
 
     if success(`git commit -m 'Aggregate documentation'`)
         @info "Pushing updated documentation"
