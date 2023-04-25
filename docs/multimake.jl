@@ -55,7 +55,7 @@ function deploymultidocs(path::AbstractString; branch::String="gh-multi-pages", 
         has_branch = false
 
         if !success(`git switch --orphan $branch`)
-            @error "Cannot create new orphaned branch $outbranch."
+            @error "Cannot create new orphaned branch $branch."
             exit(1)
         end
     end
@@ -66,13 +66,13 @@ function deploymultidocs(path::AbstractString; branch::String="gh-multi-pages", 
         rm(file; force=true, recursive=true)
     end
 
-    mkpath(path) # creates if not exists
+    # mkpath(path) # creates if not exists
 
     for file in readdir(path)
         cp(joinpath(path, file), joinpath(root_path, file))
     end
 
-    run(`git add --all`)
+    run(`git add .`)
 
     if success(`git commit -m 'Aggregate documentation'`)
         @info "Pushing updated documentation"
@@ -91,7 +91,7 @@ function deploymultidocs(path::AbstractString; branch::String="gh-multi-pages", 
     return nothing
 end
 
-build_path = joinpath(@__DIR__, "build")
+build_path = mktempdir()
 
 buildmultidocs(build_path, docs)
 
