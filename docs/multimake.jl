@@ -54,12 +54,12 @@ function deploymultidocs(path::AbstractString; branch::String="gh-multi-pages", 
     if !success(`git checkout $branch`)
         has_branch = false
 
-        if !success(`git checkout -b $branch`)
-            @error "Cannot create new orphaned branch $branch"
+        if !success(`git switch --orphan $branch`)
+            @error "Cannot create new orphaned branch $outbranch."
             exit(1)
         end
     end
-
+    
     for file in readdir(root_path; join=true)
         endswith(file, ".git") && continue
 
