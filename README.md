@@ -1,4 +1,15 @@
-# QUBO.jl Documentation
+# QUBO.jl
+<div align="left">
+   <a href="https://www.youtube.com/watch?v=OTmzlTbqdNo">
+        <img src="https://img.shields.io/badge/JuliaCon-2022-9558b2" alt="JuliaCon 2022">
+    </a>
+    <a href="https://psrenergy.github.io/ToQUBO.jl/dev">
+        <img src="https://img.shields.io/badge/docs-dev-blue.svg" alt="Docs">
+    </a>
+   <a href="https://zenodo.org/badge/latestdoi/614041491">
+      <img src="https://zenodo.org/badge/614041491.svg" alt="DOI">
+   </a>
+</div>
 
 
 ## Introduction
