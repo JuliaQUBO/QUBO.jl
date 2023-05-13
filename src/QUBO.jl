@@ -1,7 +1,8 @@
 module QUBO
 
-import ToQUBO
-import QUBODrivers
+import JuMP
 import QUBOTools
+import QUBODrivers
+import ToQUBO
 
 end # module QUBO

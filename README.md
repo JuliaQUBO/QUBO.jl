@@ -1,9 +1,28 @@
-# QUBO.jl Documentation
+# QUBO.jl
+
+<div align="center">
+    <a href="/docs/src/assets/">
+        <img src="/docs/src/assets/logo.svg" width=400px alt="QUBO.jl" />
+    </a>
+    <br>
+    <a href="https://codecov.io/gh/psrenergy/QUBO.jl">
+        <img src="https://codecov.io/gh/psrenergy/QUBO.jl/branch/master/graph/badge.svg?token=ECM5OQ9T67"/>
+    </a>
+    <a href="https://github.com/psrenergy/QUBO.jl/actions/workflows/ci.yml">
+        <img src="https://github.com/psrenergy/QUBO.jl/actions/workflows/ci.yml/badge.svg?branch=master" alt="CI" />
+    </a>
+    <a href="https://psrenergy.github.io/QUBO.jl/dev">
+        <img src="https://img.shields.io/badge/docs-dev-blue.svg" alt="Docs">
+    </a>
+    <a href="https://zenodo.org/badge/latestdoi/430697061">
+        <img src="https://zenodo.org/badge/430697061.svg" alt="DOI">
+    </a>
+</div>
 
 
 ## Introduction
 
-`QUBO.jl` is an all-in-one package for working with QUBO formulations in [JuMP](https://github.com/jump-dev/JuMP.jl) and interfacing with QUBO solvers. This project aggregates three complementary packages: [`ToQUBO.jl`](https://github.com/psrenergy/ToQUBO.jl), [`QUBODrivers.jl`](https://github.com/psrenergy/QUBODrivers.jl) and [`QUBOTools.jl`](https://github.com/psrenergy/QUBOTools.jl).
+`QUBO.jl` is an all-in-one package for working with QUBO formulations in [JuMP](https://github.com/jump-dev/JuMP.jl) and interfacing with QUBO solvers. This project aggregates three complementary packages: [`QUBO.jl`](https://github.com/psrenergy/QUBO.jl), [`QUBODrivers.jl`](https://github.com/psrenergy/QUBODrivers.jl) and [`QUBOTools.jl`](https://github.com/psrenergy/QUBOTools.jl).
 
 ## QUBO?
 
@@ -30,7 +49,7 @@ Some of the paradigms that stand out for running QUBOs are quantum gate-based op
 
 `QUBO.Jl` main features are spreaded into its three subpackages:
 
-- `ToQUBO.jl`:  reformulate general JuMP problems into the QUBO format. 
+- `QUBO.jl`:  reformulate general JuMP problems into the QUBO format. 
 
 - `QUBODrivers.jl`: define a simple interface to connect with these solvers using a [MOI](https://github.com/jump-dev/MathOptInterface.jl)-compliant API.  
 
@@ -69,8 +88,8 @@ end
 
 <div align="center">
     <h2>QUBO.jl Packages</h2>
-    <a href="https://github.com/psrenergy/ToQUBO.jl">
-        <img width="200px" src="https://raw.githubusercontent.com/psrenergy/ToQUBO.jl/master/docs/src/assets/logo.svg" alt="ToQUBO.jl" />
+    <a href="https://github.com/psrenergy/QUBO.jl">
+        <img width="200px" src="https://raw.githubusercontent.com/psrenergy/QUBO.jl/master/docs/src/assets/logo.svg" alt="QUBO.jl" />
     </a>
     <a href="https://github.com/psrenergy/QUBODrivers.jl">
         <img width="200px" src="https://raw.githubusercontent.com/psrenergy/QUBODrivers.jl/master/docs/src/assets/logo.svg" alt="QUBODrivers.jl" />

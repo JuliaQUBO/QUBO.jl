@@ -6,7 +6,7 @@ makedocs(;
     format=Documenter.HTML(
         assets=[
             "assets/extra_styles.css",
-            # "assets/favicon.ico",
+            "assets/favicon.ico",
         ],
         mathengine=Documenter.KaTeX(),
         sidebar_sitename=false,
