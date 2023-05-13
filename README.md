@@ -96,8 +96,8 @@ end
 
 <div align="center">
     <h2>PSR Quantum Optimization Toolchain</h2>
-    <a href="https://github.com/psrenergy/QUBO.jl">
-        <img width="200px" src="https://raw.githubusercontent.com/psrenergy/ToQUBO.jl/master/docs/src/assets/logo.svg" alt="QUBO.jl" />
+    <a href="https://github.com/psrenergy/ToQUBO.jl">
+        <img width="200px" src="https://raw.githubusercontent.com/psrenergy/ToQUBO.jl/master/docs/src/assets/logo.svg" alt="ToQUBO.jl" />
     </a>
     <a href="https://github.com/psrenergy/QUBODrivers.jl">
         <img width="200px" src="https://raw.githubusercontent.com/psrenergy/QUBODrivers.jl/master/docs/src/assets/logo.svg" alt="QUBODrivers.jl" />
