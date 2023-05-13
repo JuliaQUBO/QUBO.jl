@@ -14,8 +14,14 @@
     <a href="https://psrenergy.github.io/QUBO.jl/dev">
         <img src="https://img.shields.io/badge/docs-dev-blue.svg" alt="Docs">
     </a>
-    <a href="https://zenodo.org/badge/latestdoi/430697061">
-        <img src="https://zenodo.org/badge/430697061.svg" alt="DOI">
+    <a href="https://www.youtube.com/watch?v=OTmzlTbqdNo">
+        <img src="https://img.shields.io/badge/JuliaCon-2022-9558b2" alt="JuliaCon 2022">
+    </a>
+    <a href="https://psrenergy.github.io/ToQUBO.jl/dev">
+        <img src="https://img.shields.io/badge/docs-dev-blue.svg" alt="Docs">
+    </a>
+    <a href="https://zenodo.org/badge/latestdoi/614041491">
+        <img src="https://zenodo.org/badge/614041491.svg" alt="DOI">
     </a>
 </div>
 
@@ -60,9 +66,11 @@ More features are available in the documentation.
 ## Quick Start
 
 ### Instalation
+
 ```julia
-julia> ]add https://github.com/psrenergy/QUBO.jl#master
+julia> import Pkg; Pkg.add("QUBO")
 ```
+
 ### Example
 
 ```julia
@@ -87,7 +95,7 @@ end
 ```
 
 <div align="center">
-    <h2>QUBO.jl Packages</h2>
+    <h2>PSR Quantum Optimization Toolchain</h2>
     <a href="https://github.com/psrenergy/QUBO.jl">
         <img width="200px" src="https://raw.githubusercontent.com/psrenergy/QUBO.jl/master/docs/src/assets/logo.svg" alt="QUBO.jl" />
     </a>

@@ -9,28 +9,24 @@ docs = [
         path="QUBO.jl",
         name="QUBO.jl",
         giturl="https://github.com/psrenergy/QUBO.jl.git",
-        branch="gh-pages",
     ),
     MultiDocumenter.MultiDocRef(
         upstream=joinpath(temp_dir, "ToQUBO.jl"),
         path="ToQUBO.jl",
         name="ToQUBO.jl",
         giturl="https://github.com/psrenergy/ToQUBO.jl.git",
-        branch="gh-pages",
     ),
     MultiDocumenter.MultiDocRef(
         upstream=joinpath(temp_dir, "QUBODrivers.jl"),
         path="QUBODrivers.jl",
         name="QUBODrivers.jl",
         giturl="https://github.com/psrenergy/QUBODrivers.jl.git",
-        branch="gh-pages",
     ),
     MultiDocumenter.MultiDocRef(
         upstream=joinpath(temp_dir, "QUBOTools.jl"),
         path="QUBOTools.jl",
         name="QUBOTools.jl",
         giturl="https://github.com/psrenergy/QUBOTools.jl.git",
-        branch="gh-pages",
     ),
 ]
 
@@ -42,7 +38,7 @@ function buildmultidocs(path::AbstractString, docs)
             index_versions=["stable"],
             engine=MultiDocumenter.FlexSearch
         ),
-        # rootpath="/QUBO.jl"
+        rootpath="/QUBO.jl"
     )
 
     return nothing
@@ -58,19 +54,19 @@ function deploymultidocs(path::AbstractString; branch::String="gh-multi-pages", 
     if !success(`git checkout $branch`)
         has_branch = false
 
-        if !success(`git checkout -b $branch`)
-            @error "Cannot create new orphaned branch $branch"
+        if !success(`git switch --orphan $branch`)
+            @error "Cannot create new orphaned branch $branch."
             exit(1)
         end
     end
-
+    
     for file in readdir(root_path; join=true)
         endswith(file, ".git") && continue
 
         rm(file; force=true, recursive=true)
     end
 
-    mkpath(path) # creates if not exists
+    # mkpath(path) # creates if not exists
 
     for file in readdir(path)
         cp(joinpath(path, file), joinpath(root_path, file))
@@ -95,7 +91,7 @@ function deploymultidocs(path::AbstractString; branch::String="gh-multi-pages", 
     return nothing
 end
 
-build_path = joinpath(@__DIR__, "build")
+build_path = mktempdir()
 
 buildmultidocs(build_path, docs)
 
