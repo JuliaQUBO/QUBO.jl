@@ -1,6 +1,3 @@
-import QUBODrivers: Spin
-export Spin
-
 # Spin Variable for JuMP
 # Ref: https://jump.dev/JuMP.jl/stable/developers/extensions/#extend_variable_macro
 

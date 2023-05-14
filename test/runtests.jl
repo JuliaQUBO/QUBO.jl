@@ -1,7 +1,11 @@
 using Test
-import QUBO: QUBO
+using JuMP
+using QUBO
 
+include("spin_model.jl")
 
 function main()
-    @test true
+    test_spin_model()
+
+    return nothing
 end
