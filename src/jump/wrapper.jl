@@ -5,20 +5,11 @@ struct SpinInfo
     info::JuMP.VariableInfo
 end
 
-function JuMP.build_variable(
-    ::Function,
-    info::JuMP.VariableInfo,
-    ::Type{Spin};
-    kwargs...
-)
+function JuMP.build_variable(::Function, info::JuMP.VariableInfo, ::Type{Spin}; kwargs...)
     return SpinInfo(info)
 end
 
-function JuMP.add_variable(
-    model::JuMP.Model,
-    info::SpinInfo,
-    name::String,
-)
+function JuMP.add_variable(model::JuMP.Model, info::SpinInfo, name::String)
     x = JuMP.add_variable(model, JuMP.ScalarVariable(info.info), name)
 
     JuMP.@constraint(model, x ∈ Spin())

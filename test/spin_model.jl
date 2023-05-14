@@ -6,7 +6,7 @@ function test_spin_model()
             0 0 2
             0 0 0
         ]
-        
+
         model = Model(ExactSampler.Optimizer)
 
         @variable(model, s[1:3], Spin)

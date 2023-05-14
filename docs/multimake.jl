@@ -5,28 +5,28 @@ temp_dir = mktempdir()
 
 docs = [
     MultiDocumenter.MultiDocRef(
-        upstream=joinpath(temp_dir, "QUBO.jl"),
-        path="QUBO.jl",
-        name="QUBO.jl",
-        giturl="https://github.com/psrenergy/QUBO.jl.git",
+        upstream = joinpath(temp_dir, "QUBO.jl"),
+        path = "QUBO.jl",
+        name = "QUBO.jl",
+        giturl = "https://github.com/psrenergy/QUBO.jl.git",
     ),
     MultiDocumenter.MultiDocRef(
-        upstream=joinpath(temp_dir, "ToQUBO.jl"),
-        path="ToQUBO.jl",
-        name="ToQUBO.jl",
-        giturl="https://github.com/psrenergy/ToQUBO.jl.git",
+        upstream = joinpath(temp_dir, "ToQUBO.jl"),
+        path = "ToQUBO.jl",
+        name = "ToQUBO.jl",
+        giturl = "https://github.com/psrenergy/ToQUBO.jl.git",
     ),
     MultiDocumenter.MultiDocRef(
-        upstream=joinpath(temp_dir, "QUBODrivers.jl"),
-        path="QUBODrivers.jl",
-        name="QUBODrivers.jl",
-        giturl="https://github.com/psrenergy/QUBODrivers.jl.git",
+        upstream = joinpath(temp_dir, "QUBODrivers.jl"),
+        path = "QUBODrivers.jl",
+        name = "QUBODrivers.jl",
+        giturl = "https://github.com/psrenergy/QUBODrivers.jl.git",
     ),
     MultiDocumenter.MultiDocRef(
-        upstream=joinpath(temp_dir, "QUBOTools.jl"),
-        path="QUBOTools.jl",
-        name="QUBOTools.jl",
-        giturl="https://github.com/psrenergy/QUBOTools.jl.git",
+        upstream = joinpath(temp_dir, "QUBOTools.jl"),
+        path = "QUBOTools.jl",
+        name = "QUBOTools.jl",
+        giturl = "https://github.com/psrenergy/QUBOTools.jl.git",
     ),
 ]
 
@@ -34,17 +34,21 @@ function buildmultidocs(path::AbstractString, docs)
     MultiDocumenter.make(
         path,
         docs;
-        search_engine=MultiDocumenter.SearchConfig(
-            index_versions=["stable"],
-            engine=MultiDocumenter.FlexSearch
+        search_engine = MultiDocumenter.SearchConfig(
+            index_versions = ["stable"],
+            engine = MultiDocumenter.FlexSearch,
         ),
-        rootpath="/QUBO.jl"
+        rootpath = "/QUBO.jl",
     )
 
     return nothing
 end
 
-function deploymultidocs(path::AbstractString; branch::String="gh-multi-pages", main::String="main")
+function deploymultidocs(
+    path::AbstractString;
+    branch::String = "gh-multi-pages",
+    main::String = "main",
+)
     root_path = normpath(joinpath(@__DIR__, ".."))
 
     run(`git pull`)
@@ -59,11 +63,11 @@ function deploymultidocs(path::AbstractString; branch::String="gh-multi-pages", 
             exit(1)
         end
     end
-    
-    for file in readdir(root_path; join=true)
+
+    for file in readdir(root_path; join = true)
         endswith(file, ".git") && continue
 
-        rm(file; force=true, recursive=true)
+        rm(file; force = true, recursive = true)
     end
 
     # mkpath(path) # creates if not exists
@@ -98,5 +102,5 @@ buildmultidocs(build_path, docs)
 if "--skip-deploy" ∈ ARGS
     @warn "Skipping deployment"
 else
-    deploymultidocs(build_path; main="master")
+    deploymultidocs(build_path; main = "master")
 end
