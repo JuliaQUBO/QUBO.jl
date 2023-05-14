@@ -9,3 +9,5 @@ function main()
 
     return nothing
 end
+
+main() # Here we go!
