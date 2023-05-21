@@ -23,6 +23,9 @@
     <a href="https://zenodo.org/badge/latestdoi/614041491">
         <img src="https://zenodo.org/badge/614041491.svg" alt="DOI">
     </a>
+    <a href="https://mybinder.org/v2/gh/psrenergy/QUBO-notebooks/HEAD">
+        <img src="https://mybinder.org/badge_logo.svg" alt="Binder">
+    </a>
 </div>
 
 
