@@ -14,7 +14,7 @@
     <a href="https://www.youtube.com/watch?v=OTmzlTbqdNo">
         <img src="https://img.shields.io/badge/JuliaCon-2022-9558b2" alt="JuliaCon 2022">
     </a>
-    <a href="https://psrenergy.github.io/ToQUBO.jl/dev">
+    <a href="https://psrenergy.github.io/QUBO.jl/QUBO.jl/dev">
         <img src="https://img.shields.io/badge/docs-dev-blue.svg" alt="Docs">
     </a>
     <a href="https://zenodo.org/badge/latestdoi/614041491">
@@ -28,7 +28,7 @@
 
 ## Introduction
 
-`QUBO.jl` is an all-in-one package for working with QUBO formulations in [JuMP](https://github.com/jump-dev/JuMP.jl) and interfacing with QUBO solvers. This project aggregates three complementary packages: [`QUBO.jl`](https://github.com/psrenergy/QUBO.jl), [`QUBODrivers.jl`](https://github.com/psrenergy/QUBODrivers.jl) and [`QUBOTools.jl`](https://github.com/psrenergy/QUBOTools.jl).
+`QUBO.jl` is an all-in-one package for working with QUBO formulations in [JuMP](https://github.com/jump-dev/JuMP.jl) and interfacing with QUBO solvers. This project aggregates three complementary packages: [`ToQUBO.jl`](https://github.com/psrenergy/ToQUBO.jl), [`QUBODrivers.jl`](https://github.com/psrenergy/QUBODrivers.jl) and [`QUBOTools.jl`](https://github.com/psrenergy/QUBOTools.jl).
 
 ## QUBO?
 
