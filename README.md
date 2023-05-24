@@ -55,7 +55,7 @@ Some of the paradigms that stand out for running QUBOs are quantum gate-based op
 
 `QUBO.Jl` main features are spreaded into its three subpackages:
 
-- `QUBO.jl`:  reformulate general JuMP problems into the QUBO format. 
+- `ToQUBO.jl`:  reformulate general JuMP problems into the QUBO format. 
 
 - `QUBODrivers.jl`: define a simple interface to connect with these solvers using a [MOI](https://github.com/jump-dev/MathOptInterface.jl)-compliant API.  
 
