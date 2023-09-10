@@ -8,9 +8,9 @@
 [![Code Coverage](https://codecov.io/gh/psrenergy/QUBO.jl/branch/master/graph/badge.svg?token=ECM5OQ9T67")](https://codecov.io/gh/psrenergy/QUBO.jl)
 [![CI](https://github.com/psrenergy/QUBO.jl/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/psrenergy/QUBO.jl/actions/workflows/ci.yml)
 [![Docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://psrenergy.github.io/QUBO.jl/QUBO.jl/dev)
+[![Zenodo/DOI](https://zenodo.org/badge/614041491.svg)](https://zenodo.org/badge/latestdoi/614041491)
 [![JuliaCon 2022](https://img.shields.io/badge/JuliaCon-2022-9558b2)](https://www.youtube.com/watch?v=OTmzlTbqdNo)
 [![arXiv](https://img.shields.io/badge/arXiv-2307.02577-b31b1b.svg)](https://arxiv.org/abs/2307.02577)
-[![Zenodo/DOI](https://zenodo.org/badge/614041491.svg)](https://zenodo.org/badge/latestdoi/614041491)
 </div>
 
 ## Introduction
@@ -29,7 +29,7 @@ We can represent such problem as follows:
 
 ```math
 \begin{array}{rl}
-   \min          & \mathbf{x}' Q\,\mathbf{x} \\
+   \min | \max & \alpha \left[\mathbf{\ell}' \mathbf{x} \mathbf{x}' Q\,\mathbf{x} + \beta \right] \\
    \textrm{s.t.} & \mathbf{x} \in \mathbb{B}^{n}
 \end{array}
 ```
@@ -39,16 +39,32 @@ With that said, the significant advances in computing systems and algorithms spe
 
 Some of the paradigms that stand out for running QUBOs are quantum gate-based optimization algorithms (QAOA and VQE), quantum annealers and hardware-accelerated platforms (Coherent Ising Machines and Simulated Bifurcation Machines).
 
-
-## Quick Start
+## Quick Start 🚀
 
 ### Instalation
 
 ```julia
-julia> import Pkg; Pkg.add("QUBO")
+import Pkg
+
+Pkg.add("QUBO")
 ```
 
 ### Example
+
+Given the following binary Knapsack Problem
+
+```math
+\begin{array}{rl}
+\max          & x_{1} + 2 x_{2} + 3 x_{3} \\
+\textrm{s.t.} & 0.3 x_{1} + 0.5 x_{2} + x_{3} \leq 1.6 \\
+              & \mathbf{x} \in \mathbb{B}^{3}
+\end{array}
+```
+
+one could write a simple [JuMP](https://jump.dev) model and have its constraint automatically encoded by [ToQUBO.jl](https://github.com/psrenergy/ToQUBO.jl).
+
+<details>
+    <summary>Show Code</summary>
 
 ```julia
 using JuMP
@@ -57,8 +73,8 @@ using QUBO
 model = Model(() -> ToQUBO.Optimizer(ExactSampler.Optimizer))
 
 @variable(model, x[1:3], Bin)
-@constraint(model, 0.3*x[1] + 0.5*x[2] + 1.0*x[3] <= 1.6)
-@objective(model, Max, 1.0*x[1] + 2.0*x[2] + 3.0*x[3])
+@objective(model, Max, x[1] + 2 * x[2] + 3 * x[3])
+@constraint(model, 0.3 * x[1] + 0.5 * x[2] + x[3] <= 1.6)
 
 optimize!(model)
 
@@ -68,8 +84,9 @@ for i = 1:result_count(model)
 
     println("f($xi) = $yi")
 end
-
 ```
+
+</details>
 
 ## Overview
 
@@ -119,3 +136,23 @@ The QUBOTools.jl package implements codecs for QUBO (Quadratic Unconstrained Bin
 
 <div>
 </div>
+
+## Citing [QUBO.jl](https://github.com/psrenergy/QUBO.jl)
+
+If you find [QUBO.jl](https://github.com/psrenergy/QUBO.jl) and its packages useful in your work, we kindly request that you cite the following paper (preprint):
+
+```tex
+@misc{qubojl:2023,
+  title         = {QUBO.jl: A Julia Ecosystem for Quadratic Unconstrained Binary Optimization}, 
+  author        = {Pedro {Maciel Xavier} and Pedro Ripper and Tiago Andrade and Joaquim {Dias Garcia} and Nelson Maculan and David E. {Bernal Neira}},
+  year          = {2023},
+  doi           = {10.48550/arXiv.2307.02577},
+  eprint        = {2307.02577},
+  archivePrefix = {arXiv},
+  primaryClass  = {math.OC},
+}
+```
+
+---
+
+
