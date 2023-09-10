@@ -156,7 +156,8 @@ If you find [QUBO.jl](https://github.com/psrenergy/QUBO.jl) and its packages use
 ---
 
 <div align="center">
-    <source media="(prefers-color-scheme: dark)" srcset="/docs/src/assets/collaboration-dark.svg">
-      <img alt="PSR; UFRJ; Purdue; USRA" src="/docs/src/assets/collaboration-light.svg">
+    <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="/docs/src/assets/collaboration-dark.svg">
+        <img alt="PSR; UFRJ; Purdue; USRA" src="/docs/src/assets/collaboration-light.svg">
     </picture>
 </div>
