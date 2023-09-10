@@ -82,7 +82,7 @@ for i = 1:result_count(model)
     xi = value.(x, result = i)
     yi = objective_value(model, result = i)
 
-    println("f($xi) = $yi")
+    println("x: ", xi, "; cost = ", yi)
 end
 ```
 
@@ -155,4 +155,27 @@ If you find [QUBO.jl](https://github.com/psrenergy/QUBO.jl) and its packages use
 
 ---
 
-
+<a href="https://psr-inc.com">
+    <img src="docs/src/assets/psr-logo-light.png#gh-light-mode-only" alt="PSR Energy" height="100px">
+</a>
+<a href="https://psr-inc.com">
+    <img src="docs/src/assets/psr-logo-dark.png#gh-dark-mode-only" alt="PSR Energy" height="100px">
+</a>
+<a href="https://ufrj.br">
+    <img src="docs/src/assets/ufrj-logo-light.svg#gh-light-mode-only" alt="Universidade Federal do Rio de Janeiro" height="100px">
+</a>
+<a href="https://ufrj.br">
+    <img src="docs/src/assets/ufrj-logo-dark.svg#gh-dark-mode-only" alt="Universidade Federal do Rio de Janeiro" height="100px">
+</a>
+<a href="https://purdue.edu">
+    <img src="docs/src/assets/purdue-logo-light.svg#gh-light-mode-only" alt="Purdue University" height="100px">
+</a>
+<a href="https://purdue.edu">
+    <img src="docs/src/assets/purdue-logo-dark.svg#gh-dark-mode-only" alt="Purdue University" height="100px">
+</a>
+<a href="https://usra.edu">
+    <img src="docs/src/assets/usra-logo-light.png#gh-light-mode-only" alt="University Space Research Association" height="100px">
+</a>
+<a href="https://usra.edu">
+    <img src="docs/src/assets/usra-logo-dark.png#gh-dark-mode-only" alt="University Space Research Association" height="100px">
+</a>
