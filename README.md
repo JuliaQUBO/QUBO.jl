@@ -1,38 +1,26 @@
 # QUBO.jl
 
 <div align="center">
-    <a href="/docs/src/assets/">
-        <img src="/docs/src/assets/logo.svg" width=400px alt="QUBO.jl" />
-    </a>
-    <br>
-    <a href="https://arxiv.org/abs/2307.02577">
-        <img src="https://img.shields.io/badge/arXiv-2307.02577-b31b1b.svg" alt="arXiv"/>
-    </a>
-    <a href="https://codecov.io/gh/psrenergy/QUBO.jl">
-        <img src="https://codecov.io/gh/psrenergy/QUBO.jl/branch/master/graph/badge.svg?token=ECM5OQ9T67"/>
-    </a>
-    <a href="https://github.com/psrenergy/QUBO.jl/actions/workflows/ci.yml">
-        <img src="https://github.com/psrenergy/QUBO.jl/actions/workflows/ci.yml/badge.svg?branch=master" alt="CI" />
-    </a>
-    <a href="https://www.youtube.com/watch?v=OTmzlTbqdNo">
-        <img src="https://img.shields.io/badge/JuliaCon-2022-9558b2" alt="JuliaCon 2022">
-    </a>
-    <a href="https://psrenergy.github.io/QUBO.jl/QUBO.jl/dev">
-        <img src="https://img.shields.io/badge/docs-dev-blue.svg" alt="Docs">
-    </a>
-    <a href="https://zenodo.org/badge/latestdoi/614041491">
-        <img src="https://zenodo.org/badge/614041491.svg" alt="DOI">
-    </a>
-</div>
+<a href="/docs/src/assets/">
+    <img src="/docs/src/assets/logo.svg" width=400px alt="QUBO.jl" />
+</a>
 
+[![Code Coverage](https://codecov.io/gh/psrenergy/QUBO.jl/branch/master/graph/badge.svg?token=ECM5OQ9T67")](https://codecov.io/gh/psrenergy/QUBO.jl)
+[![CI](https://github.com/psrenergy/QUBO.jl/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/psrenergy/QUBO.jl/actions/workflows/ci.yml)
+[![Docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://psrenergy.github.io/QUBO.jl/QUBO.jl/dev)
+[![JuliaCon 2022](https://img.shields.io/badge/JuliaCon-2022-9558b2)](https://www.youtube.com/watch?v=OTmzlTbqdNo)
+[![arXiv](https://img.shields.io/badge/arXiv-2307.02577-b31b1b.svg)](https://arxiv.org/abs/2307.02577)
+[![Zenodo/DOI](https://zenodo.org/badge/614041491.svg)](https://zenodo.org/badge/latestdoi/614041491)
+</div>
 
 ## Introduction
 
-`QUBO.jl` is an all-in-one package for working with QUBO formulations in [JuMP](https://github.com/jump-dev/JuMP.jl) and interfacing with QUBO solvers. This project aggregates three complementary packages: [`ToQUBO.jl`](https://github.com/psrenergy/ToQUBO.jl), [`QUBODrivers.jl`](https://github.com/psrenergy/QUBODrivers.jl) and [`QUBOTools.jl`](https://github.com/psrenergy/QUBOTools.jl).
+[QUBO.jl](https://github.com/psrenergy/QUBO.jl) is an all-in-one package for working with QUBO formulations in [JuMP](https://github.com/jump-dev/JuMP.jl) and interfacing with QUBO solvers. This project aggregates three complementary packages: [ToQUBO.jl](https://github.com/psrenergy/ToQUBO.jl), [QUBODrivers.jl](https://github.com/psrenergy/QUBODrivers.jl) and [QUBOTools.jl](https://github.com/psrenergy/QUBOTools.jl).
 
 ## QUBO?
 
 QUBO is an acronym for *Quadratic Unconstrained Binary Optimization*. So every QUBO problem is comprised of:
+
 - a linear or quadratic objective function
 - no constraints
 - binary variables
@@ -51,17 +39,6 @@ With that said, the significant advances in computing systems and algorithms spe
 
 Some of the paradigms that stand out for running QUBOs are quantum gate-based optimization algorithms (QAOA and VQE), quantum annealers and hardware-accelerated platforms (Coherent Ising Machines and Simulated Bifurcation Machines).
 
-## `QUBO.jl` features
-
-`QUBO.Jl` main features are spreaded into its three subpackages:
-
-- `ToQUBO.jl`:  reformulate general JuMP problems into the QUBO format. 
-
-- `QUBODrivers.jl`: define a simple interface to connect with these solvers using a [MOI](https://github.com/jump-dev/MathOptInterface.jl)-compliant API.  
-
-- `QUBOTools.jl`:   a set of methods to work with different formats for QUBO.
-
-More features are available in the documentation.
 
 ## Quick Start
 
@@ -94,15 +71,51 @@ end
 
 ```
 
-<div align="center">
-    <h2>PSR Quantum Optimization Toolchain</h2>
-    <a href="https://github.com/psrenergy/ToQUBO.jl">
-        <img width="200px" src="https://raw.githubusercontent.com/psrenergy/ToQUBO.jl/master/docs/src/assets/logo.svg" alt="ToQUBO.jl" />
-    </a>
-    <a href="https://github.com/psrenergy/QUBODrivers.jl">
-        <img width="200px" src="https://raw.githubusercontent.com/psrenergy/QUBODrivers.jl/master/docs/src/assets/logo.svg" alt="QUBODrivers.jl" />
-    </a>
-    <a href="https://github.com/psrenergy/QUBOTools.jl">
-        <img width="200px" src="https://raw.githubusercontent.com/psrenergy/QUBOTools.jl/main/docs/src/assets/logo.svg" alt="QUBOTools.jl" />
-    </a>
+## Overview
+
+<div align="left">
+<a href="https://github.com/psrenergy/ToQUBO.jl">
+<img width="200px" src="https://raw.githubusercontent.com/psrenergy/ToQUBO.jl/master/docs/src/assets/logo.svg" alt="ToQUBO.jl" align="right" />
+</a>
+<div align="left">
+
+### ToQUBO.jl
+
+[ToQUBO.jl](https://github.com/psrenergy/ToQUBO.jl) is a Julia package to reformulate general optimization problems into QUBO (Quadratic Unconstrained Binary Optimization) instances.
+This tool aims to convert a broad range of JuMP problems for straightforward application in many physics and physics-inspired solution methods whose normal optimization form is equivalent to the QUBO.
+These methods include quantum annealing, quantum gate-circuit optimization algorithms (Quantum Optimization Alternating Ansatz, Variational Quantum Eigensolver), other hardware-accelerated platforms, such as Coherent Ising Machines and Simulated Bifurcation Machines, and more traditional methods such as simulated annealing.
+During execution, [ToQUBO.jl](https://github.com/psrenergy/ToQUBO.jl) encodes both discrete and continuous variables, maps constraints, and computes their penalties, performing a few model optimization steps along the process.
+[ToQUBO.jl](https://github.com/psrenergy/ToQUBO.jl) was written as a MathOptInterface (MOI) layer that automatically maps between input and output models, thus providing a smooth JuMP modeling experience.
+
+<div>
+</div>
+
+<div align="right">
+<a href="https://github.com/psrenergy/QUBODrivers.jl">
+    <img width="200px" src="https://raw.githubusercontent.com/psrenergy/QUBODrivers.jl/master/docs/src/assets/logo.svg" alt="QUBODrivers.jl" align="left" />
+</a>
+<div align="left">
+
+### QUBODrivers.jl
+
+This package aims to provide a common [MOI](https://github.com/jump-dev/MathOptInterface.jl)-compliant API for QUBO Sampling and Annealing machines.
+It also contains testing tools, including utility samplers for performance comparison and sanity checks.
+*Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sit amet urna risus. Proin molestie urna ex, non ullamcorper est varius id. Sed tempus purus quis tempus placerat. Praesent sit amet venenatis libero. Aliquam feugiat, ex sed feugiat imperdiet, tortor leo pellentesque nulla, in pellentesque quam augue non velit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nunc porta dolor lorem, et placerat sem venenatis ac. Vivamus suscipit finibus blandit. Nullam non semper massa.*
+
+<div>
+</div>
+
+<div align="left">
+<a href="https://github.com/psrenergy/QUBOTools.jl">
+    <img width="200px" src="https://raw.githubusercontent.com/psrenergy/QUBOTools.jl/main/docs/src/assets/logo.svg" alt="QUBOTools.jl" align="right" />
+</a>
+</a>
+<div align="left">
+
+### QUBOTools.jl
+
+The QUBOTools.jl package implements codecs for QUBO (Quadratic Unconstrained Binary Optimization) instances. Its purpose is to provide fast and reliable conversion between common formats used to represent such problems. This allows for rapid leverage of many emergent computing architectures whose job is to solve this kind of optimization problem.
+*Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sit amet urna risus. Proin molestie urna ex, non ullamcorper est varius id. Sed tempus purus quis tempus placerat. Praesent sit amet venenatis libero. Aliquam feugiat, ex sed feugiat imperdiet, tortor leo pellentesque nulla, in pellentesque quam augue non velit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nunc porta dolor lorem, et placerat sem venenatis ac. Vivamus suscipit finibus blandit. Nullam non semper massa.*
+
+<div>
 </div>
