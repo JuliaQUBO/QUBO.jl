@@ -156,36 +156,7 @@ If you find [QUBO.jl](https://github.com/psrenergy/QUBO.jl) and its packages use
 ---
 
 <div align="center">
-    <a href="https://psr-inc.com">
-    <kbd>
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="/docs/src/assets/psr-logo-dark.png">
-      <img alt="PSR Energy" height="100px" src="/docs/src/assets/psr-logo-light.png">
+    <source media="(prefers-color-scheme: dark)" srcset="/docs/src/assets/collaboration-dark.svg">
+      <img alt="PSR; UFRJ; Purdue; USRA" src="docs/src/assets/collaboration-light.svg">
     </picture>
-    </kbd>
-    </a>
-    <a href="https://ufrj.br">
-    <kbd>
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="/docs/src/assets/ufrj-logo-dark.svg">
-      <img alt="Universidade Federal do Rio de Janeiro" height="100px" src="/docs/src/assets/ufrj-logo-light.svg">
-    </picture>
-    </kbd>
-    </a>
-    <a href="https://purdue.edu">
-    <kbd>
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="/docs/src/assets/usra-logo-dark.png">
-      <img alt="University Space Research Association" height="100px" src="/docs/src/assets/usra-logo-light.png">
-    </picture>
-    </kbd>
-    </a>
-    <a href="https://purdue.edu">
-    <kbd>
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="/docs/src/assets/purdue-logo-dark.svg">
-      <img alt="Purdue University" height="100px" src="/docs/src/assets/purdue-logo-light.svg">
-    </picture>
-    </kbd>
-    </a>
 </div>
