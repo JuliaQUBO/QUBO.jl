@@ -1,6 +1,7 @@
 # QUBO.jl
 
 <div align="center">
+
 <a href="/docs/src/assets/">
     <img src="/docs/src/assets/logo.svg" width=400px alt="QUBO.jl" />
 </a>
@@ -11,33 +12,40 @@
 [![Zenodo/DOI](https://zenodo.org/badge/614041491.svg)](https://zenodo.org/badge/latestdoi/614041491)
 [![JuliaCon 2022](https://img.shields.io/badge/JuliaCon-2022-9558b2)](https://www.youtube.com/watch?v=OTmzlTbqdNo)
 [![arXiv](https://img.shields.io/badge/arXiv-2307.02577-b31b1b.svg)](https://arxiv.org/abs/2307.02577)
+
+*A Julia ecosystem for Quadratic Unconstrained Binary Optimization*
+
 </div>
 
-## Introduction
+[QUBO.jl](https://github.com/psrenergy/QUBO.jl) is an all-in-one package for working with QUBO models in [JuMP](https://github.com/jump-dev/JuMP.jl) and interfacing with their solvers.
+This project aggregates and extends functionality from its complementary packages [ToQUBO.jl](https://github.com/psrenergy/ToQUBO.jl), [QUBODrivers.jl](https://github.com/psrenergy/QUBODrivers.jl) and [QUBOTools.jl](https://github.com/psrenergy/QUBOTools.jl).
 
-[QUBO.jl](https://github.com/psrenergy/QUBO.jl) is an all-in-one package for working with QUBO formulations in [JuMP](https://github.com/jump-dev/JuMP.jl) and interfacing with QUBO solvers. This project aggregates three complementary packages: [ToQUBO.jl](https://github.com/psrenergy/ToQUBO.jl), [QUBODrivers.jl](https://github.com/psrenergy/QUBODrivers.jl) and [QUBOTools.jl](https://github.com/psrenergy/QUBOTools.jl).
+## QUBO? 🟦
 
-## QUBO?
+QUBO is an acronym for **Quadratic Unconstrained Binary Optimization**, a notorious family of Combinatorial Optimization problems.
+Recently, significant advances in computing systems and algorithms specialized for sampling QUBO solutions have contributed to its increasing popularity.
 
-QUBO is an acronym for *Quadratic Unconstrained Binary Optimization*. So every QUBO problem is comprised of:
+These novel tools include Quantum Annealing, Quantum Gate-Circuit Optimization Algorithms (Quantum Optimization Alternating Ansatz, Variational Quantum Eigensolver), other hardware-accelerated platforms, such as Coherent Ising Machines and Simulated Bifurcation Machines, not to mention traditional methods such as Simulated Annealing and Parallel Tempering.
 
-- a linear or quadratic objective function
-- no constraints
-- binary variables
+<details>
+    <summary>Show Math</summary>
 
-We can represent such problem as follows:
+Mathematically speaking, this kind of optimization problem is defined by models of the form
 
-```math
+$$
 \begin{array}{rl}
-   \min | \max & \alpha \left[\mathbf{\ell}' \mathbf{x} \mathbf{x}' Q\,\mathbf{x} + \beta \right] \\
-   \textrm{s.t.} & \mathbf{x} \in \mathbb{B}^{n}
+    \min & \alpha \left[\mathbf{x}' Q\,\mathbf{x} + \mathbf{\ell}' \mathbf{x} + \beta \right] \\
+    \textrm{s.t.} & \mathbf{x} \in \lbrace{0, 1}\rbrace^{n}
 \end{array}
-```
+$$
 
-QUBOs are suited for representing non-convex global optimization problems.
-With that said, the significant advances in computing systems and algorithms specialized for sampling QUBOs have contributed to their popularity.
+where $\min$ and $\max$ are interchangeable under sign inversion and spin variables $\mathbf{s} \in \lbrace{\pm1}\rbrace^{n}$ may be employed by taking $s = 2x - 1$ as convention.
 
-Some of the paradigms that stand out for running QUBOs are quantum gate-based optimization algorithms (QAOA and VQE), quantum annealers and hardware-accelerated platforms (Coherent Ising Machines and Simulated Bifurcation Machines).
+In other words, it is an optimization model with a **quadratic objective function** on **binary variables** and **no constraints**.
+
+Despite being very simple, these models are capable of representing other nonconvex global optimization problems.
+
+</details>
 
 ## Quick Start 🚀
 
@@ -88,21 +96,23 @@ end
 
 </details>
 
-## Overview
+## Overview 🗺️
 
 <div align="left">
 <a href="https://github.com/psrenergy/ToQUBO.jl">
 <img width="200px" src="https://raw.githubusercontent.com/psrenergy/ToQUBO.jl/master/docs/src/assets/logo.svg" alt="ToQUBO.jl" align="right" />
 </a>
+
 <div align="left">
 
 ### ToQUBO.jl
 
 [ToQUBO.jl](https://github.com/psrenergy/ToQUBO.jl) is a Julia package to reformulate general optimization problems into QUBO (Quadratic Unconstrained Binary Optimization) instances.
 This tool aims to convert a broad range of JuMP problems for straightforward application in many physics and physics-inspired solution methods whose normal optimization form is equivalent to the QUBO.
-These methods include quantum annealing, quantum gate-circuit optimization algorithms (Quantum Optimization Alternating Ansatz, Variational Quantum Eigensolver), other hardware-accelerated platforms, such as Coherent Ising Machines and Simulated Bifurcation Machines, and more traditional methods such as simulated annealing.
+Not only it is has the [**widest constraint coverage**](https://github.com/psrenergy/ToQUBO.jl#list-of-interpretable-constraints) but also is the [**most performant**](https://github.com/psrenergy/ToQUBO-benchmark) QUBO reformulation tool available.
+
 During execution, [ToQUBO.jl](https://github.com/psrenergy/ToQUBO.jl) encodes both discrete and continuous variables, maps constraints, and computes their penalties, performing a few model optimization steps along the process.
-[ToQUBO.jl](https://github.com/psrenergy/ToQUBO.jl) was written as a MathOptInterface (MOI) layer that automatically maps between input and output models, thus providing a smooth JuMP modeling experience.
+[ToQUBO.jl](https://github.com/psrenergy/ToQUBO.jl) was written as a [MathOptInterface](https://github.com/jump-dev/MathOptInterface.jl) (MOI) layer that automatically maps between input and output models, thus providing a smooth JuMP modeling experience.
 
 <div>
 </div>
@@ -111,13 +121,16 @@ During execution, [ToQUBO.jl](https://github.com/psrenergy/ToQUBO.jl) encodes bo
 <a href="https://github.com/psrenergy/QUBODrivers.jl">
     <img width="200px" src="https://raw.githubusercontent.com/psrenergy/QUBODrivers.jl/master/docs/src/assets/logo.svg" alt="QUBODrivers.jl" align="left" />
 </a>
+
 <div align="left">
 
 ### QUBODrivers.jl
 
 This package aims to provide a common [MOI](https://github.com/jump-dev/MathOptInterface.jl)-compliant API for QUBO Sampling and Annealing machines.
 It also contains testing tools, including utility samplers for performance comparison and sanity checks.
-*Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sit amet urna risus. Proin molestie urna ex, non ullamcorper est varius id. Sed tempus purus quis tempus placerat. Praesent sit amet venenatis libero. Aliquam feugiat, ex sed feugiat imperdiet, tortor leo pellentesque nulla, in pellentesque quam augue non velit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nunc porta dolor lorem, et placerat sem venenatis ac. Vivamus suscipit finibus blandit. Nullam non semper massa.*
+
+It was designed to allow algorithm developers and hardware manufacturers to easily connect their products to the [JuMP](https://jump.dev) ecosystem.
+Its simple interface paves the path for the rapid integration of heterogeneous QUBO solvers, including cloud-based Quantum Computing services ([DWave.jl](https://github.com/psrenergy/DWave.jl), [QiskitOpt.jl](https://github.com/psrenergy/QiskitOpt.jl)); Quantum Simulation software ([QuantumAnnealingInterface.jl](https://github.com/psrenergy/QuantumAnnealingInterface.jl); [CIMOptimizer.jl](https://github.com/pedromxavier/CIMOptimizer.jl)) and Heuristic solvers ([MQLib.jl](https://github.com/psrenergy/MQLib.jl), [DWaveNeal.jl](https://github.com/psrenergy/DWaveNeal.jl)).
 
 <div>
 </div>
@@ -127,17 +140,22 @@ It also contains testing tools, including utility samplers for performance compa
     <img width="200px" src="https://raw.githubusercontent.com/psrenergy/QUBOTools.jl/main/docs/src/assets/logo.svg" alt="QUBOTools.jl" align="right" />
 </a>
 </a>
+
 <div align="left">
 
 ### QUBOTools.jl
 
-The QUBOTools.jl package implements codecs for QUBO (Quadratic Unconstrained Binary Optimization) instances. Its purpose is to provide fast and reliable conversion between common formats used to represent such problems. This allows for rapid leverage of many emergent computing architectures whose job is to solve this kind of optimization problem.
-*Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sit amet urna risus. Proin molestie urna ex, non ullamcorper est varius id. Sed tempus purus quis tempus placerat. Praesent sit amet venenatis libero. Aliquam feugiat, ex sed feugiat imperdiet, tortor leo pellentesque nulla, in pellentesque quam augue non velit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nunc porta dolor lorem, et placerat sem venenatis ac. Vivamus suscipit finibus blandit. Nullam non semper massa.*
+The [QUBOTools.jl](https://github.com/psrenergy/QUBOTools.jl) package implements a broad set of utilities for working with QUBO instances.
+It defines the abstract interfaces for representing both QUBO models and their solutions.
+Besides that, its library contains reference implementations for the proposed interface, making it ready to power other applications.
+
+One of its main purposes is to provide fast and reliable conversion mechanism between common file formats for storing such problems.
+With [QUBOTools.jl](https://github.com/psrenergy/QUBOTools.jl) it is possible to read models from various benchmarking databases and also write models in specifications that most devices will directly handle.
 
 <div>
 </div>
 
-## Citing [QUBO.jl](https://github.com/psrenergy/QUBO.jl)
+## Citing [QUBO.jl](https://github.com/psrenergy/QUBO.jl) 📑
 
 If you find [QUBO.jl](https://github.com/psrenergy/QUBO.jl) and its packages useful in your work, we kindly request that you cite the following paper (preprint):
 
@@ -153,7 +171,7 @@ If you find [QUBO.jl](https://github.com/psrenergy/QUBO.jl) and its packages use
 }
 ```
 
----
+This project is part of a collaboration involving [PSR Energy Consulting & Analytics](https://psr-inc.com), the [Federal University of Rio de Janeiro](https://ufrj.br) (UFRJ), [Purdue University](https://purdue.edu) and the [Universities Space Research Association](https://usra.edu) (USRA).
 
 <div align="center">
     <picture>
