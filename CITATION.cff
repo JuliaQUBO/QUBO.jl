@@ -16,8 +16,8 @@ authors:
 - family-names: "E. Bernal Neira"
   given-names: "David"
   orcid: "https://orcid.org/0000-0002-8308-5016"
-title: "QUBO.jl"
-version: 0.1.0
-doi: 10.5281/zenodo.7909166
+title: "QUBO.jl: A Julia Ecosystem for Quadratic Unconstrained Binary Optimization"
+version: 0.2.0
+doi: 10.48550/arXiv.2307.02577
 date-released: 2023-05-08
 url: "https://github.com/psrenergy/QUBO.jl"
