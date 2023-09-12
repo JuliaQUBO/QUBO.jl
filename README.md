@@ -27,23 +27,27 @@ Recently, significant advances in computing systems and algorithms specialized f
 
 These novel tools include Quantum Annealing, Quantum Gate-Circuit Optimization Algorithms (Quantum Optimization Alternating Ansatz, Variational Quantum Eigensolver), other hardware-accelerated platforms, such as Coherent Ising Machines and Simulated Bifurcation Machines, not to mention traditional methods such as Simulated Annealing and Parallel Tempering.
 
-<details>
-    <summary>Show Math</summary>
+### Mathematical Model
 
-Mathematically speaking, this kind of optimization problem is defined by models of the form
-
-$$
-\begin{array}{rl}
-    \min & \alpha \left[\mathbf{x}' Q\,\mathbf{x} + \mathbf{\ell}' \mathbf{x} + \beta \right] \\
-    \textrm{s.t.} & \mathbf{x} \in \lbrace{0, 1}\rbrace^{n}
-\end{array}
-$$
-
-where $\min$ and $\max$ are interchangeable under sign inversion and spin variables $\mathbf{s} \in \lbrace{\pm1}\rbrace^{n}$ may be employed by taking $s = 2x - 1$ as convention.
-
-In other words, it is an optimization model with a **quadratic objective function** on **binary variables** and **no constraints**.
-
+Conceptually speaking, it is an optimization model with a **quadratic objective function** on **binary variables** and **no constraints**.
 Despite being very simple, these models are capable of representing other nonconvex global optimization problems.
+
+```math
+\begin{array}{rl}
+  \min & \alpha \left[\mathbf{x}' \mathbf{Q}\,\mathbf{x} + \mathbf{\ell}' \mathbf{x} + \beta \right] \\
+  \textrm{s.t.} & \mathbf{x} \in \lbrace{0, 1}\rbrace^{n}
+\end{array}
+```
+
+<details>
+    <summary><strong>Show Description</strong></summary>
+
+Analizing the model attentively, let $\mathbf{x}$ be a **vector of boolean (zero-one) variables**.
+Take also the **vector of linear terms** $\mathbf{\ell} \in \mathbb{R}^{n}$ and the **strictly upper triangular matrix of quadratic terms** $\mathbf{Q} \in \mathbb{R}^{n \times n}$.
+Last but not least, consider $\alpha, \beta \in \mathbb{R}$ as the **scaling** and **offset** parameters, respectively.
+
+Note that in this kind of problem, $\min$ and $\max$ are interchangeable under sign inversion.
+Also, spin variables $\mathbf{s} \in \lbrace{\pm 1}\rbrace^{n}$ may be employed instead, assuming that $s = 2x - 1$ by convention.
 
 </details>
 
@@ -72,7 +76,7 @@ Given the following binary Knapsack Problem
 one could write a simple [JuMP](https://jump.dev) model and have its constraint automatically encoded by [ToQUBO.jl](https://github.com/psrenergy/ToQUBO.jl).
 
 <details>
-    <summary>Show Code</summary>
+    <summary><strong>Show Code</strong></summary>
 
 ```julia
 using JuMP
