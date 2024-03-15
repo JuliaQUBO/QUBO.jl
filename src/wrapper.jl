@@ -19,3 +19,13 @@ end
 
 JuMP.in_set_string(::MIME"text/plain", ::Spin) = "spin"
 JuMP.in_set_string(::MIME"text/latex", ::Spin) = raw"\in \left\langle{-1, 1}\right\rangle"
+
+# Number of Reads
+@doc raw"""
+    reads(model::JuMP.Model; result::Integer = 1)
+
+Returns the multiplicity of a given result.
+"""
+function QUBOTools.reads(model::JuMP.Model; result::Integer = 1)
+    return JuMP.get_attribute(model, NumberOfReads(result))
+end

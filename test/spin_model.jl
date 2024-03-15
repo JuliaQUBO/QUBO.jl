@@ -14,8 +14,9 @@ function test_spin_model()
 
         optimize!(model)
 
-        @test value.(s) ≈ [1, 1, -1] || value.(s) ≈ [1, -1, 1] || value.(s) ≈ [-1, 1, 1]
+        @test value.(s) ≈ [↑, ↑, ↓] || value.(s) ≈ [↑, ↓, ↑] || value.(s) ≈ [↓, ↑, ↑]
         @test objective_value(model) ≈ -3.0
+        @test reads(model) == 1
     end
 
     return nothing

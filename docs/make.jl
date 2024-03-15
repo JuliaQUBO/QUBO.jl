@@ -1,17 +1,22 @@
 using Documenter
+using QUBO
+
+# Set up to run docstrings with jldoctest
+DocMeta.setdocmeta!(QUBO, :DocTestSetup, :(using QUBO); recursive = true)
 
 makedocs(;
-    doctest = true,
-    clean = true,
-    format = Documenter.HTML(
-        assets = ["assets/extra_styles.css", "assets/favicon.ico"],
+    doctest  = true,
+    clean    = true,
+    warnonly = [:missing_docs],
+    format   = Documenter.HTML( #
+        assets     = ["assets/extra_styles.css", "assets/favicon.ico"],
         mathengine = Documenter.KaTeX(),
-        sidebar_sitename = false,
+        sidebar_sitename = false
     ),
     sitename = "QUBO.jl",
-    authors = "Pedro Xavier and Pedro Ripper and Tiago Andrade and Joaquim Garcia and David Bernal",
-    pages = ["Home" => "index.md"],
-    workdir = ".",
+    authors  = "Pedro Maciel Xavier and Pedro Ripper and Tiago Andrade and Joaquim Dias Garcia and David E. Bernal Neira",
+    pages    = ["Home" => "index.md"],
+    workdir  = @__DIR__
 )
 
 if "--skip-deploy" ∈ ARGS
