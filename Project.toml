@@ -1,7 +1,7 @@
 name = "QUBO"
 uuid = "ce8c2e91-a970-4681-856b-16178c24a30c"
 authors = ["pedromxavier <pedroxavier@psr-inc.com>", "pedroripper <pedroripper@psr-inc.com>", "joaquimg <joaquim@psr-inc.com>", "AndradeTiago <tiago.andrade@psr-inc.com>", "bernalde <dbernalneira@usra.edu>"]
-version = "0.2.0"
+version = "0.3.0"
 
 [deps]
 JuMP = "4076af6c-e467-56ae-b986-b466b2749572"
@@ -11,7 +11,7 @@ ToQUBO = "9a412ddf-83fa-43b6-9748-7843c851aa65"
 
 [compat]
 JuMP = "1"
-QUBODrivers = "0.2"
-QUBOTools = "0.8"
-ToQUBO = "0.1.6"
+QUBODrivers = "0.3.1"
+QUBOTools = "0.9.2"
+ToQUBO = "0.1.8"
 julia = "1.6"
