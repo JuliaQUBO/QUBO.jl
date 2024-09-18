@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1000" height="1000" width="2000">
   <!-- <rect width="2000" height="1000" /> -->
-  <image x="0" y="0" width="1000" height="1000" href="./logo.svg" />
-  <image x="1000" y="234.97980128932386" width="1000" href="./collaboration-light.svg" />
+  <image x="0" y="0" width="1000" height="1000" href="logo.svg" />
+  <image x="1000" y="234.97980128932386" width="1000" href="collaboration-light.svg" />
 </svg>
