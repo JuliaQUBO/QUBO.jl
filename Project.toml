@@ -1,7 +1,7 @@
 name = "QUBO"
 uuid = "ce8c2e91-a970-4681-856b-16178c24a30c"
 authors = ["pedromxavier <pedroxavier@psr-inc.com>", "pedroripper <pedroripper@psr-inc.com>", "joaquimg <joaquim@psr-inc.com>", "AndradeTiago <tiago.andrade@psr-inc.com>", "bernalde <dbernaln@purdue.edu>"]
-version = "0.3.0"
+version = "0.3.2-dev"
 
 [deps]
 JuMP = "4076af6c-e467-56ae-b986-b466b2749572"
@@ -15,5 +15,5 @@ JuMP             = "1"
 MathOptInterface = "1"
 QUBODrivers      = "0.3"
 QUBOTools        = "0.9"
-ToQUBO           = "0.1.7"
+ToQUBO           = "0.1.8"
 julia            = "1.9"
