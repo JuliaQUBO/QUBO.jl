@@ -3,7 +3,7 @@
 
 ## Introduction
 
-`QUBO.jl` is an all-in-one package for working with QUBO formulations in [JuMP](https://github.com/jump-dev/JuMP.jl) and interfacing with QUBO solvers. This project aggregates three complementary packages: [`ToQUBO.jl`](https://github.com/psrenergy/ToQUBO.jl), [`QUBODrivers.jl`](https://github.com/psrenergy/QUBODrivers.jl) and [`QUBOTools.jl`](https://github.com/psrenergy/QUBOTools.jl).
+`QUBO.jl` is an all-in-one package for working with QUBO formulations in [JuMP](https://github.com/jump-dev/JuMP.jl) and interfacing with QUBO solvers. This project aggregates three complementary packages: [`ToQUBO.jl`](https://github.com/JuliaQUBO/ToQUBO.jl), [`QUBODrivers.jl`](https://github.com/JuliaQUBO/QUBODrivers.jl) and [`QUBOTools.jl`](https://github.com/JuliaQUBO/QUBOTools.jl).
 
 ## QUBO?
 
@@ -42,7 +42,7 @@ More features are available in the documentation.
 
 ### Instalation
 ```julia
-julia> ]add https://github.com/psrenergy/QUBO.jl#master
+julia> ]add https://github.com/JuliaQUBO/QUBO.jl#master
 ```
 ### Example
 
@@ -70,14 +70,15 @@ end
 ```@raw html
 <div align="center">
     <h2>QUBO.jl Packages</h2>
-    <a href="https://github.com/psrenergy/ToQUBO.jl">
-        <img width="200px" src="https://raw.githubusercontent.com/psrenergy/ToQUBO.jl/master/docs/src/assets/logo.svg" alt="ToQUBO.jl" />
+
+    <a href="https://github.com/JuliaQUBO/ToQUBO.jl">
+        <img width="200px" src="./logo.svg" alt="ToQUBO.jl" />
     </a>
-    <a href="https://github.com/psrenergy/QUBODrivers.jl">
-        <img width="200px" src="https://raw.githubusercontent.com/psrenergy/QUBODrivers.jl/master/docs/src/assets/logo.svg" alt="QUBODrivers.jl" />
+    <a href="https://github.com/JuliaQUBO/QUBODrivers.jl">
+        <img width="200px" src="./logo.svg" alt="QUBODrivers.jl" />
     </a>
-    <a href="https://github.com/psrenergy/QUBOTools.jl">
-        <img width="200px" src="https://raw.githubusercontent.com/psrenergy/QUBOTools.jl/main/docs/src/assets/logo.svg" alt="QUBOTools.jl" />
+    <a href="https://github.com/JuliaQUBO/QUBOTools.jl">
+        <img width="200px" src="./logo.svg" alt="QUBOTools.jl" />
     </a>
 </div>
 ```
