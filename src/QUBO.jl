@@ -7,10 +7,10 @@ import MathOptInterface as MOI
 import QUBOTools
 import QUBOTools: ↑, ↓
 import QUBOTools: reads
-import QUBOTools: __moi_spin_set, __moi_num_reads
 
-const Spin          = QUBOTools.__moi_spin_set()
-const NumberOfReads = QUBOTools.__moi_num_reads()
+const QUBOTools_MOI = Base.get_extension(QUBOTools, :QUBOTools_MOI)
+const Spin          = QUBOTools_MOI.Spin
+const NumberOfReads = QUBOTools_MOI.NumberOfReads
 
 export QUBOTools
 export ↑, ↓
@@ -29,5 +29,13 @@ import ToQUBO
 export ToQUBO
 
 include("wrapper.jl")
+
+function source_model(model::JuMP.Model)
+    return JuMP.get_attribute(model, ToQUBO.Attributes.SourceModel())
+end
+
+function target_model(model::JuMP.Model)
+    return JuMP.get_attribute(model, ToQUBO.Attributes.TargetModel())
+end
 
 end # module QUBO

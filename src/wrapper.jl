@@ -9,8 +9,8 @@ function JuMP.build_variable(::Function, info::JuMP.VariableInfo, ::Type{Spin}; 
     return SpinInfo(info)
 end
 
-function JuMP.add_variable(model::JuMP.Model, info::SpinInfo, name::String)
-    x = JuMP.add_variable(model, JuMP.ScalarVariable(info.info), name)
+function JuMP.add_variable(model::JuMP.Model, spin_info::SpinInfo, name::String)
+    x = JuMP.add_variable(model, JuMP.ScalarVariable(spin_info.info), name)
 
     JuMP.@constraint(model, x ∈ Spin())
 
@@ -27,5 +27,5 @@ JuMP.in_set_string(::MIME"text/latex", ::Spin) = raw"\in \left\langle{-1, 1}\rig
 Returns the multiplicity of a given result.
 """
 function QUBOTools.reads(model::JuMP.Model; result::Integer = 1)
-    return JuMP.get_attribute(model, NumberOfReads(result))
+    return JuMP.get_attribute(model, NumberOfReads(result))::Integer
 end
