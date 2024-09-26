@@ -55,6 +55,8 @@ function deploymultidocs(
 
     has_branch = true
 
+    run(`git checkout $branch`)
+
     if !success(`git checkout $branch`)
         has_branch = false
 
