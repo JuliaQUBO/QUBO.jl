@@ -58,7 +58,7 @@ function deploymultidocs(
     if !success(`git checkout $branch`)
         has_branch = false
 
-        if !success(`git switch --orphan $branch`)
+        if !success(`git switch --orphan --discard-changes $branch`)
             @error "Cannot create new orphaned branch $branch."
 
             exit(1)
