@@ -22,5 +22,5 @@ makedocs(;
 if "--skip-deploy" ∈ ARGS
     @warn "Skipping deployment"
 else
-    deploydocs(repo = raw"github.com/psrenergy/QUBO.jl.git", push_preview = true)
+    deploydocs(repo = raw"github.com/JuliaQUBO/QUBO.jl.git", push_preview = true)
 end
