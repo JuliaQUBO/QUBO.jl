@@ -51,11 +51,19 @@ function deploymultidocs(
 )
     root_path = normpath(joinpath(@__DIR__, ".."))
 
+    run(`git status`)
+
     run(`git pull`)
+
+    run(`git status`)
 
     has_branch = true
 
     run(`git checkout $branch`)
+
+    run(`git status`)
+
+    exit(1)
 
     if !success(`git checkout $branch`)
         has_branch = false
