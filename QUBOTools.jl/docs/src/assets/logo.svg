@@ -1,0 +1,92 @@
+<svg width="1000" height="1000" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="grad-r" x1="0%" x2="0%" y1="0%" y2="100%">
+            <stop offset="0%"   stop-color="#4063d8" stop-opacity="1.0"/>
+            <stop offset="35%"  stop-color="#4063d8" stop-opacity="1.0"/>
+            <stop offset="50%"  stop-color="#4063d8" stop-opacity="0.0"/>
+            <stop offset="65%"  stop-color="#cb3c33" stop-opacity="1.0"/>
+            <stop offset="100%" stop-color="#cb3c33" stop-opacity="1.0"/>
+        </linearGradient>
+        <linearGradient id="grad-g" x1="0%" x2="0%" y1="0%" y2="100%">
+            <stop offset="0%"   stop-color="#4063d8" stop-opacity="1.0"/>
+            <stop offset="35%"  stop-color="#4063d8" stop-opacity="1.0"/>
+            <stop offset="50%"  stop-color="#4063d8" stop-opacity="0.0"/>
+            <stop offset="65%"  stop-color="#389826" stop-opacity="1.0"/>
+            <stop offset="100%" stop-color="#389826" stop-opacity="1.0"/>
+        </linearGradient>
+        <linearGradient id="grad-v" x1="0%" x2="0%" y1="0%" y2="100%">
+            <stop offset="0%"   stop-color="#4063d8" stop-opacity="1.0"/>
+            <stop offset="35%"  stop-color="#4063d8" stop-opacity="1.0"/>
+            <stop offset="50%"  stop-color="#4063d8" stop-opacity="0.0"/>
+            <stop offset="65%"  stop-color="#9558b2" stop-opacity="1.0"/>
+            <stop offset="100%" stop-color="#9558b2" stop-opacity="1.0"/>
+        </linearGradient>
+
+        <path id="path-r" stroke-width="10px" d="M450 0 L 450 1000" />
+        <path id="path-g" stroke-width="10px" d="M500 0 L 500 1000" />
+        <path id="path-v" stroke-width="10px" d="M550 0 L 550 1000" />
+    </defs>
+    <style>
+    .red{
+      	fill: #cb3c33;
+		stroke-width: 3px;
+    }
+
+    .green{
+      	fill: #389826;
+		stroke-width: 5px;
+    }
+
+    .blue{
+      	fill: #4063d8;
+		stroke-width: 3px;
+    }
+
+    .violet{
+      	fill: #9558b2;
+		stroke-width: 5px;
+    }
+
+    .data {
+        font-family: sans-serif;
+        font-size: 32pt;
+        font-weight: bold;
+        text-anchor: middle;
+    }
+
+    .title {
+        fill: #4063d8;
+        stroke: #000;
+        stroke-width: 0px;
+        font-family: Helvetica;
+        font-size: 110pt;
+        text-anchor: middle;
+        alignment-baseline: middle;
+        font-style: italic;
+        font-weight: bold;
+        text-shadow: 5px 5px 1px #000000;
+    }
+  	</style>
+
+    <text class="data" fill="url(#grad-r)">
+        <textPath href="#path-r" startOffset="50%">
+        0 1 1 1 0 1 0 1 0 1 1 0 1 1 0 1 ↓ ↑ ↑ ↑ ↓ ↑ ↓ ↑ ↓ ↑ ↑ ↓ ↑ ↑ ↓ ↑ ↓
+        </textPath>
+    </text>
+
+    <text class="data" fill="url(#grad-g)">
+        <textPath href="#path-g" startOffset="50%">
+        0 0 1 0 0 1 0 0 0 0 0 0 1 0 0 0 ↓ ↓ ↑ ↓ ↓ ↑ ↓ ↓ ↓ ↓ ↓ ↓ ↑ ↓ ↓ ↓ ↓
+        </textPath>
+    </text>
+
+    <text class="data" fill="url(#grad-v)">
+        <textPath href="#path-v" startOffset="50%">
+        0 1 1 0 0 0 1 1 1 1 0 1 1 0 0 0 ↓ ↑ ↑ ↓ ↓ ↓ ↑ ↑ ↑ ↑ ↓ ↑ ↑ ↓ ↓ ↓ ↑
+        </textPath>
+    </text>
+
+    <text class="title" x="500" y="500">
+        QUBOTools.jl
+    </text>
+</svg>

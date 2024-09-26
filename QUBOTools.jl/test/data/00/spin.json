@@ -1,0 +1,12 @@
+{
+    "description": "Model 0 ~ Empty model",
+    "id": 0,
+    "linear_terms": [],
+    "metadata": {},
+    "offset": 0.0,
+    "quadratic_terms": [],
+    "scale": 1.0,
+    "variable_domain": "spin",
+    "variable_ids": [],
+    "version": "1.0.0"
+}

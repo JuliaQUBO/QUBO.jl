@@ -1,0 +1,94 @@
+<!DOCTYPE html><HTML lang="en"><head><script charset="utf-8" src="../../../../assets/default/multidoc_injector.js" type="text/javascript"></script><script charset="utf-8" type="text/javascript">window.MULTIDOCUMENTER_ROOT_PATH = '/QUBO.jl/'</script><script charset="utf-8" src="../../../../assets/default/flexsearch.bundle.js" type="text/javascript"></script><script charset="utf-8" src="../../../../assets/default/flexsearch_integration.js" type="text/javascript"></script><meta charset="UTF-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><title>Portfolio Optimization · ToQUBO.jl</title><meta content="Portfolio Optimization · ToQUBO.jl" name="title"/><meta content="Portfolio Optimization · ToQUBO.jl" property="og:title"/><meta content="Portfolio Optimization · ToQUBO.jl" property="twitter:title"/><meta content="Documentation for ToQUBO.jl." name="description"/><meta content="Documentation for ToQUBO.jl." property="og:description"/><meta content="Documentation for ToQUBO.jl." property="twitter:description"/><script data-outdated-warner="" src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script data-main="../../assets/documenter.js" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" data-theme-name="documenter-dark" data-theme-primary-dark="" href="../../assets/themes/documenter-dark.css" rel="stylesheet" type="text/css"/><link class="docs-theme-link" data-theme-name="documenter-light" data-theme-primary="" href="../../assets/themes/documenter-light.css" rel="stylesheet" type="text/css"/><script src="../../assets/themeswap.js"></script><link href="../../assets/extra_styles.css" rel="stylesheet" type="text/css"/><link href="../../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="nothing/QUBO.jl/ToQUBO.jl/dev/examples/portfolio_optimization/" rel="canonical"/><link href="../../../../assets/default/multidoc.css" rel="stylesheet" type="text/css"/><link href="../../../../assets/default/flexsearch.css" rel="stylesheet" type="text/css"/></head><body><nav id="multi-page-nav"><div class="hidden-on-mobile" id="nav-items"><a class="nav-link nav-item" href="../../../../QUBO.jl/">QUBO.jl</a><a class="nav-link active nav-item" href="../../../">ToQUBO.jl</a><a class="nav-link nav-item" href="../../../../QUBODrivers.jl/">QUBODrivers.jl</a><a class="nav-link nav-item" href="../../../../QUBOTools.jl/">QUBOTools.jl</a><div class="search nav-item"><input id="search-input" placeholder="Search..."/><ul class="suggestions hidden" id="search-result-container"></ul><div class="search-keybinding">/</div></div></div><button id="multidoc-toggler"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path></svg></button></nav><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img alt="ToQUBO.jl logo" src="../../assets/logo.svg"/></a><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><span class="tocitem">Manual</span><ul><li><a class="tocitem" href="../../manual/1-start/">Getting Started</a></li><li><a class="tocitem" href="../../manual/2-model/">Running a Model</a></li><li><a class="tocitem" href="../../manual/3-results/">Gathering Results</a></li><li><a class="tocitem" href="../../manual/4-settings/">Compiler Settings</a></li></ul></li><li><span class="tocitem">Examples</span><ul><li><a class="tocitem" href="../knapsack/">Knapsack</a></li><li><a class="tocitem" href="../integer_factorization/">Integer Factorization</a></li><li class="is-active"><a class="tocitem" href="">Portfolio Optimization</a><ul class="internal"><li><a class="tocitem" href="#Stock-prices"><span>Stock prices</span></a></li><li><a class="tocitem" href="#Solving"><span>Solving</span></a></li><li><a class="tocitem" href="#Penalty-Analysis"><span>Penalty Analysis</span></a></li></ul></li></ul></li><li><span class="tocitem">Booklet</span><ul><li><a class="tocitem" href="../../booklet/1-intro/">Introduction</a></li><li><a class="tocitem" href="../../booklet/2-qubo/">QUBO</a></li><li><a class="tocitem" href="../../booklet/3-pbo/">PBO</a></li><li><a class="tocitem" href="../../booklet/4-encoding/">Encoding</a></li><li><a class="tocitem" href="../../booklet/5-virtual/">Virtual Mapping</a></li><li><a class="tocitem" href="../../booklet/6-compiler/">The Compiler</a></li><li><a class="tocitem" href="../../booklet/7-solvers/">Solvers</a></li><li><a class="tocitem" href="../../booklet/8-appendix/">Appendix</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" href="#" id="documenter-sidebar-button"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Examples</a></li><li class="is-active"><a href="">Portfolio Optimization</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href="">Portfolio Optimization</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/psrenergy/ToQUBO.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/psrenergy/ToQUBO.jl/blob/master/docs/src/examples/portfolio_optimization.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" href="#" id="documenter-settings-button" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" href="javascript:;" id="documenter-article-toggle-button" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Portfolio-Optimization"><a class="docs-heading-anchor" href="#Portfolio-Optimization">Portfolio Optimization</a><a id="Portfolio-Optimization-1"></a><a class="docs-heading-anchor-permalink" href="#Portfolio-Optimization" title="Permalink"></a></h1><p>In this example, we will be exploring an optimization model for asset distribution where the expected return is maximized while mitigating the financial risk. The following approach was inspired by a <a href="https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/portfolio/">JuMP tutorial</a>, where monthly stock prices for three assets are provided, namely <code>IBM</code>, <code>WMT</code> and <code>SEHI</code>.</p><p>The modelling presented below aggregates the risk measurement <span>$\mathbf{x}' \Sigma \mathbf{x}$</span> as a penalty term to the objective function, thus yielding</p><p class="math-container">\[\begin{array}{rll}
+    \max_{\mathbf{x}} &amp; \mathbf{\mu}'\mathbf{x} - \lambda\, \mathbf{x}' \Sigma \mathbf{x}             \\
+    \textrm{s.t.}     &amp; 0 \le {x}_{i} \le 1                                               &amp; \forall i \\
+                      &amp; \sum_{i} {x}_{i} = 1
+\end{array}\]</p><p>where <span>$\mu_{i} = \mathbb{E}[r_{i}]$</span> is the expected return value for each investment <span>$i$</span>; <span>$\Sigma$</span> is the covariance matrix and <span>$\lambda$</span> is the risk-aversion penalty factor.</p><h2 id="Stock-prices"><a class="docs-heading-anchor" href="#Stock-prices">Stock prices</a><a id="Stock-prices-1"></a><a class="docs-heading-anchor-permalink" href="#Stock-prices" title="Permalink"></a></h2><pre><code class="language-julia hljs">using DataFrames
+using Statistics
+
+assets = [:IBM, :WMT, :SEHI]
+
+df = DataFrames.DataFrame(
+    [
+         93.043    51.826    1.063
+         84.585    52.823    0.938
+        111.453    56.477    1.000
+         99.525    49.805    0.938
+         95.819    50.287    1.438
+        114.708    51.521    1.700
+        111.515    51.531    2.540
+        113.211    48.664    2.390
+        104.942    55.744    3.120
+         99.827    47.916    2.980
+         91.607    49.438    1.900
+        107.937    51.336    1.750
+        115.590    55.081    1.800
+    ],
+    assets,
+)</code></pre><div><div style="float: left;"><span>13×3 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;"><table class="data-frame" style="margin-bottom: 6px;"><thead><tr class="header"><th class="rowNumber" style="font-weight: bold; text-align: right;">Row</th><th style="text-align: left;">IBM</th><th style="text-align: left;">WMT</th><th style="text-align: left;">SEHI</th></tr><tr class="subheader headerLastRow"><th class="rowNumber" style="font-weight: bold; text-align: right;"></th><th style="text-align: left;" title="Float64">Float64</th><th style="text-align: left;" title="Float64">Float64</th><th style="text-align: left;" title="Float64">Float64</th></tr></thead><tbody><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">1</td><td style="text-align: right;">93.043</td><td style="text-align: right;">51.826</td><td style="text-align: right;">1.063</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">2</td><td style="text-align: right;">84.585</td><td style="text-align: right;">52.823</td><td style="text-align: right;">0.938</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">3</td><td style="text-align: right;">111.453</td><td style="text-align: right;">56.477</td><td style="text-align: right;">1.0</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">4</td><td style="text-align: right;">99.525</td><td style="text-align: right;">49.805</td><td style="text-align: right;">0.938</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">5</td><td style="text-align: right;">95.819</td><td style="text-align: right;">50.287</td><td style="text-align: right;">1.438</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">6</td><td style="text-align: right;">114.708</td><td style="text-align: right;">51.521</td><td style="text-align: right;">1.7</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">7</td><td style="text-align: right;">111.515</td><td style="text-align: right;">51.531</td><td style="text-align: right;">2.54</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">8</td><td style="text-align: right;">113.211</td><td style="text-align: right;">48.664</td><td style="text-align: right;">2.39</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">9</td><td style="text-align: right;">104.942</td><td style="text-align: right;">55.744</td><td style="text-align: right;">3.12</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">10</td><td style="text-align: right;">99.827</td><td style="text-align: right;">47.916</td><td style="text-align: right;">2.98</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">11</td><td style="text-align: right;">91.607</td><td style="text-align: right;">49.438</td><td style="text-align: right;">1.9</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">12</td><td style="text-align: right;">107.937</td><td style="text-align: right;">51.336</td><td style="text-align: right;">1.75</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">13</td><td style="text-align: right;">115.59</td><td style="text-align: right;">55.081</td><td style="text-align: right;">1.8</td></tr></tbody></table></div><h2 id="Solving"><a class="docs-heading-anchor" href="#Solving">Solving</a><a id="Solving-1"></a><a class="docs-heading-anchor-permalink" href="#Solving" title="Permalink"></a></h2><pre><code class="language-julia hljs">using JuMP
+using ToQUBO
+using DWave
+
+function solve(
+    config!::Function,
+    df::DataFrame,
+    λ::Float64 = 10.;
+    optimizer = DWave.Neal.Optimizer
+)
+    # Number of assets
+    n = size(df, 2)
+
+    # Relative monthly return
+    r = diff(Matrix(df); dims = 1) ./ Matrix(df[1:end-1, :])
+
+    # Expected monthly return value for each stock
+    μ = vec(Statistics.mean(r; dims = 1))
+
+    # Covariance matrix
+    Σ = Statistics.cov(r)
+
+    # Build model
+    model = Model(() -&gt; ToQUBO.Optimizer(optimizer))
+
+    @variable(model, 0 &lt;= x[1:n] &lt;= 1)
+    @objective(model, Max, μ'x - λ * x' * Σ * x)
+    @constraint(model, sum(x) == 1)
+
+    config!(model)
+
+    optimize!(model)
+
+    return value.(x)
+end
+
+function solve(df::DataFrame, λ::Float64 = 10.; optimizer = DWave.Neal.Optimizer)
+    return solve(identity, df, λ; optimizer)
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">solve (generic function with 4 methods)</code></pre><pre><code class="language-julia hljs">solve(df) do model
+    JuMP.set_silent(model)
+    JuMP.set_optimizer_attribute(model, "num_reads", 2_000)
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">3-element Vector{Float64}:
+ 0.0
+ 1.0
+ 0.0</code></pre><h2 id="Penalty-Analysis"><a class="docs-heading-anchor" href="#Penalty-Analysis">Penalty Analysis</a><a id="Penalty-Analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Penalty-Analysis" title="Permalink"></a></h2><p>To finish our discussion, we are going to sketch some graphics to help our reasoning on how the penalty factor <span>$\lambda$</span> affects our investments.</p><pre><code class="language-julia hljs">using Plots
+
+Λ = collect(0.:5.:50.)
+X = Dict{Symbol,Vector{Float64}}(tag =&gt; [] for tag in assets)
+
+for λ = Λ
+    x = solve(df, λ)
+
+    for (i, tag) in enumerate(assets)
+        push!(X[tag], x[i])
+    end
+end
+
+plt = plot(;
+    title="Portfolio Optimization",
+    xlabel=raw"penalty factor ($\lambda$)",
+    ylabel=raw"investment share ($x$)",
+)
+
+for tag in assets
+    plot!(plt, Λ, X[tag]; label=string(tag))
+end
+
+plt</code></pre><img alt="Example block output" src="989a79eb.svg"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../integer_factorization/">« Integer Factorization</a><a class="docs-footer-nextpage" href="../../booklet/1-intro/">Introduction »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label></p><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div><p></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.1.2 on <span class="colophon-date" title="Monday 27 November 2023 05:17">Monday 27 November 2023</span>. Using Julia version 1.9.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></HTML>

@@ -1,0 +1,9 @@
+c id : 0
+c 
+c scale : 1.0
+c offset : 0.0
+c description : Model 0 ~ Empty model
+c 
+p qubo 0 0 0 0
+c linear terms
+c quadratic terms

@@ -1,0 +1,163 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Binary Quadratic Program Schema",
+    "type": "object",
+    "required": [
+        "version",
+        "id",
+        "variable_ids",
+        "variable_domain",
+        "scale",
+        "offset",
+        "linear_terms",
+        "quadratic_terms",
+        "metadata"
+    ],
+    "properties": {
+        "version": {
+            "type": "string",
+            "enum": [
+                "1.0.0"
+            ]
+        },
+        "id": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "metadata": {
+            "type": "object",
+            "properties": {
+                "dw_url": {
+                    "type": "string"
+                },
+                "dw_solver_name": {
+                    "type": "string"
+                },
+                "dw_chip_id": {
+                    "type": "string"
+                },
+                "chimera_cell_size": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "chimera_degree": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "generated": {
+                    "type": "string"
+                },
+                "dwig_generator": {
+                    "type": "string"
+                }
+            }
+        },
+        "variable_ids": {
+            "type": "array",
+            "items": {
+                "type": "integer",
+                "minimum": 0
+            }
+        },
+        "variable_domain": {
+            "type": "string",
+            "enum": [
+                "spin",
+                "boolean"
+            ]
+        },
+        "scale": {
+            "type": "number"
+        },
+        "offset": {
+            "type": "number"
+        },
+        "linear_terms": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "coeff"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "coeff": {
+                        "type": "number"
+                    }
+                }
+            }
+        },
+        "quadratic_terms": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id_head",
+                    "id_tail",
+                    "coeff"
+                ],
+                "properties": {
+                    "id_head": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "id_tail": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "coeff": {
+                        "type": "number"
+                    }
+                }
+            }
+        },
+        "description": {
+            "type": "string"
+        },
+        "solutions": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "assignment"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "evaluation": {
+                        "type": "number"
+                    },
+                    "assignment": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "id",
+                                "value"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "minimum": 0
+                                },
+                                "value": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

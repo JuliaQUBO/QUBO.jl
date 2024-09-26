@@ -1,0 +1,12 @@
+c id : 2
+c description : Model 2 ~ Simple model with solutions
+c scale : 2.7
+c offset : 1.93
+p qubo 0 6 3 2
+c linear terms
+1 1 0.0
+3 3 0.4
+5 5 -4.4
+c quadratic terms
+1 3 -0.8
+1 5 6.0

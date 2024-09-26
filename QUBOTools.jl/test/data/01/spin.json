@@ -1,0 +1,25 @@
+{
+	"description": "Model 1 ~ Simple model with linear terms",
+	"id": 1,
+	"linear_terms": [
+		{
+			"id": 2,
+			"coeff": 0.65
+		},
+		{
+			"id": 6,
+			"coeff": -0.35
+		}
+	],
+	"metadata": {},
+	"offset": 0.3,
+	"quadratic_terms": [],
+	"scale": 1.0,
+	"variable_domain": "spin",
+	"variable_ids": [
+		2,
+		4,
+		6
+	],
+	"version": "1.0.0"
+}

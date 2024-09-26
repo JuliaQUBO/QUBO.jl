@@ -1,0 +1,12 @@
+c id : 1
+c 
+c scale : 1.0
+c offset : 0.0
+c description : Model 1 ~ Simple model with linear terms
+c 
+p qubo 0 7 2 0
+c linear terms
+2 2 1.3
+4 4 0.0
+6 6 -0.7
+c quadratic terms
