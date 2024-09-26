@@ -8,25 +8,25 @@ docs = [
         upstream = joinpath(temp_dir, "QUBO.jl"),
         path = "QUBO.jl",
         name = "QUBO.jl",
-        giturl = "https://github.com/psrenergy/QUBO.jl.git",
+        giturl = "https://github.com/JuliaQUBO/QUBO.jl.git",
     ),
     MultiDocumenter.MultiDocRef(
         upstream = joinpath(temp_dir, "ToQUBO.jl"),
         path = "ToQUBO.jl",
         name = "ToQUBO.jl",
-        giturl = "https://github.com/psrenergy/ToQUBO.jl.git",
+        giturl = "https://github.com/JuliaQUBO/ToQUBO.jl.git",
     ),
     MultiDocumenter.MultiDocRef(
         upstream = joinpath(temp_dir, "QUBODrivers.jl"),
         path = "QUBODrivers.jl",
         name = "QUBODrivers.jl",
-        giturl = "https://github.com/psrenergy/QUBODrivers.jl.git",
+        giturl = "https://github.com/JuliaQUBO/QUBODrivers.jl.git",
     ),
     MultiDocumenter.MultiDocRef(
         upstream = joinpath(temp_dir, "QUBOTools.jl"),
         path = "QUBOTools.jl",
         name = "QUBOTools.jl",
-        giturl = "https://github.com/psrenergy/QUBOTools.jl.git",
+        giturl = "https://github.com/JuliaQUBO/QUBOTools.jl.git",
     ),
 ]
 
