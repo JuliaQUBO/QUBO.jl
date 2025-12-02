@@ -51,7 +51,9 @@ function deploymultidocs(
 )
     root_path = normpath(joinpath(@__DIR__, ".."))
 
-    run(`git pull`)
+    # We do not run `git pull` here because in CI environments (like GitHub Actions),
+    # the repository is often in a detached HEAD state, which causes `git pull` to fail.
+    # We assume the environment is already set up with the correct commit to build.
 
     has_branch = true
 

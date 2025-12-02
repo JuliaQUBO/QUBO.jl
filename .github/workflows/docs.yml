@@ -34,5 +34,9 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          julia --project=docs/ docs/multimake.jl
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            julia --project=docs/ docs/multimake.jl --skip-deploy
+          else
+            julia --project=docs/ docs/multimake.jl
+          fi
 
