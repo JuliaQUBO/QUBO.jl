@@ -20,4 +20,4 @@ title: "QUBO.jl: A Julia Ecosystem for Quadratic Unconstrained Binary Optimizati
 version: 0.2.0
 doi: 10.48550/arXiv.2307.02577
 date-released: 2023-05-08
-url: "https://github.com/psrenergy/QUBO.jl"
+url: "https://github.com/JuliaQUBO/QUBO.jl"

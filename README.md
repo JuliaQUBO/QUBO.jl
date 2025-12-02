@@ -18,7 +18,7 @@
 </div>
 
 [QUBO.jl](https://github.com/JuliaQUBO/QUBO.jl) is an all-in-one package for working with QUBO models in [JuMP](https://github.com/jump-dev/JuMP.jl) and interfacing with their solvers.
-This project aggregates and extends functionality from its complementary packages [ToQUBO.jl](https://github.com/psrenergy/ToQUBO.jl), [QUBODrivers.jl](https://github.com/psrenergy/QUBODrivers.jl) and [QUBOTools.jl](https://github.com/psrenergy/QUBOTools.jl).
+This project aggregates and extends functionality from its complementary packages [ToQUBO.jl](https://github.com/JuliaQUBO/ToQUBO.jl), [QUBODrivers.jl](https://github.com/JuliaQUBO/QUBODrivers.jl) and [QUBOTools.jl](https://github.com/JuliaQUBO/QUBOTools.jl).
 
 ## QUBO? 🟦
 
@@ -73,7 +73,7 @@ Given the following binary Knapsack Problem
 \end{array}
 ```
 
-one could write a simple [JuMP](https://jump.dev) model and have its constraint automatically encoded by [ToQUBO.jl](https://github.com/psrenergy/ToQUBO.jl).
+one could write a simple [JuMP](https://jump.dev) model and have its constraint automatically encoded by [ToQUBO.jl](https://github.com/JuliaQUBO/ToQUBO.jl).
 
 <details>
     <summary><strong>Show Code</strong></summary>
@@ -103,27 +103,27 @@ end
 ## Overview 🗺️
 
 <div align="left">
-<a href="https://github.com/psrenergy/ToQUBO.jl">
-<img width="200px" src="https://raw.githubusercontent.com/psrenergy/ToQUBO.jl/master/docs/src/assets/logo.svg" alt="ToQUBO.jl" align="right" />
+<a href="https://github.com/JuliaQUBO/ToQUBO.jl">
+<img width="200px" src="https://raw.githubusercontent.com/JuliaQUBO/ToQUBO.jl/master/docs/src/assets/logo.svg" alt="ToQUBO.jl" align="right" />
 </a>
 
 <div align="left">
 
 ### ToQUBO.jl
 
-[ToQUBO.jl](https://github.com/psrenergy/ToQUBO.jl) is a Julia package to reformulate general optimization problems into QUBO (Quadratic Unconstrained Binary Optimization) instances.
+[ToQUBO.jl](https://github.com/JuliaQUBO/ToQUBO.jl) is a Julia package to reformulate general optimization problems into QUBO (Quadratic Unconstrained Binary Optimization) instances.
 This tool aims to convert a broad range of JuMP problems for straightforward application in many physics and physics-inspired solution methods whose normal optimization form is equivalent to the QUBO.
-Not only it is has the [**widest constraint coverage**](https://github.com/psrenergy/ToQUBO.jl#list-of-interpretable-constraints) but also is the [**most performant**](https://github.com/psrenergy/ToQUBO-benchmark) QUBO reformulation tool available.
+Not only it is has the [**widest constraint coverage**](https://github.com/JuliaQUBO/ToQUBO.jl#list-of-interpretable-constraints) but also is the [**most performant**](https://github.com/JuliaQUBO/ToQUBO-benchmark) QUBO reformulation tool available.
 
-During execution, [ToQUBO.jl](https://github.com/psrenergy/ToQUBO.jl) encodes both discrete and continuous variables, maps constraints, and computes their penalties, performing a few model optimization steps along the process.
-[ToQUBO.jl](https://github.com/psrenergy/ToQUBO.jl) was written as a [MathOptInterface](https://github.com/jump-dev/MathOptInterface.jl) (MOI) layer that automatically maps between input and output models, thus providing a smooth JuMP modeling experience.
+During execution, [ToQUBO.jl](https://github.com/JuliaQUBO/ToQUBO.jl) encodes both discrete and continuous variables, maps constraints, and computes their penalties, performing a few model optimization steps along the process.
+[ToQUBO.jl](https://github.com/JuliaQUBO/ToQUBO.jl) was written as a [MathOptInterface](https://github.com/jump-dev/MathOptInterface.jl) (MOI) layer that automatically maps between input and output models, thus providing a smooth JuMP modeling experience.
 
 <div>
 </div>
 
 <div align="right">
-<a href="https://github.com/psrenergy/QUBODrivers.jl">
-    <img width="200px" src="https://raw.githubusercontent.com/psrenergy/QUBODrivers.jl/master/docs/src/assets/logo.svg" alt="QUBODrivers.jl" align="left" />
+<a href="https://github.com/JuliaQUBO/QUBODrivers.jl">
+    <img width="200px" src="https://raw.githubusercontent.com/JuliaQUBO/QUBODrivers.jl/master/docs/src/assets/logo.svg" alt="QUBODrivers.jl" align="left" />
 </a>
 
 <div align="left">
@@ -134,14 +134,14 @@ This package aims to provide a common [MOI](https://github.com/jump-dev/MathOptI
 It also contains testing tools, including utility samplers for performance comparison and sanity checks.
 
 It was designed to allow algorithm developers and hardware manufacturers to easily connect their products to the [JuMP](https://jump.dev) ecosystem.
-Its simple interface paves the path for the rapid integration of heterogeneous QUBO solvers, including cloud-based Quantum Computing services ([DWave.jl](https://github.com/psrenergy/DWave.jl), [QiskitOpt.jl](https://github.com/psrenergy/QiskitOpt.jl)); Quantum Simulation software ([QuantumAnnealingInterface.jl](https://github.com/psrenergy/QuantumAnnealingInterface.jl); [CIMOptimizer.jl](https://github.com/pedromxavier/CIMOptimizer.jl)) and Heuristic solvers ([MQLib.jl](https://github.com/psrenergy/MQLib.jl), [DWaveNeal.jl](https://github.com/psrenergy/DWaveNeal.jl)).
+Its simple interface paves the path for the rapid integration of heterogeneous QUBO solvers, including cloud-based Quantum Computing services ([DWave.jl](https://github.com/JuliaQUBO/DWave.jl), [QiskitOpt.jl](https://github.com/JuliaQUBO/QiskitOpt.jl)); Quantum Simulation software ([QuantumAnnealingInterface.jl](https://github.com/JuliaQUBO/QuantumAnnealingInterface.jl); [CIMOptimizer.jl](https://github.com/JuliaQUBO/CIMOptimizer.jl)) and Heuristic solvers ([MQLib.jl](https://github.com/JuliaQUBO/MQLib.jl).
 
 <div>
 </div>
 
 <div align="left">
-<a href="https://github.com/psrenergy/QUBOTools.jl">
-    <img width="200px" src="https://raw.githubusercontent.com/psrenergy/QUBOTools.jl/main/docs/src/assets/logo.svg" alt="QUBOTools.jl" align="right" />
+<a href="https://github.com/JuliaQUBO/QUBOTools.jl">
+    <img width="200px" src="https://raw.githubusercontent.com/JuliaQUBO/QUBOTools.jl/main/docs/src/assets/logo.svg" alt="QUBOTools.jl" align="right" />
 </a>
 </a>
 
@@ -149,19 +149,19 @@ Its simple interface paves the path for the rapid integration of heterogeneous Q
 
 ### QUBOTools.jl
 
-The [QUBOTools.jl](https://github.com/psrenergy/QUBOTools.jl) package implements a broad set of utilities for working with QUBO instances.
+The [QUBOTools.jl](https://github.com/JuliaQUBO/QUBOTools.jl) package implements a broad set of utilities for working with QUBO instances.
 It defines the abstract interfaces for representing both QUBO models and their solutions.
 Besides that, its library contains reference implementations for the proposed interface, making it ready to power other applications.
 
 One of its main purposes is to provide fast and reliable conversion mechanism between common file formats for storing such problems.
-With [QUBOTools.jl](https://github.com/psrenergy/QUBOTools.jl) it is possible to read models from various benchmarking databases and also write models in specifications that most devices will directly handle.
+With [QUBOTools.jl](https://github.com/JuliaQUBO/QUBOTools.jl) it is possible to read models from various benchmarking databases and also write models in specifications that most devices will directly handle.
 
 <div>
 </div>
 
-## Citing [QUBO.jl](https://github.com/psrenergy/QUBO.jl) 📑
+## Citing [QUBO.jl](https://github.com/JuliaQUBO/QUBO.jl) 📑
 
-If you find [QUBO.jl](https://github.com/psrenergy/QUBO.jl) and its packages useful in your work, we kindly request that you cite the following paper (preprint):
+If you find [QUBO.jl](https://github.com/JuliaQUBO/QUBO.jl) and its packages useful in your work, we kindly request that you cite the following paper (preprint):
 
 ```tex
 @misc{qubojl:2023,
