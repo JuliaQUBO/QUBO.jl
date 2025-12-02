@@ -6,9 +6,9 @@
     <img src="/docs/src/assets/logo.svg" width=400px alt="QUBO.jl" />
 </a>
 
-[![Code Coverage](https://codecov.io/gh/psrenergy/QUBO.jl/branch/master/graph/badge.svg?token=ECM5OQ9T67")](https://codecov.io/gh/psrenergy/QUBO.jl)
-[![CI](https://github.com/psrenergy/QUBO.jl/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/psrenergy/QUBO.jl/actions/workflows/ci.yml)
-[![Docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://psrenergy.github.io/QUBO.jl/QUBO.jl/dev)
+[![Code Coverage](https://codecov.io/gh/JuliaQUBO/QUBO.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/JuliaQUBO/QUBO.jl)
+[![CI](https://github.com/JuliaQUBO/QUBO.jl/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/JuliaQUBO/QUBO.jl/actions/workflows/ci.yml)
+[![Docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://JuliaQUBO.github.io/QUBO.jl/dev)
 [![Zenodo/DOI](https://zenodo.org/badge/614041491.svg)](https://zenodo.org/badge/latestdoi/614041491)
 [![JuliaCon 2022](https://img.shields.io/badge/JuliaCon-2022-9558b2)](https://www.youtube.com/watch?v=OTmzlTbqdNo)
 [![arXiv](https://img.shields.io/badge/arXiv-2307.02577-b31b1b.svg)](https://arxiv.org/abs/2307.02577)
@@ -17,7 +17,7 @@
 
 </div>
 
-[QUBO.jl](https://github.com/psrenergy/QUBO.jl) is an all-in-one package for working with QUBO models in [JuMP](https://github.com/jump-dev/JuMP.jl) and interfacing with their solvers.
+[QUBO.jl](https://github.com/JuliaQUBO/QUBO.jl) is an all-in-one package for working with QUBO models in [JuMP](https://github.com/jump-dev/JuMP.jl) and interfacing with their solvers.
 This project aggregates and extends functionality from its complementary packages [ToQUBO.jl](https://github.com/psrenergy/ToQUBO.jl), [QUBODrivers.jl](https://github.com/psrenergy/QUBODrivers.jl) and [QUBOTools.jl](https://github.com/psrenergy/QUBOTools.jl).
 
 ## QUBO? 🟦
