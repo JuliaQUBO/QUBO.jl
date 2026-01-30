@@ -8,7 +8,7 @@
 
 [![Code Coverage](https://codecov.io/gh/psrenergy/QUBO.jl/branch/master/graph/badge.svg?token=ECM5OQ9T67")](https://codecov.io/gh/psrenergy/QUBO.jl)
 [![CI](https://github.com/psrenergy/QUBO.jl/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/psrenergy/QUBO.jl/actions/workflows/ci.yml)
-[![Docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://psrenergy.github.io/QUBO.jl/QUBO.jl/dev)
+[![Docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://juliaqubo.github.io/QUBO.jl/QUBO.jl/dev/)
 [![Zenodo/DOI](https://zenodo.org/badge/614041491.svg)](https://zenodo.org/badge/latestdoi/614041491)
 [![JuliaCon 2022](https://img.shields.io/badge/JuliaCon-2022-9558b2)](https://www.youtube.com/watch?v=OTmzlTbqdNo)
 [![arXiv](https://img.shields.io/badge/arXiv-2307.02577-b31b1b.svg)](https://arxiv.org/abs/2307.02577)
