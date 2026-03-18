@@ -8,7 +8,7 @@
 
 [![Code Coverage](https://codecov.io/gh/JuliaQUBO/QUBO.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/JuliaQUBO/QUBO.jl)
 [![CI](https://github.com/JuliaQUBO/QUBO.jl/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/JuliaQUBO/QUBO.jl/actions/workflows/ci.yml)
-[![Docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://JuliaQUBO.github.io/QUBO.jl/dev)
+[![Docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://juliaqubo.github.io/QUBO.jl/QUBO.jl/dev/)
 [![Zenodo/DOI](https://zenodo.org/badge/614041491.svg)](https://zenodo.org/badge/latestdoi/614041491)
 [![JuliaCon 2022](https://img.shields.io/badge/JuliaCon-2022-9558b2)](https://www.youtube.com/watch?v=OTmzlTbqdNo)
 [![arXiv](https://img.shields.io/badge/arXiv-2307.02577-b31b1b.svg)](https://arxiv.org/abs/2307.02577)
@@ -134,7 +134,7 @@ This package aims to provide a common [MOI](https://github.com/jump-dev/MathOptI
 It also contains testing tools, including utility samplers for performance comparison and sanity checks.
 
 It was designed to allow algorithm developers and hardware manufacturers to easily connect their products to the [JuMP](https://jump.dev) ecosystem.
-Its simple interface paves the path for the rapid integration of heterogeneous QUBO solvers, including cloud-based Quantum Computing services ([DWave.jl](https://github.com/JuliaQUBO/DWave.jl), [QiskitOpt.jl](https://github.com/JuliaQUBO/QiskitOpt.jl)); Quantum Simulation software ([QuantumAnnealingInterface.jl](https://github.com/JuliaQUBO/QuantumAnnealingInterface.jl); [CIMOptimizer.jl](https://github.com/JuliaQUBO/CIMOptimizer.jl)) and Heuristic solvers ([MQLib.jl](https://github.com/JuliaQUBO/MQLib.jl).
+Its simple interface paves the path for the rapid integration of heterogeneous QUBO solvers, including cloud-based Quantum Computing services ([DWave.jl](https://github.com/JuliaQUBO/DWave.jl), [QiskitOpt.jl](https://github.com/JuliaQUBO/QiskitOpt.jl)); Quantum Simulation software ([QuantumAnnealingInterface.jl](https://github.com/JuliaQUBO/QuantumAnnealingInterface.jl); [CIMOptimizer.jl](https://github.com/JuliaQUBO/CIMOptimizer.jl)) and Heuristic solvers ([MQLib.jl](https://github.com/JuliaQUBO/MQLib.jl), [DWaveNeal.jl](https://github.com/JuliaQUBO/DWaveNeal.jl)).
 
 <div>
 </div>
