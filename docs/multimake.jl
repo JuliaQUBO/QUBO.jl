@@ -1,6 +1,8 @@
 using Documenter
 using MultiDocumenter
 
+include("multimake_utils.jl")
+
 temp_dir = mktempdir()
 
 docs = [
@@ -55,19 +57,7 @@ function deploymultidocs(
     # the repository is often in a detached HEAD state, which causes `git pull` to fail.
     # We assume the environment is already set up with the correct commit to build.
 
-    has_branch = true
-
-    run(`git checkout $branch`)
-
-    if !success(`git checkout $branch`)
-        has_branch = false
-
-        if !success(`git switch --orphan --discard-changes $branch`)
-            @error "Cannot create new orphaned branch $branch."
-
-            exit(1)
-        end
-    end
+    has_branch = checkout_deploy_branch(branch)
 
     for file in readdir(root_path; join = true)
         endswith(file, ".git") && continue

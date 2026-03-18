@@ -143,7 +143,6 @@ Its simple interface paves the path for the rapid integration of heterogeneous Q
 <a href="https://github.com/JuliaQUBO/QUBOTools.jl">
     <img width="200px" src="https://raw.githubusercontent.com/JuliaQUBO/QUBOTools.jl/main/docs/src/assets/logo.svg" alt="QUBOTools.jl" align="right" />
 </a>
-</a>
 
 <div align="left">
 
