@@ -16,7 +16,7 @@ function commit_file!(name::AbstractString, contents::AbstractString, message::A
 end
 
 function initialize_git_repo!()
-    run(`git init -b master`)
+    run(`git init -b main`)
     configure_git_user!()
     commit_file!("README.md", "# temp repo\n", "Initial commit")
 
@@ -44,7 +44,7 @@ function test_multimake_utils()
                     initialize_git_repo!()
                     run(`git switch -c gh-multi-pages`)
                     commit_file!("branch.txt", "branch contents\n", "Branch commit")
-                    run(`git checkout master`)
+                    run(`git checkout main`)
 
                     has_branch = checkout_deploy_branch("gh-multi-pages")
 
@@ -61,7 +61,7 @@ function test_multimake_utils()
                         initialize_git_repo!()
                         run(`git init --bare $origin`)
                         run(`git remote add origin $origin`)
-                        run(`git push -u origin master`)
+                        run(`git push -u origin main`)
                         run(`git switch -c gh-multi-pages`)
                         commit_file!("branch.txt", "branch contents\n", "Branch commit")
                         run(`git push -u origin gh-multi-pages`)
@@ -69,7 +69,7 @@ function test_multimake_utils()
                 end
 
                 mktempdir() do clone
-                    run(`git clone --branch master --single-branch $origin $clone`)
+                    run(`git clone --branch main --single-branch $origin $clone`)
 
                     cd(clone) do
                         has_branch = checkout_deploy_branch("gh-multi-pages")
@@ -92,7 +92,7 @@ function test_multimake_utils()
                         initialize_git_repo!()
                         run(`git init --bare $remote_path`)
                         run(`git remote add upstream $remote_path`)
-                        run(`git push -u upstream master`)
+                        run(`git push -u upstream main`)
                         run(`git tag gh-multi-pages`)
                         tag_commit = readchomp(`git rev-parse refs/tags/gh-multi-pages`)
                         run(`git push upstream refs/tags/gh-multi-pages`)
@@ -102,7 +102,7 @@ function test_multimake_utils()
                     end
 
                     mktempdir() do clone
-                        run(`git clone --origin upstream --branch master --single-branch $remote_path $clone`)
+                        run(`git clone --origin upstream --branch main --single-branch $remote_path $clone`)
 
                         cd(clone) do
                             configure_git_user!()

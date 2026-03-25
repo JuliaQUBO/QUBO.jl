@@ -42,7 +42,7 @@ More features are available in the documentation.
 
 ### Instalation
 ```julia
-julia> ]add https://github.com/JuliaQUBO/QUBO.jl#master
+julia> ]add https://github.com/JuliaQUBO/QUBO.jl#main
 ```
 ### Example
 

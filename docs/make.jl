@@ -10,6 +10,7 @@ makedocs(;
     warnonly = [:missing_docs],
     format   = Documenter.HTML( #
         assets     = ["assets/extra_styles.css", "assets/favicon.ico"],
+        edit_link  = "main",
         mathengine = Documenter.KaTeX(),
         sidebar_sitename = false
     ),
@@ -22,5 +23,5 @@ makedocs(;
 if "--skip-deploy" ∈ ARGS
     @warn "Skipping deployment"
 else
-    deploydocs(repo = raw"github.com/JuliaQUBO/QUBO.jl.git", push_preview = true)
+    deploydocs(repo = raw"github.com/JuliaQUBO/QUBO.jl.git", devbranch = "main", push_preview = true)
 end

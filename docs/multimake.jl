@@ -93,5 +93,5 @@ buildmultidocs(build_path, docs)
 if "--skip-deploy" ∈ ARGS
     @warn "Skipping deployment"
 else
-    deploymultidocs(build_path; main = "master")
+    deploymultidocs(build_path; main = "main")
 end
