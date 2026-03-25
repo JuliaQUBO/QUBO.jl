@@ -13,8 +13,11 @@ authors:
 - family-names: "Dias Garcia"
   given-names: "Joaquim"
   orcid: "https://orcid.org/0000-0002-7721-8564"
-- family-names: "E. Bernal Neira"
-  given-names: "David"
+- family-names: "Maculan"
+  given-names: "Nelson"
+  orcid: "https://orcid.org/0000-0002-3897-3356"
+- family-names: "Bernal Neira"
+  given-names: "David E."
   orcid: "https://orcid.org/0000-0002-8308-5016"
 title: "QUBO.jl: A Julia Ecosystem for Quadratic Unconstrained Binary Optimization"
 version: 0.2.0
