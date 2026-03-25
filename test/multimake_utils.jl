@@ -47,6 +47,35 @@ function test_multimake_utils()
                 end
             end
         end
+
+        @testset "Fetches existing remote branch when clone is single-branch" begin
+            mktempdir() do origin
+                mktempdir() do source
+                    cd(source) do
+                        initialize_git_repo!()
+                        run(`git init --bare $origin`)
+                        run(`git remote add origin $origin`)
+                        run(`git push -u origin master`)
+                        run(`git switch -c gh-multi-pages`)
+                        commit_file!("branch.txt", "branch contents\n", "Branch commit")
+                        run(`git push -u origin gh-multi-pages`)
+                    end
+                end
+
+                mktempdir() do clone
+                    run(`git clone --branch master --single-branch $origin $clone`)
+
+                    cd(clone) do
+                        has_branch = checkout_deploy_branch("gh-multi-pages")
+
+                        @test has_branch
+                        @test readchomp(`git branch --show-current`) == "gh-multi-pages"
+                        @test read("branch.txt", String) == "branch contents\n"
+                        @test success(`git rev-parse --verify refs/heads/gh-multi-pages`)
+                    end
+                end
+            end
+        end
     end
 
     return nothing
