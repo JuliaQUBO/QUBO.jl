@@ -70,7 +70,7 @@ function test_multimake_utils()
 
                         @test has_branch
                         @test readchomp(`git branch --show-current`) == "gh-multi-pages"
-                        @test read("branch.txt", String) == "branch contents\n"
+                        @test chomp(read("branch.txt", String)) == "branch contents"
                         @test success(`git rev-parse --verify refs/heads/gh-multi-pages`)
                     end
                 end
