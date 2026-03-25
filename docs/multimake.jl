@@ -50,6 +50,7 @@ function deploymultidocs(
     path::AbstractString;
     branch::String = "gh-multi-pages",
     main::String = "main",
+    remote::String = "origin",
 )
     root_path = normpath(joinpath(@__DIR__, ".."))
 
@@ -57,7 +58,7 @@ function deploymultidocs(
     # the repository is often in a detached HEAD state, which causes `git pull` to fail.
     # We assume the environment is already set up with the correct commit to build.
 
-    checkout_deploy_branch(branch)
+    checkout_deploy_branch(branch; remote)
 
     for file in readdir(root_path; join = true)
         endswith(file, ".git") && continue
@@ -75,7 +76,7 @@ function deploymultidocs(
 
     if success(`git commit -m 'Aggregate documentation'`)
         @info "Pushing updated documentation"
-        run(`git push origin HEAD:$branch`)
+        push_deploy_branch(branch; remote)
 
         run(`git checkout $main`)
     else
