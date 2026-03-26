@@ -67,6 +67,45 @@ end
 
 ```
 
+## Constraint Penalties
+
+To set a custom penalty for a constraint, create the constraint first and then
+set `ToQUBO.Attributes.ConstraintEncodingPenaltyHint()` on the returned
+constraint reference before `optimize!`.
+There is no combined `@constraint` syntax for this in JuMP, so the usual
+pattern is to define the constraint and immediately attach the hint.
+
+```julia
+using JuMP
+using QUBO
+
+model = Model(() -> ToQUBO.Optimizer(ExactSampler.Optimizer))
+
+@variable(model, x[1:3], Bin)
+
+c = @constraint(model, x[1] + x[2] + x[3] <= 2)
+set_attribute(c, ToQUBO.Attributes.ConstraintEncodingPenaltyHint(), 20.0)
+
+@objective(model, Max, x[1] + 2 * x[2] + 3 * x[3])
+
+optimize!(model)
+
+rho = get_attribute(c, ToQUBO.Attributes.ConstraintEncodingPenalty())
+```
+
+For many constraints, broadcast `set_attribute` across the constraint
+container. This lets you assign either the same penalty to all constraints or a
+different penalty to each one.
+
+```julia
+c = @constraint(model, [i in 1:3], x[i] <= 1)
+
+set_attribute.(c, Ref(ToQUBO.Attributes.ConstraintEncodingPenaltyHint()), 5.0)
+
+rho = [5.0, 10.0, 20.0]
+set_attribute.(c, Ref(ToQUBO.Attributes.ConstraintEncodingPenaltyHint()), rho)
+```
+
 ```@raw html
 <div align="center">
     <h2>QUBO.jl Packages</h2>
