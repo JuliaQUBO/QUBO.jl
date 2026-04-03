@@ -21,7 +21,7 @@ permissions:
 
 jobs:
   backfill:
-    uses: JuliaQUBO/.github/.github/workflows/backfill-labels.yml@e3c5c6d53b5be000ba40fe80946ec11181a6e5cf
+    uses: JuliaQUBO/.github/.github/workflows/backfill-labels.yml@7373363a26cd68189b1f35f1d3fd31d46787a760
     with:
       dry_run: ${{ inputs.dry_run }}
       max_items: ${{ inputs.max_items }}
