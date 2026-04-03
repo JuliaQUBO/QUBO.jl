@@ -18,6 +18,6 @@ permissions:
 
 jobs:
   sync:
-    uses: JuliaQUBO/.github/.github/workflows/sync-labels.yml@7373363a26cd68189b1f35f1d3fd31d46787a760
+    uses: JuliaQUBO/.github/.github/workflows/sync-labels.yml@02781d5b27dd8f0d2bc5b1fe3845eff7113244ec
     with:
       dry_run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
