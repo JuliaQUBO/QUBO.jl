@@ -1,0 +1,27 @@
+name: Backfill Shared Labels
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Preview label changes without applying them.
+        required: false
+        default: true
+        type: boolean
+      max_items:
+        description: Maximum number of open issues and PRs to scan.
+        required: false
+        default: 100
+        type: number
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  backfill:
+    uses: JuliaQUBO/.github/.github/workflows/backfill-labels.yml@e3c5c6d53b5be000ba40fe80946ec11181a6e5cf
+    with:
+      dry_run: ${{ inputs.dry_run }}
+      max_items: ${{ inputs.max_items }}

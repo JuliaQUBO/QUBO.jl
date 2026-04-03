@@ -1,0 +1,19 @@
+name: Label Pull Requests
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  label:
+    uses: JuliaQUBO/.github/.github/workflows/pr-labeler.yml@e3c5c6d53b5be000ba40fe80946ec11181a6e5cf
+    with:
+      configuration_path: .github/labeler.yml
