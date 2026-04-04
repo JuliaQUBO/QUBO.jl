@@ -46,7 +46,7 @@ on the optimizer backend, so we retrieve it through `JuMP.unsafe_backend(model)`
 ```@example knapsack
 n, l, q, α, β = QUBOTools.qubo(JuMP.unsafe_backend(model), :dense)
 
-(n = n, alpha = α, beta = β, linear_terms = length(l), quadratic_size = size(q))
+(n = n, alpha = α, beta = β, nonzero_quadratic_terms = count(!iszero, q))
 ```
 
 For larger instances you would typically switch to a heuristic or hardware

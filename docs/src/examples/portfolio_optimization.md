@@ -73,7 +73,15 @@ model, allocation = solve_portfolio(prices)
 [(; asset = assets[i], weight = round(allocation[i]; digits = 2)) for i in eachindex(assets)]
 ```
 
-## Check the Compiled QUBO Size
+With this coarse encoding tolerance, the feasible weights are limited to a few
+discrete values, so the example is better read as a workflow demonstration than
+as a realistic diversified portfolio.
+
+```@example portfolio-optimization
+sum(allocation)
+```
+
+## Inspect the Compiled QUBO
 
 The compiled QUBO is available on the optimizer backend, which we inspect
 through `JuMP.unsafe_backend(model)`.
@@ -81,7 +89,7 @@ through `JuMP.unsafe_backend(model)`.
 ```@example portfolio-optimization
 n, l, qmat, α, β = QUBOTools.qubo(JuMP.unsafe_backend(model), :dense)
 
-(n = n, alpha = α, beta = β, sum_allocation = sum(allocation))
+(n = n, alpha = α, beta = β, nonzero_quadratic_terms = count(!iszero, qmat))
 ```
 
 For real portfolios you would usually use a richer dataset, a tighter encoding,

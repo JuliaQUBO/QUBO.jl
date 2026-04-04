@@ -8,8 +8,10 @@ We seek integer factors `p` and `q` such that
 
 ```math
 \begin{array}{rl}
+\text{find} & p,\, q \\
 \text{s.t.} & p q = R \\
-            & p, q \in \mathbb{Z}
+            & 2 \le p \le \lceil\sqrt{R}\,\rceil \\
+            & \lceil\sqrt{R}\,\rceil \le q \le \lfloor R/2 \rfloor
 \end{array}
 ```
 
@@ -55,7 +57,7 @@ so inspection goes through `JuMP.unsafe_backend(model)`.
 ```@example prime-factorization
 n, l, qmat, α, β = QUBOTools.qubo(JuMP.unsafe_backend(model), :dense)
 
-(n = n, alpha = α, beta = β, quadratic_size = size(qmat))
+(n = n, alpha = α, beta = β, nonzero_quadratic_terms = count(!iszero, qmat))
 ```
 
 This formulation is mainly educational: exact solving is reasonable only for

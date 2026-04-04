@@ -123,8 +123,8 @@ set_attribute.(c, Ref(ToQUBO.Attributes.ConstraintEncodingPenaltyHint()), rho)
         <a href="https://juliaqubo.github.io/QUBO.jl/QUBODrivers.jl/dev/">
             <img src="assets/logo-qubodrivers.svg" alt="QUBODrivers.jl logo" />
         </a>
-        <p>Expose samplers and annealers through a consistent `MOI`-compatible
-        interface that can be used directly from JuMP and `QUBO.jl`.</p>
+        <p>Expose samplers and annealers through a consistent <code>MOI</code>-compatible
+        interface that can be used directly from JuMP and <code>QUBO.jl</code>.</p>
         <div class="qubo-package-links">
             <a href="https://juliaqubo.github.io/QUBO.jl/QUBODrivers.jl/dev/">Docs</a>
             <a href="https://github.com/JuliaQUBO/QUBODrivers.jl">Repository</a>
