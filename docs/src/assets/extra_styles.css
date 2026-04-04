@@ -13,3 +13,35 @@ div.mermaid {
     text-align: center;
     margin: 0 auto;
 }
+
+.qubo-package-grid {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    margin: 2rem 0;
+}
+
+.qubo-package-card {
+    border: 1px solid var(--documenter-border-color);
+    border-radius: 14px;
+    padding: 1.1rem;
+    background: var(--documenter-sidebar-background);
+}
+
+.qubo-package-card h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.qubo-package-card img {
+    display: block;
+    max-height: 100px;
+    margin: 0.5rem auto 1rem;
+}
+
+.qubo-package-links {
+    display: flex;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+    margin-top: 0.75rem;
+}
