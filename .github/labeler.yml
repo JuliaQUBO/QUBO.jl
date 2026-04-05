@@ -1,6 +1,6 @@
 documentation:
   - changed-files:
-      - all-globs-to-all-files:
+      - any-glob-to-all-files:
           - "docs/**"
           - "**/*.md"
           - "**/*.rst"
