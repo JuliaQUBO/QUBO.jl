@@ -15,7 +15,7 @@ makedocs(;
         sidebar_sitename = false
     ),
     sitename = "QUBO.jl",
-    authors  = "Pedro Maciel Xavier and Pedro Ripper and Tiago Andrade and Joaquim Dias Garcia and David E. Bernal Neira",
+    authors  = "Pedro Maciel Xavier and Pedro Ripper and Tiago Andrade and Joaquim Dias Garcia and Nelson Maculan and David E. Bernal Neira",
     pages    = [
         "Home" => "index.md",
         "Examples" => [
