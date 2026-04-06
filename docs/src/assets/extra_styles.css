@@ -1,3 +1,29 @@
+.theme--documenter-light,
+.theme--catppuccin-latte {
+    --qubo-package-card-border: #dbdbdb;
+    --qubo-package-card-background: #f5f5f5;
+}
+
+.theme--documenter-dark {
+    --qubo-package-card-border: #5e6d6f;
+    --qubo-package-card-background: #282f2f;
+}
+
+.theme--catppuccin-frappe {
+    --qubo-package-card-border: #737994;
+    --qubo-package-card-background: #303446;
+}
+
+.theme--catppuccin-macchiato {
+    --qubo-package-card-border: #6e738d;
+    --qubo-package-card-background: #24273a;
+}
+
+.theme--catppuccin-mocha {
+    --qubo-package-card-border: #7f849c;
+    --qubo-package-card-background: #1e1e2e;
+}
+
 .docs-sidebar .docs-logo > img {
     max-height: 16rem !important;
     margin: auto;
@@ -12,4 +38,36 @@ p:has(img) {
 div.mermaid {
     text-align: center;
     margin: 0 auto;
+}
+
+.qubo-package-grid {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    margin: 2rem 0;
+}
+
+.qubo-package-card {
+    border: 1px solid var(--qubo-package-card-border);
+    border-radius: 14px;
+    padding: 1.1rem;
+    background: var(--qubo-package-card-background);
+}
+
+.qubo-package-card h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.qubo-package-card img {
+    display: block;
+    max-height: 100px;
+    margin: 0.5rem auto 1rem;
+}
+
+.qubo-package-links {
+    display: flex;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+    margin-top: 0.75rem;
 }
