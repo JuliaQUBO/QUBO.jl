@@ -63,6 +63,12 @@ workflow across the compiler, solver, and tooling layers:
 - [Prime Factorization](@ref)
 - [Portfolio Optimization](@ref)
 
+## Analysis & Visualization
+
+After solving, use QUBOTools plotting recipes to inspect the compiled QUBO
+matrix, interaction graph, and solution energy landscape.
+See [Analysis & Visualization](@ref analysis-visualization) for details.
+
 ## Constraint Penalty Hints
 
 To set a custom penalty for a constraint, create the constraint first and then

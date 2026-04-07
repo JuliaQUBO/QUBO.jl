@@ -18,6 +18,7 @@ makedocs(;
     authors  = "Pedro Maciel Xavier and Pedro Ripper and Tiago Andrade and Joaquim Dias Garcia and Nelson Maculan and David E. Bernal Neira",
     pages    = [
         "Home" => "index.md",
+        "Analysis & Visualization" => "analysis.md",
         "Examples" => [
             "Knapsack" => "examples/knapsack.md",
             "Prime Factorization" => "examples/prime_factorization.md",

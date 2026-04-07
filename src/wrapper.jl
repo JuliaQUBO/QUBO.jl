@@ -29,3 +29,8 @@ Returns the multiplicity of a given result.
 function QUBOTools.reads(model::JuMP.Model; result::Integer = 1)
     return JuMP.get_attribute(model, NumberOfReads(result))::Integer
 end
+
+# QUBOTools backend for JuMP models using ToQUBO
+function QUBOTools.backend(model::JuMP.Model)
+    return QUBOTools.backend(JuMP.unsafe_backend(model))
+end
