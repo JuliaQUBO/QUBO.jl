@@ -1,0 +1,14 @@
+documentation:
+  - changed-files:
+      - any-glob-to-all-files:
+          - "docs/**"
+          - "**/*.md"
+          - "**/*.rst"
+          - "README*"
+          - "CHANGELOG*"
+          - "NEWS*"
+          - "CITATION.cff"
+          - "LICENSE*"
+          - "papers/**"
+          - ".github/ISSUE_TEMPLATE/**"
+          - ".github/pull_request_template.md"

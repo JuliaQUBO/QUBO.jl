@@ -1,0 +1,33 @@
+name: Validate Label Automation
+
+on:
+  pull_request:
+    paths:
+      - ".github/labeler.yml"
+      - ".github/workflows/label-sync.yml"
+      - ".github/workflows/label-backfill.yml"
+      - ".github/workflows/pr-labeler.yml"
+      - ".github/workflows/validate-label-automation.yml"
+      - ".github/tests/test_label_automation.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
+        with:
+          python-version: "3.x"
+
+      - name: Install test dependencies
+        run: pip install pyyaml
+
+      - name: Run label automation contract tests
+        run: python -m unittest discover -s .github/tests -p "test_*.py"

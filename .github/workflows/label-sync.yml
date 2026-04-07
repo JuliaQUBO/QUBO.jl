@@ -1,0 +1,22 @@
+name: Sync Shared Labels
+
+on:
+  schedule:
+    - cron: "17 4 1 * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Preview label changes without applying them.
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  sync:
+    uses: JuliaQUBO/.github/.github/workflows/sync-labels.yml@02781d5b27dd8f0d2bc5b1fe3845eff7113244ec
+    with:
+      dry_run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
