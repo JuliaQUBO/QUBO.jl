@@ -1,0 +1,112 @@
+<!DOCTYPE html><HTML lang="en"><head><script charset="utf-8" src="../../../../assets/default/multidoc_injector.js" type="text/javascript"></script><script charset="utf-8" type="text/javascript">window.MULTIDOCUMENTER_ROOT_PATH = '/QUBO.jl/'</script><script charset="utf-8" src="../../../../assets/default/flexsearch.bundle.js" type="text/javascript"></script><script charset="utf-8" src="../../../../assets/default/flexsearch_integration.js" type="text/javascript"></script><meta charset="UTF-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><title>Sampler Setup · QUBODrivers.jl</title><meta content="Sampler Setup · QUBODrivers.jl" name="title"/><meta content="Sampler Setup · QUBODrivers.jl" property="og:title"/><meta content="Sampler Setup · QUBODrivers.jl" property="twitter:title"/><meta content="Documentation for QUBODrivers.jl." name="description"/><meta content="Documentation for QUBODrivers.jl." property="og:description"/><meta content="Documentation for QUBODrivers.jl." property="twitter:description"/><script data-outdated-warner="" src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script data-main="../../assets/documenter.js" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" data-theme-name="catppuccin-mocha" href="../../assets/themes/catppuccin-mocha.css" rel="stylesheet" type="text/css"/><link class="docs-theme-link" data-theme-name="catppuccin-macchiato" href="../../assets/themes/catppuccin-macchiato.css" rel="stylesheet" type="text/css"/><link class="docs-theme-link" data-theme-name="catppuccin-frappe" href="../../assets/themes/catppuccin-frappe.css" rel="stylesheet" type="text/css"/><link class="docs-theme-link" data-theme-name="catppuccin-latte" href="../../assets/themes/catppuccin-latte.css" rel="stylesheet" type="text/css"/><link class="docs-theme-link" data-theme-name="documenter-dark" data-theme-primary-dark="" href="../../assets/themes/documenter-dark.css" rel="stylesheet" type="text/css"/><link class="docs-theme-link" data-theme-name="documenter-light" data-theme-primary="" href="../../assets/themes/documenter-light.css" rel="stylesheet" type="text/css"/><script src="../../assets/themeswap.js"></script><link href="../../assets/extra_styles.css" rel="stylesheet" type="text/css"/><link href="nothing/QUBO.jl/QUBODrivers.jl/stable/manual/4-setup/" rel="canonical"/><link href="../../../../assets/default/multidoc.css" rel="stylesheet" type="text/css"/><link href="../../../../assets/default/flexsearch.css" rel="stylesheet" type="text/css"/></head><body><nav id="multi-page-nav"><div class="hidden-on-mobile" id="nav-items"><a class="nav-link nav-item" href="../../../../QUBO.jl/">QUBO.jl</a><a class="nav-link nav-item" href="../../../../ToQUBO.jl/">ToQUBO.jl</a><a class="nav-link active nav-item" href="../../../">QUBODrivers.jl</a><a class="nav-link nav-item" href="../../../../QUBOTools.jl/">QUBOTools.jl</a><div class="search nav-item"><input id="search-input" placeholder="Search everywhere..."/><ul class="suggestions hidden" id="search-result-container"></ul><div class="search-keybinding">/</div></div></div><button id="multidoc-toggler"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path></svg></button></nav><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img alt="QUBODrivers.jl logo" src="../../assets/logo.svg"/></a><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><span class="tocitem">Manual</span><ul><li><a class="tocitem" href="../1-intro/">Introduction</a></li><li><a class="tocitem" href="../2-solve/">Solving QUBO</a></li><li><a class="tocitem" href="../3-samplers/">Samplers</a></li><li class="is-active"><a class="tocitem" href="">Sampler Setup</a><ul class="internal"><li><a class="tocitem" href="#Imports"><span>Imports</span></a></li><li><a class="tocitem" href="#The-[QUBODrivers.@setup](@ref)-macro"><span>The <code>QUBODrivers.@setup</code> macro</span></a></li><li><a class="tocitem" href="#The-[QUBODrivers.sample](@ref)-method"><span>The <code>QUBODrivers.sample</code> method</span></a></li><li><a class="tocitem" href="#A-complete-example"><span>A complete example</span></a></li></ul></li><li><a class="tocitem" href="../7-integration/">Implementing a Sampler</a></li><li><a class="tocitem" href="../5-tests/">Test Suite</a></li><li><a class="tocitem" href="../6-benchmarks/">Benchmarking</a></li><li><a class="tocitem" href="../8-api/">API Reference</a></li></ul></li><li><span class="tocitem">Booklet</span><ul><li><a class="tocitem" href="../../booklet/1-intro/">Introduction</a></li><li><a class="tocitem" href="../../booklet/2-interface/">Sampler Interface</a></li><li><a class="tocitem" href="../../booklet/3-attributes/">Attribute System</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" href="#" id="documenter-sidebar-button"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Manual</a></li><li class="is-active"><a href="">Sampler Setup</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href="">Sampler Setup</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/JuliaQUBO/QUBODrivers.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/JuliaQUBO/QUBODrivers.jl/blob/main/docs/src/manual/4-setup.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" href="#" id="documenter-settings-button" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" href="javascript:;" id="documenter-article-toggle-button" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Sampler-Setup"><a class="docs-heading-anchor" href="#Sampler-Setup">Sampler Setup</a><a id="Sampler-Setup-1"></a><a class="docs-heading-anchor-permalink" href="#Sampler-Setup" title="Permalink"></a></h1><p>This guide explains the pieces needed to define a sampler interface with QUBODrivers. The smallest useful wrapper has two parts:</p><ul><li>a <a href="#QUBODrivers.@setup"><code>QUBODrivers.@setup</code></a> macro call that declares the optimizer type and attributes;</li><li>a <a href="#QUBODrivers.sample"><code>QUBODrivers.sample</code></a> method that reads the internal model, calls the backend, and returns a <code>QUBOTools.SampleSet</code>.</li></ul><h2 id="Imports"><a class="docs-heading-anchor" href="#Imports">Imports</a><a id="Imports-1"></a><a class="docs-heading-anchor-permalink" href="#Imports" title="Permalink"></a></h2><p>Import QUBODrivers, MathOptInterface, and QUBOTools. QUBOTools is available through the <code>QUBODrivers</code> module and provides model conversion, objective evaluation, sample containers, and metadata helpers.</p><pre><code class="language-julia hljs">import QUBODrivers
+import QUBODrivers: QUBOTools
+import MathOptInterface as MOI</code></pre><h2 id="The-[QUBODrivers.@setup](@ref)-macro"><a class="docs-heading-anchor" href="#The-[QUBODrivers.@setup](@ref)-macro">The </a><a href="#QUBODrivers.@setup"><code>QUBODrivers.@setup</code></a> macro<a id="The-[QUBODrivers.@setup](@ref)-macro-1"></a><a class="docs-heading-anchor-permalink" href="#The-[QUBODrivers.@setup](@ref)-macro" title="Permalink"></a></h2><article><details class="docstring" open="true"><summary id="QUBODrivers.@setup"><a class="docstring-binding" href="#QUBODrivers.@setup"><code>QUBODrivers.@setup</code></a> — <span class="docstring-category">Macro</span></summary><section><div><pre><code class="language-julia hljs">QUBODrivers.@setup Optimizer begin
+    name = "Solver Name"
+    version = v"1.0.0"
+    attributes = begin
+        NumberOfReads["num_reads"]::Integer = 1_000
+    end
+end</code></pre><p>Declare a QUBODrivers sampler optimizer type.</p><p>The macro creates a mutable <code>Optimizer{T} &lt;: QUBODrivers.AbstractSampler{T}</code>, QUBOTools model storage, MOI optimizer metadata, raw attribute storage, and <code>MOI.get</code>/<code>MOI.set</code>/<code>MOI.supports</code> methods for declared attributes.</p><p>The setup block accepts:</p><ul><li><code>name</code>: required solver name returned by <code>MOI.SolverName</code>;</li><li><code>version</code>: optional <code>VersionNumber</code>, defaulting to the QUBODrivers package version;</li><li><code>attributes</code>: optional block of solver attributes.</li></ul><p>Attributes are assignments to default values. They may be typed with <code>::T</code>, exposed as typed MOI attributes, exposed as raw string attributes, or exposed as both:</p><ul><li><code>"num_reads" = 1_000</code></li><li><code>"num_reads"::Integer = 1_000</code></li><li><code>NumberOfReads = 1_000</code></li><li><code>NumberOfReads::Integer = 1_000</code></li><li><code>NumberOfReads["num_reads"] = 1_000</code></li><li><code>NumberOfReads["num_reads"]::Integer = 1_000</code></li></ul><p><strong>Example</strong></p><pre><code class="language-julia hljs">QUBODrivers.@setup Optimizer begin
+    name       = "Super Sampler"
+    version    = v"1.0.2"
+    attributes = begin
+        NumberOfReads["num_reads"]::Integer  = 1_000
+        SuperAttribute["super_attr"]         = nothing
+        MegaAttribute::Union{String,Nothing} = "mega"
+    end
+end</code></pre><p>After setup, implement <a href="#QUBODrivers.sample"><code>QUBODrivers.sample</code></a> for the generated optimizer.</p></div><a class="docs-sourcelink" href="https://github.com/JuliaQUBO/QUBODrivers.jl/blob/70684e1e74dd9a91b06d3fde51783564c8f54283/src/library/setup/macro.jl#L1-L49" target="_blank">source</a></section></details></article><p>This macro usually takes two arguments: the identifier of the sampler's <code>struct</code> (usually <code>Optimizer</code>) and a <code>begin ... end</code> block containing configuration parameters as key-value pairs.</p><p>The first parameter of the configuration block is the sampler's name, which will be used to identify it in the <code>MOI.SolverName</code> attribute.</p><p>The next entry is the <code>version</code> assignment, which is accessed by the <code>MOI.SolverVersion</code> attribute. In order to consistently support <a href="https://semver.org/">semantic versioning</a> it is required that the version number comes as a <em>v-string</em> e.g. <code>v"major.minor.patch"</code>.</p><div class="admonition is-info" id="Note-65b955f57ea2c83c"><header class="admonition-header">Note<a class="admonition-anchor" href="#Note-65b955f57ea2c83c" title="Permalink"></a></header><div class="admonition-body"><p>If missing, the <code>version</code> parameter matches the current version of <code>QUBODrivers.jl</code>.</p></div></div><p>A simple yet valid <code>@setup</code> call would look like this:</p><pre><code class="language-julia hljs">QUBODrivers.@setup Optimizer begin
+    name    = "Super Sampler"
+    version = v"1.0.2"
+end</code></pre><p>The generated optimizer has storage for the current QUBOTools model, raw attributes, the original MOI variable order, and fixed-variable metadata. If a sampler needs additional fields, define the optimizer type manually and implement the same methods described in the <a href="../8-api/#API-Reference">API Reference</a>.</p><h3 id="Attributes"><a class="docs-heading-anchor" href="#Attributes">Attributes</a><a id="Attributes-1"></a><a class="docs-heading-anchor-permalink" href="#Attributes" title="Permalink"></a></h3><p>The <code>attributes</code> parameter is also a <code>begin ... end</code> block. Each entry declares a default value and optional type for a sampler option. Attributes are accessed with <code>MOI.get</code>, <code>MOI.set</code>, <code>MOI.RawOptimizerAttribute</code>, JuMP's <code>set_optimizer_attribute</code>, or the generated typed attribute.</p><pre><code class="language-julia hljs">QUBODrivers.@setup Optimizer begin
+    name    = "Super Sampler"
+    version = v"1.0.2"
+    attributes = begin
+        NumberOfReads["num_reads"]::Integer = 1_000
+        SuperAttribute::String = "super"
+    end
+end</code></pre><p>In the example above, users can write either:</p><pre><code class="language-julia hljs">MOI.set(sampler, NumberOfReads(), 2_000)
+MOI.set(sampler, MOI.RawOptimizerAttribute("num_reads"), 2_000)</code></pre><h2 id="The-[QUBODrivers.sample](@ref)-method"><a class="docs-heading-anchor" href="#The-[QUBODrivers.sample](@ref)-method">The </a><a href="#QUBODrivers.sample"><code>QUBODrivers.sample</code></a> method<a id="The-[QUBODrivers.sample](@ref)-method-1"></a><a class="docs-heading-anchor-permalink" href="#The-[QUBODrivers.sample](@ref)-method" title="Permalink"></a></h2><article><details class="docstring" open="true"><summary id="QUBODrivers.sample"><a class="docstring-binding" href="#QUBODrivers.sample"><code>QUBODrivers.sample</code></a> — <span class="docstring-category">Function</span></summary><section><div><pre><code class="language-julia hljs">sample(::AbstractSampler{T})::SampleSet{T} where {T}</code></pre><p>Run the backend sampler and return a <code>QUBOTools.SampleSet</code>.</p><p>Sampler packages implement this method for their optimizer type. The method should read the model from the sampler, read any MOI or raw optimizer attributes it needs, call the backend, and return a <code>SampleSet{T}</code> whose samples use the same sense and domain as the backend output.</p><p><code>MOI.optimize!</code> calls this method and attaches the returned sample set to the optimizer. If the returned metadata does not include a <code>"time"</code> dictionary with a <code>"total"</code> entry, or does not include <code>"status"</code>, QUBODrivers fills those fields with default values.</p></div><a class="docs-sourcelink" href="https://github.com/JuliaQUBO/QUBODrivers.jl/blob/70684e1e74dd9a91b06d3fde51783564c8f54283/src/interface/sampler.jl#L16-L30" target="_blank">source</a></section></details></article><h3 id="The-SampleSet-collection"><a class="docs-heading-anchor" href="#The-SampleSet-collection">The <code>SampleSet</code> collection</a><a id="The-SampleSet-collection-1"></a><a class="docs-heading-anchor-permalink" href="#The-SampleSet-collection" title="Permalink"></a></h3><p>The <a href="#QUBODrivers.sample"><code>QUBODrivers.sample</code></a> method must return a <code>QUBOTools.SampleSet{T}</code>. A <code>SampleSet</code> collects <code>QUBOTools.Sample</code> entries together with metadata about the sampling run.</p><p>Build a <code>SampleSet</code> from a vector of samples and an optional metadata dictionary:</p><pre><code class="language-julia hljs">samples = QUBOTools.Sample{T,Int}[
+    QUBOTools.Sample{T,Int}(ψ, λ)   # state vector ψ, objective value λ
+    for (ψ, λ) in zip(states, values)
+]
+
+metadata = Dict{String,Any}(
+    "time" =&gt; Dict{String,Any}("total" =&gt; elapsed),
+)
+
+return QUBOTools.SampleSet(samples, metadata; sense = :min, domain = :bool)</code></pre><p>The <code>sense</code> keyword (<code>:min</code> or <code>:max</code>) and <code>domain</code> (<code>:bool</code> or <code>:spin</code>) tell QUBOTools how to interpret the samples.</p><p>The metadata dictionary is the place to record backend status, timing, and diagnostics. QUBODrivers will add a total time and empty status string if they are missing, but backend-specific wrappers should provide as much useful metadata as their solver exposes.</p><h2 id="A-complete-example"><a class="docs-heading-anchor" href="#A-complete-example">A complete example</a><a id="A-complete-example-1"></a><a class="docs-heading-anchor-permalink" href="#A-complete-example" title="Permalink"></a></h2><pre><code class="language-julia hljs">module SuperSampler
+
+import QUBODrivers
+import QUBODrivers: QUBOTools
+import MathOptInterface as MOI
+
+@doc raw"""
+    SuperSampler.Optimizer
+
+This sampler is super!
+"""
+QUBODrivers.@setup Optimizer begin
+    name    = "Super Sampler"
+    version = v"1.0.2"
+    attributes = begin
+        NumberOfReads["num_reads"]::Integer = 1_000
+        SuperAttribute::String = "super"
+    end
+end
+
+function QUBODrivers.sample(sampler::Optimizer{T}) where {T}
+    # ~ Is your annealer running on the Ising Model? Have this:
+    n, h, J, α, β = QUBOTools.ising(
+        sampler,
+        :dense; # Here we opt for a dense matrix representation
+        sense = :max,
+    )
+
+    # ~ Retrieve Attributes using MathOptInterface ~ #
+    num_reads  = MOI.get(sampler, NumberOfReads())
+    super_attr = MOI.get(sampler, SuperAttribute())
+
+    # ~ Do some sampling ~ #
+    samples = QUBOTools.Sample{T,Int}[]
+
+    clock = @timed for _ = 1:num_reads
+        ψ = super_sample(n, h, J, super_attr)
+        λ = QUBOTools.value(ψ, h, J, α, β)
+
+        s = QUBOTools.Sample{T,Int}(ψ, λ)
+
+        push!(samples, s)
+    end
+
+    # ~ Store some metadata ~ #
+    metadata = Dict{String,Any}(
+        "num_reads"  =&gt; num_reads,
+        "super_attr" =&gt; super_attr,
+        "time"       =&gt; Dict{String,Any}("effective" =&gt; clock.time),
+    )
+
+    # ~ Return a SampleSet ~ #
+    return QUBOTools.SampleSet(samples, metadata; sense=:max, domain=:spin)
+end
+
+function super_sample(n, h, J, super_attr)
+    # ~ Do some super sampling (using C/C++) ~ #
+    ψ = ccall(
+        :super_sample,
+        Vector{Int},
+        (
+            Cint,
+            Ptr{Float64},
+            Ptr{Ptr{Float64}},
+            Cstring
+        ),
+        n,
+        h,
+        J,
+        super_attr,
+    )
+
+    return ψ
+end
+
+end # module</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../3-samplers/">« Samplers</a><a class="docs-footer-nextpage" href="../7-integration/">Implementing a Sampler »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label></p><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div><p></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Friday 22 May 2026 15:21">Friday 22 May 2026</span>. Using Julia version 1.12.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></HTML>
