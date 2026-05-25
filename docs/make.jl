@@ -9,7 +9,7 @@ makedocs(;
     clean    = true,
     warnonly = [:missing_docs],
     format   = Documenter.HTML( #
-        assets     = ["assets/extra_styles.css", "assets/favicon.ico"],
+        assets     = ["assets/extra_styles.css", "assets/mermaid-init.js", "assets/favicon.ico"],
         edit_link  = "main",
         mathengine = Documenter.KaTeX(),
         sidebar_sitename = false
@@ -18,6 +18,7 @@ makedocs(;
     authors  = "Pedro Maciel Xavier and Pedro Ripper and Tiago Andrade and Joaquim Dias Garcia and Nelson Maculan and David E. Bernal Neira",
     pages    = [
         "Home" => "index.md",
+        "Design & Architecture" => "design.md",
         "Analysis & Visualization" => "analysis.md",
         "Examples" => [
             "Knapsack" => "examples/knapsack.md",

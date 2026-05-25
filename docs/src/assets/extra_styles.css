@@ -35,7 +35,8 @@ p:has(img) {
     margin: 0 auto;
 }
 
-div.mermaid {
+div.mermaid,
+pre.mermaid {
     text-align: center;
     margin: 0 auto;
 }
