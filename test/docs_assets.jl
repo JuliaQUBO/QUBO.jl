@@ -13,7 +13,7 @@ function test_docs_assets()
         @test !occursin("--documenter-border-color", css)
         @test !occursin("--documenter-sidebar-background", css)
         @test occursin("pre.mermaid", css)
-        @test occursin("mermaid.esm.min.mjs", mermaid_js)
+        @test occursin("mermaid@10.9.6/dist/mermaid.esm.min.mjs", mermaid_js)
         @test occursin("renderMermaidDiagrams", mermaid_js)
 
         @test occursin("M 671.76 94.861", qubodrivers_logo)
