@@ -24,8 +24,14 @@ function test_docs_assets()
         @test occursin("class=\"mermaid\"", design)
         @test occursin("QUBODrivers.jl", design)
         @test occursin("QUBOTools.jl", design)
+        @test occursin("QUBO.jl entrypoint package", design)
+        @test occursin("source_model", design)
+        @test occursin("target_model", design)
+        @test occursin("QUBOTools_MOI.QUBOModel", design)
         @test occursin("pseudo-Boolean", design)
         @test occursin("quadratization", design)
+        @test !occursin("Figure 1", design)
+        @test !occursin("MIQP solver", design)
     end
 
     return nothing

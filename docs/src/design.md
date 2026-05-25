@@ -1,77 +1,92 @@
 # Design & Architecture
 
-QUBO.jl is the entrypoint package for the JuliaQUBO ecosystem. It bundles the
-compiler, solver interface, and model tooling packages used to move from
-ordinary JuMP models to QUBO instances, solver calls, and post-solve analysis.
+QUBO.jl is the entrypoint package for the JuliaQUBO ecosystem. The package code
+is intentionally thin: it imports and re-exports the compiler, sampler, and
+tooling packages, then adds small JuMP and QUBOTools integrations for common
+workflows.
 
-The architecture below follows Figure 1 of the QUBO.jl paper. Model I/O is the
-optimization-model path, while data I/O covers file conversion, model data, and
-solution data handled by QUBOTools.jl.
+The architecture below follows the package boundaries in the current source
+code. The QUBO.jl paper provides useful background, but the code is the source
+of truth for this diagram.
 
 ```@raw html
 <pre class="mermaid">
-flowchart LR
-    subgraph legend["Legend"]
+flowchart TB
+    user["User code&lt;br/&gt;using QUBO&lt;br/&gt;JuMP.Model"]
+
+    subgraph qubo["QUBO.jl entrypoint package"]
         direction LR
-        l1[" "] -->|"Model I/O"| l2[" "]
-        l3[" "] -.->|"Data I/O"| l4[" "]
-        style l1 height:0px
-        style l2 height:0px
-        style l3 height:0px
-        style l4 height:0px
+        reexports["Imports and re-exports&lt;br/&gt;ToQUBO.jl / QUBODrivers.jl&lt;br/&gt;/ QUBOTools.jl"]
+        integrations["Local integrations&lt;br/&gt;Spin, NumberOfReads,&lt;br/&gt;reads(model)&lt;br/&gt;source_model / target_model&lt;br/&gt;QUBOTools.backend(::JuMP.Model)"]
     end
 
-    jump["JuMP MINLP model&lt;br/&gt;opt f(y,z)&lt;br/&gt;s.t. g(y,z) &lt;= 0&lt;br/&gt;h(y,z) = 0"]
-    file["File"]
-
-    subgraph qubo["QUBO.jl"]
-        toqubo["ToQUBO.jl"]
-        moi["MOI QUBO model&lt;br/&gt;opt x' Q x&lt;br/&gt;s.t. x in B^n"]
-        drivers["QUBODrivers.jl"]
-        tools["QUBOTools.jl"]
+    subgraph toqubo["ToQUBO.jl compiler"]
+        direction TB
+        source["source_model&lt;br/&gt;PreQUBO / MOI"]
+        ir["PBO/PBF compiler state&lt;br/&gt;encodings + penalties&lt;br/&gt;quadratization when needed"]
+        target["target_model&lt;br/&gt;QUBOTools_MOI.QUBOModel&lt;br/&gt;binary quadratic MOI model"]
     end
 
-    miqp["MIQP solver"]
-    qsolver["QUBO solver"]
-    analysis["Analysis"]
-    modeldata["Model data"]
-    solutiondata["Solution data"]
+    subgraph drivers["QUBODrivers.jl sampler layer"]
+        direction TB
+        samplers["MOI sampler optimizers&lt;br/&gt;Exact / Random / Identity / others"]
+        resultattrs["MOI result attributes&lt;br/&gt;objective values / primals&lt;br/&gt;/ reads"]
+    end
 
-    jump --> toqubo --> moi
-    moi --> miqp
-    moi --> drivers --> qsolver
+    subgraph tools["QUBOTools.jl model and analysis layer"]
+        direction TB
+        qmodel["QUBOTools.Model&lt;br/&gt;QUBO / Ising forms"]
+        solution["Sample / SampleSet&lt;br/&gt;solution data"]
+        files["read/write model and solution files"]
+        analysis["metrics and plotting recipes"]
+    end
 
-    file <-.->|"Data I/O"| tools
-    moi <-.->|"Model I/O"| tools
-    drivers -.->|"Solution data"| tools
-    tools --> analysis
-    tools -.-> modeldata
-    tools -.-> solutiondata
+    user --> reexports --> source
+    integrations -.-> qmodel
+
+    source --> ir --> target
+    target --> samplers --> resultattrs --> solution
+    target -.->|"backend"| qmodel
+    qmodel --> files
+    solution --> files
+    qmodel --> analysis
+    solution --> analysis
 </pre>
 ```
 
 ## Ecosystem Layers
 
-`ToQUBO.jl` is the reformulation layer. It receives a JuMP model through
-MathOptInterface (MOI), applies the compilation steps needed by the QUBO
-formalism, and caches the resulting QUBO as another MOI model. That output can
-be forwarded to a QUBO sampler or to a classical MIQP solver that supports
-binary variables and nonconvex quadratic objectives.
+`QUBO.jl` is the entrypoint layer. Its source imports and exports
+`ToQUBO.jl`, `QUBODrivers.jl`, and `QUBOTools.jl`, exports the built-in
+samplers from QUBODrivers, and exposes QUBOTools' `Spin`, `NumberOfReads`, and
+`reads` APIs. It also defines the JuMP-facing convenience functions
+`source_model`, `target_model`, and `QUBOTools.backend(::JuMP.Model)`.
 
-`QUBODrivers.jl` provides the solver-facing interface. Solver wrappers subtype
-MOI optimizer abstractions, validate QUBO-compatible models, expose solver
-attributes, submit models to sampling or annealing backends, and return solution
-sets for analysis.
+`ToQUBO.jl` is the compiler layer. Its optimizer is a virtual MOI optimizer
+with a `source_model`, a `target_model`, and compiler state for variables,
+constraints, pseudo-Boolean functions, penalties, and the final compiled
+objective. During `MOI.optimize!`, ToQUBO compiles the source model and writes a
+binary quadratic target model.
 
-`QUBOTools.jl` provides the model and result tooling layer. It handles QUBO and
-Ising file conversion, defines reusable model and solution abstractions, and
-backs analysis utilities such as conditioning queries, density metrics, and
-plotting recipes.
+`QUBODrivers.jl` is the sampler layer. Sampler optimizers subtype an MOI
+optimizer abstraction, accept QUBO or Ising models, store a `QUBOTools.Model`,
+and expose results through MOI attributes. Built-in samplers such as
+`ExactSampler`, `RandomSampler`, and `IdentitySampler` are re-exported by
+QUBO.jl.
+
+`QUBOTools.jl` is the model, solution, file I/O, and analysis layer. It defines
+the model and solution abstractions used by the compiler and samplers, handles
+QUBO and Ising forms, reads and writes model and solution files, and backs
+analysis utilities such as density metrics and plotting recipes.
 
 ## Compilation Through PBO
 
-The QUBO.jl paper describes compilation as a lowering process from a general
-optimization model to a binary, unconstrained polynomial of degree at most two.
+PBO is part of the ToQUBO.jl compiler internals, not a separate implementation
+inside the QUBO.jl entrypoint package. The ToQUBO source imports
+`PseudoBooleanOptimization` as `PBO` and stores pseudo-Boolean function state in
+the virtual model while compiling the source MOI model into a binary quadratic
+target model.
+
 After the original JuMP/MOI model is available, ToQUBO.jl applies variable
 encoding and constraint penalization so the problem can be represented over
 binary variables.
@@ -84,25 +99,24 @@ f(x) = \sum_{\omega \in \mathcal{P}([n])} c_{\omega}
        \prod_{j \in \omega} x_j,
 ```
 
-where ``x \in \{0, 1\}^n``. This representation is natural for QUBO
-compilation because optimizing a degree-two pseudo-Boolean function over binary
+where ``x \in \{0, 1\}^n``. This representation is natural for ToQUBO's
+compiler because optimizing a degree-two pseudo-Boolean function over binary
 variables is equivalent to optimizing a QUBO, up to the constant term.
 
 Some constraint mappings produce higher-degree pseudo-Boolean terms. Those terms
-must be quadratized before they can be sent to QUBO-compatible solvers.
-Quadratization introduces auxiliary binary variables so that the reduced
-degree-two problem has the same minimum value as the higher-degree expression.
-The paper cites Dattani for a survey of quadratization methods and Boros-Gruber
-for positive-term quadratization. ToQUBO.jl exposes this step through Julia
-multiple dispatch so new degree-reduction methods can be added without changing
-the rest of the modeling flow.
+must be quadratized before they can be written to the binary quadratic target
+model. In the current ToQUBO code, compiler routines set a `Quadratize` flag
+when they generate high-order pseudo-Boolean terms, then the build step calls
+`PBO.quadratize!` before writing the target MOI objective. The paper cites
+Dattani for a survey of quadratization methods and Boros-Gruber for
+positive-term quadratization.
 
 In summary, the compilation path is:
 
 ```text
 JuMP/MOI model
   -> variable encoding and constraint penalization
-  -> pseudo-Boolean representation
-  -> quadratization when degree > 2
-  -> MOI QUBO model
+  -> ToQUBO pseudo-Boolean compiler state
+  -> quadratization when high-order terms are generated
+  -> binary quadratic MOI target model
 ```
