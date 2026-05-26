@@ -28,3 +28,14 @@ function push_deploy_branch(branch::AbstractString; remote::AbstractString = "or
 
     return nothing
 end
+
+function restore_source_branch(branch::AbstractString; remote::AbstractString = "origin")
+    if has_local_branch(branch) ||
+       success(`git fetch $remote $(branch_ref(branch)):$(branch_ref(branch))`)
+        run(`git checkout $branch`)
+
+        return true
+    end
+
+    return false
+end
