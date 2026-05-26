@@ -25,3 +25,7 @@ Manifest.toml
 
 # VS Code configuration
 .vscode/
+
+# Local tool and package caches
+.codex
+.julia-depot/
