@@ -78,7 +78,9 @@ function deploymultidocs(
         @info "Pushing updated documentation"
         push_deploy_branch(branch; remote)
 
-        run(`git checkout $main`)
+        if !restore_source_branch(main; remote)
+            @warn "Could not restore source branch after deployment" main
+        end
     else
         @info "No changes to aggregated documentation"
     end
