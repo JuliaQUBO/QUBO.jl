@@ -141,6 +141,9 @@ set_attribute.(c, Ref(ToQUBO.Attributes.ConstraintEncodingPenaltyHint()), rho)
 
 ## Overview 🗺️
 
+For package boundaries and the compilation flow, see the
+[Design & Architecture](https://juliaqubo.github.io/QUBO.jl/dev/design/) page.
+
 <div align="left">
 <a href="https://github.com/JuliaQUBO/ToQUBO.jl">
 <img width="200px" src="https://raw.githubusercontent.com/JuliaQUBO/ToQUBO.jl/master/docs/src/assets/logo.svg" alt="ToQUBO.jl" align="right" />
