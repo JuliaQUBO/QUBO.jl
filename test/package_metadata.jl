@@ -8,7 +8,7 @@ function test_package_metadata()
 
         @test compat["julia"] == "1.10"
         @test compat["QUBOTools"] == "0.12"
-        @test compat["QUBODrivers"] == "0.4"
+        @test compat["QUBODrivers"] == "0.4, 0.5"
         @test compat["ToQUBO"] == "0.3"
 
         ci = read(joinpath(root, ".github", "workflows", "ci.yml"), String)
