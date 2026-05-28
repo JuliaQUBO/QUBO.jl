@@ -13,7 +13,7 @@ ToQUBO = "9a412ddf-83fa-43b6-9748-7843c851aa65"
 [compat]
 JuMP             = "1"
 MathOptInterface = "1"
-QUBODrivers      = "0.4"
+QUBODrivers      = "0.4, 0.5"
 QUBOTools        = "0.12"
 ToQUBO           = "0.3"
 julia            = "1.10"
