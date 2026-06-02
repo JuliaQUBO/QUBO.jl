@@ -12,9 +12,20 @@ function test_package_metadata()
         @test compat["ToQUBO"] == "0.3"
 
         ci = read(joinpath(root, ".github", "workflows", "ci.yml"), String)
+        docs_make = read(joinpath(root, "docs", "make.jl"), String)
+        dependabot = read(joinpath(root, ".github", "dependabot.yml"), String)
 
         @test occursin(r"version:\s*'1\.10'", ci)
         @test occursin(r"version:\s*'1'", ci)
+
+        @test occursin("\"Dependency Maintenance\" => \"maintenance.md\"", docs_make)
+        @test occursin("package-ecosystem: \"julia\"", dependabot)
+        @test occursin("directory: \"/docs\"", dependabot)
+        @test occursin("root-julia-dependencies", dependabot)
+        @test occursin("docs-julia-dependencies", dependabot)
+        @test occursin("package-ecosystem: \"github-actions\"", dependabot)
+        @test occursin("interval: \"weekly\"", dependabot)
+        @test occursin("interval: \"monthly\"", dependabot)
     end
 
     return nothing

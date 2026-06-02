@@ -5,6 +5,7 @@ function test_docs_assets()
         css = read(joinpath(assets_dir, "extra_styles.css"), String)
         mermaid_js = read(joinpath(assets_dir, "mermaid-init.js"), String)
         design = read(joinpath(docs_dir, "design.md"), String)
+        maintenance = read(joinpath(docs_dir, "maintenance.md"), String)
         qubodrivers_logo = read(joinpath(assets_dir, "logo-qubodrivers.svg"), String)
         qubotools_logo = read(joinpath(assets_dir, "logo-qubotools.svg"), String)
 
@@ -32,6 +33,12 @@ function test_docs_assets()
         @test occursin("quadratization", design)
         @test !occursin("Figure 1", design)
         @test !occursin("MIQP solver", design)
+
+        @test occursin("GitHub Dependabot", maintenance)
+        @test occursin("Do not add new CompatHelper workflows by default", maintenance)
+        @test occursin("package-ecosystem: \"julia\"", maintenance)
+        @test occursin("omits `test/` because `test/Project.toml` has no `[compat]`", maintenance)
+        @test occursin("COMPATHELPER_PRIV", maintenance)
     end
 
     return nothing

@@ -1,0 +1,24 @@
+version: 2
+updates:
+  - package-ecosystem: "julia"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      root-julia-dependencies:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "julia"
+    directory: "/docs"
+    schedule:
+      interval: "weekly"
+    groups:
+      docs-julia-dependencies:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
