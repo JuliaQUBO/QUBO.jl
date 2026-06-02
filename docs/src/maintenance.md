@@ -19,10 +19,16 @@ these update entries:
   compatibility bounds, scheduled weekly.
 - `github-actions` for workflow action pins, scheduled monthly.
 
+Group Julia dependency updates by environment so routine compatibility bumps
+arrive in a small number of pull requests instead of one pull request per
+dependency.
+
 The Julia update should target the repository root unless the package lives in
 a subdirectory. Repositories with extra Julia environments, such as `docs/` or
 `test/`, should add additional `julia` entries after the root package entry
-when their compatibility bounds are maintained separately.
+when their compatibility bounds are maintained separately. The QUBO.jl
+reference configuration includes `docs/` because it has its own `[compat]`
+bounds, and omits `test/` because `test/Project.toml` has no `[compat]`.
 
 The standard QUBO.jl entrypoint configuration is:
 
@@ -33,11 +39,19 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      root-julia-dependencies:
+        patterns:
+          - "*"
 
   - package-ecosystem: "julia"
     directory: "/docs"
     schedule:
       interval: "weekly"
+    groups:
+      docs-julia-dependencies:
+        patterns:
+          - "*"
 
   - package-ecosystem: "github-actions"
     directory: "/"

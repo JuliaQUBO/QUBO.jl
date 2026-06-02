@@ -37,6 +37,7 @@ function test_docs_assets()
         @test occursin("GitHub Dependabot", maintenance)
         @test occursin("Do not add new CompatHelper workflows by default", maintenance)
         @test occursin("package-ecosystem: \"julia\"", maintenance)
+        @test occursin("omits `test/` because `test/Project.toml` has no `[compat]`", maintenance)
         @test occursin("COMPATHELPER_PRIV", maintenance)
     end
 
