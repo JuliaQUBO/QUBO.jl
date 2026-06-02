@@ -19,6 +19,7 @@ makedocs(;
     pages    = [
         "Home" => "index.md",
         "Design & Architecture" => "design.md",
+        "Dependency Maintenance" => "maintenance.md",
         "Analysis & Visualization" => "analysis.md",
         "Examples" => [
             "Knapsack" => "examples/knapsack.md",
