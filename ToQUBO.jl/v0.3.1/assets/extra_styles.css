@@ -1,0 +1,15 @@
+.docs-sidebar .docs-logo > img {
+    max-height: 16rem !important;
+    margin: auto;
+}
+
+/* Center images & diagrams */
+p:has(img) {
+    text-align: center;
+    margin: 0 auto;
+}
+
+div.mermaid {
+    text-align: center;
+    margin: 0 auto;
+}
