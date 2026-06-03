@@ -16,7 +16,11 @@ jobs:
           version: '1.10'
       - name: Install dependencies
         run: julia --project=docs/ -e 'using Pkg; Pkg.develop(path=@__DIR__); Pkg.instantiate()'
+      - name: Build docs
+        if: github.event_name == 'pull_request' && github.actor == 'dependabot[bot]'
+        run: julia --project=docs/ docs/make.jl --skip-deploy
       - name: Build and deploy
+        if: github.event_name != 'pull_request' || github.actor != 'dependabot[bot]'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # For authentication with GitHub Actions token
         run: julia --project=docs/ docs/make.jl
