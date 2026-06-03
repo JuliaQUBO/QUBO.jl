@@ -10,3 +10,10 @@ ToQUBO = "9a412ddf-83fa-43b6-9748-7843c851aa65"
 
 [compat]
 Documenter = "1"
+JuMP = "1.30.1"
+MultiDocumenter = "0.8.0"
+QUBO = "0.5.0"
+QUBODrivers = "0.4, 0.5"
+QUBOTools = "0.12.1"
+Statistics = "1"
+ToQUBO = "0.3.0"
