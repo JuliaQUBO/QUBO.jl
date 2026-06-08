@@ -20,7 +20,7 @@ authors:
   given-names: "David E."
   orcid: "https://orcid.org/0000-0002-8308-5016"
 title: "QUBO.jl: A Julia Ecosystem for Quadratic Unconstrained Binary Optimization"
-version: "0.5.1"
+version: "0.6.0"
 doi: 10.48550/arXiv.2307.02577
-date-released: 2026-06-03
+date-released: 2026-06-08
 url: "https://github.com/JuliaQUBO/QUBO.jl"
