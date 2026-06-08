@@ -8,7 +8,7 @@ makedocs(;
     doctest  = true,
     clean    = true,
     warnonly = [:missing_docs],
-    format   = Documenter.HTML( #
+    format   = Documenter.HTML(
         assets     = ["assets/extra_styles.css", "assets/mermaid-init.js", "assets/favicon.ico"],
         edit_link  = "main",
         mathengine = Documenter.KaTeX(),
