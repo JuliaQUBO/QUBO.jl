@@ -8,6 +8,7 @@
 
 [![Code Coverage](https://codecov.io/gh/JuliaQUBO/QUBO.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/JuliaQUBO/QUBO.jl)
 [![CI](https://github.com/JuliaQUBO/QUBO.jl/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/JuliaQUBO/QUBO.jl/actions/workflows/ci.yml)
+[![Ecosystem Canary](https://github.com/JuliaQUBO/QUBO.jl/actions/workflows/ecosystem-canary.yml/badge.svg?branch=main)](https://github.com/JuliaQUBO/QUBO.jl/actions/workflows/ecosystem-canary.yml)
 [![Docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://juliaqubo.github.io/QUBO.jl/dev/)
 [![Zenodo/DOI](https://zenodo.org/badge/614041491.svg)](https://zenodo.org/badge/latestdoi/614041491)
 [![JuliaCon 2022](https://img.shields.io/badge/JuliaCon-2022-9558b2)](https://www.youtube.com/watch?v=OTmzlTbqdNo)
@@ -19,6 +20,12 @@
 
 [QUBO.jl](https://github.com/JuliaQUBO/QUBO.jl) is an all-in-one package for working with QUBO models in [JuMP](https://github.com/jump-dev/JuMP.jl) and interfacing with their solvers.
 This project aggregates and extends functionality from its complementary packages [ToQUBO.jl](https://github.com/JuliaQUBO/ToQUBO.jl), [QUBODrivers.jl](https://github.com/JuliaQUBO/QUBODrivers.jl) and [QUBOTools.jl](https://github.com/JuliaQUBO/QUBOTools.jl).
+
+The ecosystem canary composes the latest registered QUBO packages in fresh Julia
+environments to catch compatibility drift across package boundaries. A red
+canary means at least one tier no longer resolves or imports together; inspect
+the workflow log's compatibility matrix first, then update the offending
+package bounds or release the missing compatibility work.
 
 ## QUBO? 🟦
 
