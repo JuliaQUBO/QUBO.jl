@@ -1,0 +1,59 @@
+name: Ecosystem Canary
+
+on:
+  schedule:
+    - cron: "17 8 * * 1"
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - ".github/workflows/ecosystem-canary.yml"
+      - "scripts/compat_matrix.jl"
+      - "scripts/ecosystem_canary.jl"
+      - "Project.toml"
+      - "Manifest.toml"
+      - "docs/Project.toml"
+      - "docs/Manifest.toml"
+
+jobs:
+  tier-1:
+    name: Tier 1 resolution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: julia-actions/setup-julia@v3
+        with:
+          version: "1.11"
+      - uses: julia-actions/cache@v3
+      - name: Print compat matrix
+        run: >
+          julia scripts/compat_matrix.jl
+          QUBO QUBOLib MQLib IsingSolvers TenSolver QuantumAnnealingInterface
+      - name: Resolve and import pure-Julia tier
+        run: >
+          julia scripts/ecosystem_canary.jl --tier tier-1
+          QUBO QUBOLib MQLib IsingSolvers TenSolver QuantumAnnealingInterface
+
+  tier-2:
+    name: Tier 2 resolution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: julia-actions/setup-julia@v3
+        with:
+          version: "1.11"
+      - uses: julia-actions/cache@v3
+      - name: Print compat matrix
+        run: >
+          julia scripts/compat_matrix.jl
+          QUBO QUBOLib MQLib IsingSolvers TenSolver QuantumAnnealingInterface
+          DWave PySA CIMOptimizer QiskitOpt
+      - name: Resolve and import Python-backed tier
+        run: >
+          julia scripts/ecosystem_canary.jl --tier tier-2
+          --allow-import-failure DWave
+          --allow-import-failure PySA
+          --allow-import-failure CIMOptimizer
+          --allow-import-failure QiskitOpt
+          QUBO QUBOLib MQLib IsingSolvers TenSolver QuantumAnnealingInterface
+          DWave PySA CIMOptimizer QiskitOpt
