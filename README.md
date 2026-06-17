@@ -21,11 +21,11 @@
 [QUBO.jl](https://github.com/JuliaQUBO/QUBO.jl) is an all-in-one package for working with QUBO models in [JuMP](https://github.com/jump-dev/JuMP.jl) and interfacing with their solvers.
 This project aggregates and extends functionality from its complementary packages [ToQUBO.jl](https://github.com/JuliaQUBO/ToQUBO.jl), [QUBODrivers.jl](https://github.com/JuliaQUBO/QUBODrivers.jl) and [QUBOTools.jl](https://github.com/JuliaQUBO/QUBOTools.jl).
 
-The ecosystem canary composes the latest registered QUBO packages in fresh Julia
-environments to catch compatibility drift across package boundaries. A red
-canary means at least one tier no longer resolves or imports together; inspect
-the workflow log's compatibility matrix first, then update the offending
-package bounds or release the missing compatibility work.
+The ecosystem canary composes the latest registered versions of maintained QUBO
+packages in fresh Julia environments to catch compatibility drift across
+package boundaries. A red canary means at least one tier no longer resolves or
+imports together; inspect the workflow log's compatibility matrix first, then
+update the offending package bounds or release the missing compatibility work.
 
 ## QUBO? 🟦
 
