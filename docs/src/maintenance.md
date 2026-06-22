@@ -71,6 +71,32 @@ with explicit `contents: write` and `pull-requests: write` permissions and a
 dedicated secret such as `COMPATHELPER_PRIV` when the workflow must push
 branches that trigger CI.
 
+## Release Guardrails
+
+Use package-local release checks before tagging or registering an individual
+package release. The release preflight belongs in the package repository, for
+example `scripts/release_check.jl`, and should catch release-sensitive metadata
+that normal unit tests can miss:
+
+- root, docs, and test `Project.toml` version and compatibility drift;
+- release-note sections needed by General registry AutoMerge, especially
+  `Breaking changes` and `Changelog` wording for pre-1.0 minor releases;
+- TagBot, Registrator, General pull request, and fresh `Pkg.add` verification
+  checklist items.
+
+Use the QUBO.jl ecosystem canary after release work reaches the registry, or
+whenever a coordinated release wave changes cross-package compatibility. The
+canary composes the latest registered package versions in fresh environments
+and prints the registered compatibility matrix on failure. It is the
+post-release coordination check: it verifies that the ecosystem still installs
+and imports together, but it is not a substitute for package-local preflight
+before Registrator is triggered.
+
+When a release wave changes shared bounds such as `QUBODrivers` or
+`QUBOTools`, check the canary or run `scripts/compat_matrix.jl` from this
+repository after the package registrations land. Track any stale downstream
+bounds in the downstream package repository rather than weakening the canary.
+
 ## Rollout Order
 
 Apply the policy to package repositories before solver or adapter repositories
