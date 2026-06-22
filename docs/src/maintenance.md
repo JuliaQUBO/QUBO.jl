@@ -87,7 +87,8 @@ that normal unit tests can miss:
 Use the QUBO.jl ecosystem canary after release work reaches the registry, or
 whenever a coordinated release wave changes cross-package compatibility. The
 canary composes the latest registered package versions in fresh environments
-and prints the registered compatibility matrix on failure. It is the
+and prints the registered compatibility matrix on every run, then again on
+resolution failure. It is the
 post-release coordination check: it verifies that the ecosystem still installs
 and imports together, but it is not a substitute for package-local preflight
 before Registrator is triggered.

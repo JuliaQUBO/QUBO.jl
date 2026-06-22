@@ -42,6 +42,7 @@ function test_docs_assets()
         @test occursin("scripts/release_check.jl", maintenance)
         @test occursin("Breaking changes", maintenance)
         @test occursin("post-release coordination check", maintenance)
+        @test occursin("compatibility matrix on every run", maintenance)
         @test occursin("scripts/compat_matrix.jl", maintenance)
     end
 
