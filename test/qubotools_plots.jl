@@ -1,5 +1,15 @@
 using RecipesBase
 
+struct DummyQUBOToolsBackend end
+
+QUBOTools.backend(::DummyQUBOToolsBackend) = :dummy_backend
+
+struct DummyJuMPModel <: JuMP.AbstractModel
+    backend::DummyQUBOToolsBackend
+end
+
+JuMP.unsafe_backend(model::DummyJuMPModel) = model.backend
+
 function solved_qubo_model()
     model = Model(() -> ToQUBO.Optimizer(ExactSampler.Optimizer))
 
@@ -13,6 +23,8 @@ end
 
 function test_qubotools_plots()
     @testset "QUBOTools Plots" begin
+        @test QUBOTools.backend(DummyJuMPModel(DummyQUBOToolsBackend())) === :dummy_backend
+
         model = solved_qubo_model()
 
         backend = QUBOTools.backend(model)
