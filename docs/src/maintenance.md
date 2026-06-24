@@ -90,8 +90,11 @@ canary composes the latest registered package versions in fresh environments
 and prints the registered compatibility matrix on every run, then again on
 resolution failure. It also verifies that the resolved
 `PseudoBooleanOptimization`, `QUBOTools`, `ToQUBO`, and `QUBODrivers` versions
-are the latest registered releases, so stale downstream bounds are caught even
-when the resolver can still find an older compatible solution. It is the
+are the latest stable, unyanked registered releases compatible with the Julia
+version running the canary, so stale downstream bounds are caught even when the
+resolver can still find an older compatible solution. The core freshness gate
+is intentionally global: custom runs should include the core packages in the
+package list, because a missing core package is treated as stale. It is the
 post-release coordination check: it verifies that the ecosystem still installs
 and imports together, but it is not a substitute for package-local preflight
 before Registrator is triggered.

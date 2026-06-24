@@ -53,6 +53,25 @@ function print_compat_matrix(packages)
     end
 end
 
+function is_julia_compatible(compatibility)
+    julia_versions = get(compatibility, Pkg.Registry.JULIA_UUID, Pkg.Types.VersionSpec())
+    return VERSION in julia_versions
+end
+
+function latest_installable_registered_version(package, version_info, compatibility_info)
+    candidates = VersionNumber[]
+    for (version, info) in version_info
+        info.yanked && continue
+        isempty(version.prerelease) || continue
+        is_julia_compatible(get(compatibility_info, version, Dict())) || continue
+        push!(candidates, version)
+    end
+    if isempty(candidates)
+        error("no unyanked stable release of $package is compatible with Julia $VERSION")
+    end
+    return maximum(candidates)
+end
+
 function latest_registered_versions(registry, package_names)
     uuid_by_name = Dict(entry.name => uuid for (uuid, entry) in registry.pkgs)
     versions = Dict{String,VersionNumber}()
@@ -60,7 +79,8 @@ function latest_registered_versions(registry, package_names)
         uuid = get(uuid_by_name, package, nothing)
         uuid === nothing && error("$package is not available in the General registry")
         info = Pkg.Registry.registry_info(registry.pkgs[uuid])
-        versions[package] = maximum(keys(info.version_info))
+        compatibility_info = Pkg.Registry.compat_info(info)
+        versions[package] = latest_installable_registered_version(package, info.version_info, compatibility_info)
     end
     return versions
 end
@@ -99,7 +119,7 @@ function check_latest_core_packages(registry, tier, packages)
         status = result.ok ? "ok" : "stale"
         println(
             "  $(result.package): resolved $(version_label(result.resolved)); ",
-            "latest registered $(version_label(result.latest)) [$status]",
+            "latest installable registered $(version_label(result.latest)) [$status]",
         )
     end
 

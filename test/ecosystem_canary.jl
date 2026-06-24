@@ -45,13 +45,38 @@ function test_ecosystem_canary()
             v"0.2.5"
         @test version_label(nothing) == "missing"
 
+        stable_version_info = Dict(
+            v"1.0.0" => (; yanked = false),
+            v"1.1.0" => (; yanked = true),
+            v"1.2.0-beta" => (; yanked = false),
+            v"1.3.0" => (; yanked = false),
+        )
+        stable_compatibility_info = Dict(
+            v"1.0.0" => Dict(Pkg.Registry.JULIA_UUID => Pkg.Types.VersionSpec()),
+            v"1.1.0" => Dict(Pkg.Registry.JULIA_UUID => Pkg.Types.VersionSpec()),
+            v"1.2.0-beta" => Dict(Pkg.Registry.JULIA_UUID => Pkg.Types.VersionSpec()),
+            v"1.3.0" => Dict(Pkg.Registry.JULIA_UUID => Pkg.Types.semver_spec("99")),
+        )
+        @test latest_installable_registered_version(
+            "Example",
+            stable_version_info,
+            stable_compatibility_info,
+        ) == v"1.0.0"
+        @test_throws ErrorException latest_installable_registered_version(
+            "Example",
+            Dict(v"1.0.0" => (; yanked = true)),
+            Dict(v"1.0.0" => Dict(Pkg.Registry.JULIA_UUID => Pkg.Types.VersionSpec())),
+        )
+
         root = joinpath(@__DIR__, "..")
         workflow = read(joinpath(root, ".github", "workflows", "ecosystem-canary.yml"), String)
+        maintenance = read(joinpath(root, "docs", "src", "maintenance.md"), String)
         script = read(joinpath(root, "scripts", "ecosystem_canary.jl"), String)
 
         for package in CORE_PACKAGE_NAMES
             @test occursin(package, workflow)
         end
+        @test occursin("intentionally global", maintenance)
         @test occursin("Pkg.add(packages)", script)
         @test !occursin("Pkg.develop", script)
     end
