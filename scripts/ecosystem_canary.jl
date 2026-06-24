@@ -2,7 +2,7 @@
 
 using Pkg
 
-const CORE_PACKAGE_NAMES = ["QUBOTools", "ToQUBO", "QUBODrivers"]
+const CORE_PACKAGE_NAMES = ["PseudoBooleanOptimization", "QUBOTools", "ToQUBO", "QUBODrivers"]
 
 function parse_args(args)
     tier = "custom"

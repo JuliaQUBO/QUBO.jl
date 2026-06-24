@@ -88,12 +88,13 @@ Use the QUBO.jl ecosystem canary after release work reaches the registry, or
 whenever a coordinated release wave changes cross-package compatibility. The
 canary composes the latest registered package versions in fresh environments
 and prints the registered compatibility matrix on every run, then again on
-resolution failure. It also verifies that the resolved `QUBOTools`, `ToQUBO`,
-and `QUBODrivers` versions are the latest registered releases, so stale
-downstream bounds are caught even when the resolver can still find an older
-compatible solution. It is the post-release coordination check: it verifies
-that the ecosystem still installs and imports together, but it is not a
-substitute for package-local preflight before Registrator is triggered.
+resolution failure. It also verifies that the resolved
+`PseudoBooleanOptimization`, `QUBOTools`, `ToQUBO`, and `QUBODrivers` versions
+are the latest registered releases, so stale downstream bounds are caught even
+when the resolver can still find an older compatible solution. It is the
+post-release coordination check: it verifies that the ecosystem still installs
+and imports together, but it is not a substitute for package-local preflight
+before Registrator is triggered.
 
 When a release wave changes shared bounds such as `QUBODrivers` or
 `QUBOTools`, check the canary or run `scripts/compat_matrix.jl` from this

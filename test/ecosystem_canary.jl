@@ -16,22 +16,33 @@ function test_ecosystem_canary()
         @test tier == "tier-2"
         @test allow_import_failure == Set(["DWave"])
         @test packages == ["QUBOTools", "QUBO"]
-        @test CORE_PACKAGE_NAMES == ["QUBOTools", "ToQUBO", "QUBODrivers"]
+        @test CORE_PACKAGE_NAMES == [
+            "PseudoBooleanOptimization",
+            "QUBOTools",
+            "ToQUBO",
+            "QUBODrivers",
+        ]
 
         latest_versions = Dict(
-            "QUBOTools" => v"0.14.4",
+            "PseudoBooleanOptimization" => v"0.2.6",
+            "QUBOTools" => v"0.15.0",
             "ToQUBO" => v"0.5.0",
             "QUBODrivers" => v"0.6.3",
         )
         fresh_manifest = copy(latest_versions)
-        stale_manifest = merge(fresh_manifest, Dict("QUBOTools" => v"0.13.3"))
+        stale_manifest = merge(fresh_manifest, Dict("QUBOTools" => v"0.14.4"))
+        stale_pbo_manifest = merge(fresh_manifest, Dict("PseudoBooleanOptimization" => v"0.2.5"))
 
         fresh_results = core_version_results(CORE_PACKAGE_NAMES, latest_versions, fresh_manifest)
         @test all(result -> result.ok, fresh_results)
 
         stale_results = core_version_results(CORE_PACKAGE_NAMES, latest_versions, stale_manifest)
         @test !all(result -> result.ok, stale_results)
-        @test only(result for result in stale_results if result.package == "QUBOTools").resolved == v"0.13.3"
+        @test only(result for result in stale_results if result.package == "QUBOTools").resolved == v"0.14.4"
+        stale_pbo_results = core_version_results(CORE_PACKAGE_NAMES, latest_versions, stale_pbo_manifest)
+        @test !all(result -> result.ok, stale_pbo_results)
+        @test only(result for result in stale_pbo_results if result.package == "PseudoBooleanOptimization").resolved ==
+            v"0.2.5"
         @test version_label(nothing) == "missing"
 
         root = joinpath(@__DIR__, "..")
