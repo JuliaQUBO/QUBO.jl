@@ -98,6 +98,13 @@ When a release wave changes shared bounds such as `QUBODrivers` or
 repository after the package registrations land. Track any stale downstream
 bounds in the downstream package repository rather than weakening the canary.
 
+The QUBO.jl v0.6.2 compatibility refresh follows the registered stack with
+`ToQUBO` v0.5.1, `QUBOTools` v0.15.1, `QUBODrivers` v0.6.4, and
+`PseudoBooleanOptimization` v0.3.0. Keep executable documentation examples on
+`QUBODrivers.ExactSampler` or another dependency that supports `QUBOTools`
+0.15. While `PySA` v0.4.1 still caps `QUBOTools` at 0.14, PySA examples should
+remain plain `julia` snippets rather than Documenter `@example` blocks.
+
 ## Rollout Order
 
 Apply the policy to package repositories before solver or adapter repositories

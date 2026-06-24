@@ -7,16 +7,16 @@ function test_package_metadata()
         compat = project["compat"]
 
         @test compat["julia"] == "1.10"
-        @test project["version"] == "0.6.1"
-        @test compat["QUBOTools"] == "0.13, 0.14"
+        @test project["version"] == "0.6.2"
+        @test compat["QUBOTools"] == "0.13, 0.14, 0.15"
         @test compat["QUBODrivers"] == "0.6"
         @test compat["ToQUBO"] == "0.4, 0.5"
 
         docs_project = TOML.parsefile(joinpath(root, "docs", "Project.toml"))
         docs_compat = docs_project["compat"]
 
-        @test docs_compat["QUBO"] == "0.6.1"
-        @test docs_compat["QUBOTools"] == "0.13, 0.14"
+        @test docs_compat["QUBO"] == "0.6.2"
+        @test docs_compat["QUBOTools"] == "0.13, 0.14, 0.15"
         @test docs_compat["QUBODrivers"] == "0.6"
         @test docs_compat["ToQUBO"] == "0.4, 0.5"
 
