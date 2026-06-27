@@ -23,9 +23,13 @@ This project aggregates and extends functionality from its complementary package
 
 The ecosystem canary composes the latest registered versions of maintained QUBO
 packages in fresh Julia environments to catch compatibility drift across
-package boundaries. A red canary means at least one tier no longer resolves or
-imports together; inspect the workflow log's compatibility matrix first, then
-update the offending package bounds or release the missing compatibility work.
+package boundaries. It also fails when `PseudoBooleanOptimization`,
+`QUBOTools`, `ToQUBO`, or `QUBODrivers` resolve below their latest registered
+versions that are stable, unyanked, and compatible with the Julia version
+running the canary. A red canary means at least one tier no longer resolves,
+imports, or reaches the latest core stack; inspect the workflow log's
+compatibility matrix first, then update the offending package bounds or release
+the missing compatibility work.
 
 ## QUBO? 🟦
 

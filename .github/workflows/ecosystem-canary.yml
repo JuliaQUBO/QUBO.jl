@@ -28,10 +28,14 @@ jobs:
       - name: Print compat matrix
         run: >
           julia scripts/compat_matrix.jl
+          PseudoBooleanOptimization
+          QUBOTools ToQUBO QUBODrivers
           QUBO QUBOLib MQLib TenSolver QuantumAnnealingInterface
       - name: Resolve and import pure-Julia tier
         run: >
           julia scripts/ecosystem_canary.jl --tier tier-1
+          PseudoBooleanOptimization
+          QUBOTools ToQUBO QUBODrivers
           QUBO QUBOLib MQLib TenSolver QuantumAnnealingInterface
 
   tier-2:
@@ -46,6 +50,8 @@ jobs:
       - name: Print compat matrix
         run: >
           julia scripts/compat_matrix.jl
+          PseudoBooleanOptimization
+          QUBOTools ToQUBO QUBODrivers
           QUBO QUBOLib MQLib TenSolver QuantumAnnealingInterface
           DWave PySA CIMOptimizer QiskitOpt
       - name: Resolve and import Python-backed tier
@@ -55,5 +61,7 @@ jobs:
           --allow-import-failure PySA
           --allow-import-failure CIMOptimizer
           --allow-import-failure QiskitOpt
+          PseudoBooleanOptimization
+          QUBOTools ToQUBO QUBODrivers
           QUBO QUBOLib MQLib TenSolver QuantumAnnealingInterface
           DWave PySA CIMOptimizer QiskitOpt
