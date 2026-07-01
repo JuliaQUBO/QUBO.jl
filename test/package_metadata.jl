@@ -27,7 +27,7 @@ function test_package_metadata()
         @test occursin(r"version:\s*'1\.10'", ci)
         @test occursin(r"version:\s*'1'", ci)
 
-        @test occursin("\"Dependency Maintenance\" => \"maintenance.md\"", docs_make)
+        @test occursin("\"Maintenance Policy\" => \"maintenance.md\"", docs_make)
         @test occursin("package-ecosystem: \"julia\"", dependabot)
         @test occursin("directory: \"/docs\"", dependabot)
         @test occursin("root-julia-dependencies", dependabot)
