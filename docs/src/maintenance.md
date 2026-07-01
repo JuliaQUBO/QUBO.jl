@@ -1,4 +1,4 @@
-# Dependency Maintenance
+# Maintenance Policy
 
 QUBO.jl package repositories should use GitHub Dependabot for routine
 dependency compatibility maintenance when the repository depends only on the
@@ -8,6 +8,38 @@ Do not add new CompatHelper workflows by default. CompatHelper remains useful
 for repositories that need custom or private registries, but CompatHelper is in
 maintenance mode and its own project recommends migrating to Dependabot for
 Julia packages.
+
+## Standard Package CI
+
+Active JuliaQUBO package repositories should keep a small, stable CI baseline
+that every pull request can run without private credentials or external
+hardware:
+
+- a package CI workflow named `CI`;
+- Julia `1` and the minimum supported Julia line on `ubuntu-latest`;
+- `windows-latest` jobs when the package supports Windows or already requires
+  Windows as part of normal correctness checks;
+- dependency caching through the standard Julia GitHub Actions cache support;
+- documentation builds in a separate workflow when the repository has docs;
+- workflow and job names that stay stable unless branch protection is updated
+  in the same maintenance pass.
+
+Repository-specific checks may be part of the package baseline when they are
+deterministic, fast enough for routine PR review, and validate package
+correctness for all contributors. For example, a workflow syntax or workflow
+test job can be required when it guards the repository's normal CI contract.
+
+Do not make a workflow a required merge gate only because it is useful. A check
+should be required only when all of these are true:
+
+- it runs on ordinary pull requests without secrets, hardware, or service
+  credentials;
+- it is deterministic enough that a failure usually means the PR needs action;
+- it validates package correctness or repository infrastructure needed for
+  package correctness;
+- its check name is stable enough to maintain in branch protection.
+
+Useful checks that do not meet those criteria should stay optional and visible.
 
 ## Standard Workflow
 
@@ -58,6 +90,75 @@ updates:
     schedule:
       interval: "monthly"
 ```
+
+## Branch Protection
+
+Protect `main` on active package repositories with review and strict required
+status checks. Required checks should match the current check names emitted by
+the repository's package CI workflow.
+
+Keep these checks out of branch protection unless the team intentionally
+records a repository-specific exception:
+
+- documentation deployment and preview cleanup;
+- hardware or API smoke tests;
+- scheduled dependency drift checks;
+- benchmarks and scale tests;
+- ecosystem canaries;
+- optional solver or service integrations.
+
+Documentation builds may run on every pull request and should be fixed when
+they fail, but deployment statuses and preview cleanup jobs are operational
+signals rather than package-correctness gates. Hardware, API, benchmark,
+scheduled, and ecosystem checks are valuable diagnostics, but they can fail
+because of external service availability, credentials, runtime variance, or
+temporary cross-package release ordering.
+
+When a workflow job is renamed, first merge the workflow change with the old
+required contexts still valid where possible, then update branch protection to
+the new check names after the new checks have passed on `main`. If that is not
+possible, document the stale required contexts and update only the affected
+branch-protection entries.
+
+## Scope Exceptions
+
+The first-pass package CI baseline applies to active JuliaQUBO packages. These
+repositories and workflows are intentional exceptions:
+
+- `QUBONotebooks` is notebook and tutorial infrastructure. It should keep
+  notebook-specific verification instead of inheriting the package CI baseline.
+- `QUBOBenchmarks.jl` and `ToQUBO-benchmark` are benchmark-oriented. Their
+  performance and long-running checks are useful for regression analysis, but
+  should not become ordinary package merge gates.
+- Archived repositories should not receive routine CI or Dependabot churn
+  unless they are unarchived and returned to active maintenance.
+- Hardware and API smoke jobs should stay optional unless a repository
+  explicitly decides that external-service availability must block merges.
+- Scheduled dependency drift jobs are monitoring tools. Convert actionable
+  drift into a normal issue or PR before treating it as merge-blocking work.
+- Package-specific ecosystem canaries, scale tests, and benchmarks should
+  remain diagnostics unless the repository explicitly records why the check is
+  deterministic, cheap enough, and required for package correctness.
+
+## Drift Handling
+
+Handle future CI and Dependabot drift with a small repository-local PR unless
+the change needs ecosystem coordination.
+
+1. Let Dependabot open the routine PR and require the normal package CI to pass.
+2. If a Dependabot PR exposes stale compatibility bounds, open the follow-up in
+   the package that owns those bounds instead of weakening downstream checks.
+3. After merging workflow or Dependabot changes, verify the post-merge `main`
+   CI before closing the issue or updating a tracker.
+4. If a workflow rename changes check names, compare branch protection with the
+   latest successful checks and update only stale required contexts.
+5. Record deliberate exceptions in the issue or PR so later cleanup does not
+   reinterpret them as accidental drift.
+
+Infrastructure-only changes do not require Julia package releases. Release a
+new package version only when package code, public behavior, compatibility
+bounds, or registered metadata changes require users to receive a new version
+through the registry.
 
 ## Permissions And Secrets
 
