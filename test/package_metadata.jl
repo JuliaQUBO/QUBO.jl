@@ -1,5 +1,7 @@
 using TOML
 
+_compat_entries(value::AbstractString) = strip.(split(value, ','))
+
 function test_package_metadata()
     @testset "Package Metadata" begin
         root = joinpath(@__DIR__, "..")
@@ -8,17 +10,29 @@ function test_package_metadata()
 
         @test compat["julia"] == "1.10"
         @test project["version"] == "0.6.2"
-        @test compat["QUBOTools"] == "0.13, 0.14, 0.15, 0.16"
-        @test compat["QUBODrivers"] == "0.6"
-        @test compat["ToQUBO"] == "0.4, 0.5, 0.6"
+        @test all(
+            version -> version in _compat_entries(compat["QUBOTools"]),
+            ("0.13", "0.14", "0.15", "0.16"),
+        )
+        @test "0.6" in _compat_entries(compat["QUBODrivers"])
+        @test all(
+            version -> version in _compat_entries(compat["ToQUBO"]),
+            ("0.4", "0.5", "0.6"),
+        )
 
         docs_project = TOML.parsefile(joinpath(root, "docs", "Project.toml"))
         docs_compat = docs_project["compat"]
 
         @test docs_compat["QUBO"] == "0.6.2"
-        @test docs_compat["QUBOTools"] == "0.13, 0.14, 0.15, 0.16"
-        @test docs_compat["QUBODrivers"] == "0.6"
-        @test docs_compat["ToQUBO"] == "0.4, 0.5, 0.6"
+        @test all(
+            version -> version in _compat_entries(docs_compat["QUBOTools"]),
+            ("0.13", "0.14", "0.15", "0.16"),
+        )
+        @test "0.6" in _compat_entries(docs_compat["QUBODrivers"])
+        @test all(
+            version -> version in _compat_entries(docs_compat["ToQUBO"]),
+            ("0.4", "0.5", "0.6"),
+        )
 
         ci = read(joinpath(root, ".github", "workflows", "ci.yml"), String)
         docs_make = read(joinpath(root, "docs", "make.jl"), String)
