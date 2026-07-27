@@ -175,8 +175,12 @@ branches that trigger CI.
 ## Release Guardrails
 
 Use package-local release checks before tagging or registering an individual
-package release. The release preflight belongs in the package repository, for
-example `scripts/release_check.jl`, and should catch release-sensitive metadata
+package release. The release preflight belongs in that package's repository;
+see the
+[`ToQUBO.jl` preflight](https://github.com/JuliaQUBO/ToQUBO.jl/blob/main/scripts/release_check.jl)
+and
+[`QUBOTools.jl` preflight](https://github.com/JuliaQUBO/QUBOTools.jl/blob/main/scripts/release_check.jl)
+for concrete examples. These checks should catch release-sensitive metadata
 that normal unit tests can miss:
 
 - root, docs, and test `Project.toml` version and compatibility drift;
@@ -184,6 +188,11 @@ that normal unit tests can miss:
   `Breaking changes` and `Changelog` wording for pre-1.0 minor releases;
 - TagBot, Registrator, General pull request, and fresh `Pkg.add` verification
   checklist items.
+
+QUBO.jl does not keep a separate `scripts/release_check.jl`. Its
+package-specific version and compatibility invariants run with the normal test
+suite in `test/package_metadata.jl`; the compatibility matrix and ecosystem
+canary below provide the post-release coordination layer.
 
 Use the QUBO.jl ecosystem canary after release work reaches the registry, or
 whenever a coordinated release wave changes cross-package compatibility. The

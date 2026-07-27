@@ -44,7 +44,19 @@ function test_docs_assets()
         @test occursin("package-ecosystem: \"julia\"", maintenance)
         @test occursin("omits `test/` because `test/Project.toml` has no `[compat]`", maintenance)
         @test occursin("COMPATHELPER_PRIV", maintenance)
-        @test occursin("scripts/release_check.jl", maintenance)
+        @test occursin(
+            "JuliaQUBO/ToQUBO.jl/blob/main/scripts/release_check.jl",
+            maintenance,
+        )
+        @test occursin(
+            "JuliaQUBO/QUBOTools.jl/blob/main/scripts/release_check.jl",
+            maintenance,
+        )
+        @test occursin(
+            "QUBO.jl does not keep a separate `scripts/release_check.jl`",
+            maintenance,
+        )
+        @test occursin("test/package_metadata.jl", maintenance)
         @test occursin("Breaking changes", maintenance)
         @test occursin("post-release coordination check", maintenance)
         @test occursin("compatibility matrix on every run", maintenance)
