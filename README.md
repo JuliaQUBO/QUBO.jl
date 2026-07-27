@@ -12,6 +12,7 @@
 [![Docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://juliaqubo.github.io/QUBO.jl/dev/)
 [![Zenodo/DOI](https://zenodo.org/badge/614041491.svg)](https://zenodo.org/badge/latestdoi/614041491)
 [![JuliaCon 2022](https://img.shields.io/badge/JuliaCon-2022-9558b2)](https://www.youtube.com/watch?v=OTmzlTbqdNo)
+[![Journal article](https://img.shields.io/badge/DOI-10.1080%2F10556788.2026.2702926-blue.svg)](https://www.tandfonline.com/doi/full/10.1080/10556788.2026.2702926)
 [![arXiv](https://img.shields.io/badge/arXiv-2307.02577-b31b1b.svg)](https://arxiv.org/abs/2307.02577)
 
 *A Julia ecosystem for Quadratic Unconstrained Binary Optimization*
@@ -213,17 +214,17 @@ With [QUBOTools.jl](https://github.com/JuliaQUBO/QUBOTools.jl) it is possible to
 
 ## Citing [QUBO.jl](https://github.com/JuliaQUBO/QUBO.jl) 📑
 
-If you find [QUBO.jl](https://github.com/JuliaQUBO/QUBO.jl) and its packages useful in your work, we kindly request that you cite the following paper (preprint):
+If you find [QUBO.jl](https://github.com/JuliaQUBO/QUBO.jl) and its packages useful in your work, we kindly request that you cite the following [journal article](https://www.tandfonline.com/doi/full/10.1080/10556788.2026.2702926). The [arXiv preprint](https://arxiv.org/abs/2307.02577) remains available.
 
 ```tex
-@misc{qubojl:2023,
-  title         = {QUBO.jl: A Julia Ecosystem for Quadratic Unconstrained Binary Optimization}, 
-  author        = {Pedro {Maciel Xavier} and Pedro Ripper and Tiago Andrade and Joaquim {Dias Garcia} and Nelson Maculan and David E. {Bernal Neira}},
-  year          = {2023},
-  doi           = {10.48550/arXiv.2307.02577},
-  eprint        = {2307.02577},
-  archivePrefix = {arXiv},
-  primaryClass  = {math.OC},
+@article{qubojl:2026,
+  title   = {QUBO.jl: A Julia Ecosystem for Quadratic Unconstrained Binary Optimization},
+  author  = {Pedro {Maciel Xavier} and Pedro Ripper and Tiago Andrade and Joaquim {Dias Garcia} and Nelson Maculan and David E. {Bernal Neira}},
+  journal = {Optimization Methods and Software},
+  year    = {2026},
+  pages   = {1--24},
+  doi     = {10.1080/10556788.2026.2702926},
+  url     = {https://doi.org/10.1080/10556788.2026.2702926},
 }
 ```
 

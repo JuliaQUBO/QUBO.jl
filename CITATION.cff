@@ -21,6 +21,31 @@ authors:
   orcid: "https://orcid.org/0000-0002-8308-5016"
 title: "QUBO.jl: A Julia Ecosystem for Quadratic Unconstrained Binary Optimization"
 version: "0.6.0"
-doi: 10.48550/arXiv.2307.02577
 date-released: 2026-06-08
 url: "https://github.com/JuliaQUBO/QUBO.jl"
+preferred-citation:
+  type: article
+  authors:
+  - family-names: "Maciel Xavier"
+    given-names: "Pedro"
+    orcid: "https://orcid.org/0000-0002-4678-4942"
+  - family-names: "Ripper"
+    given-names: "Pedro"
+    orcid: "https://orcid.org/0000-0002-2227-3689"
+  - family-names: "Andrade"
+    given-names: "Tiago"
+  - family-names: "Dias Garcia"
+    given-names: "Joaquim"
+    orcid: "https://orcid.org/0000-0002-7721-8564"
+  - family-names: "Maculan"
+    given-names: "Nelson"
+    orcid: "https://orcid.org/0000-0002-3897-3356"
+  - family-names: "Bernal Neira"
+    given-names: "David E."
+    orcid: "https://orcid.org/0000-0002-8308-5016"
+  title: "QUBO.jl: A Julia Ecosystem for Quadratic Unconstrained Binary Optimization"
+  journal: "Optimization Methods and Software"
+  year: 2026
+  start: 1
+  end: 24
+  doi: 10.1080/10556788.2026.2702926
