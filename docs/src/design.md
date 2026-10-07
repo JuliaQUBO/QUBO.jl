@@ -157,16 +157,30 @@ D-Wave Hybrid, external services and a concrete solver are not production
 requirements. The user supplies the child optimizer.
 
 Start the supported compatibility floor at Julia 1.10, QUBOTools **0.16.2**,
-QUBODrivers **0.6.5**, and MathOptInterface **1**. Test/example candidates are
-JuMP 1 and ToQUBO **0.6.1** (including its refinement interfaces). These are
-proposed tested floors, not a claim that every earlier release fails. Resolve
-and test actual lower bounds before the standalone release. In particular,
+QUBODrivers **0.6.5**, and MathOptInterface **1**. JuMP 1 and released ToQUBO
+**0.6.1** provide the initial composition test/example baseline. The registered
+QUBODrivers 0.6.5 exposes the seed, metadata, timing/read traits and configurable
+test entry point used here. These are proposed compatibility floors, not a claim
+that every earlier release fails. Resolve and test actual lower bounds before
+the standalone release. In particular,
 `QUBOTools = "0.16.2"` excludes the defective earlier 0.16 graph exports.
 QUBOTools 0.16.2 is already [released](https://github.com/JuliaQUBO/QUBOTools.jl/releases/tag/v0.16.2)
 and [registered](https://github.com/JuliaRegistries/General/pull/170908).
 [Conditioning PR #139](https://github.com/JuliaQUBO/QUBOTools.jl/pull/139) merged
 documentation/tests after that release; it introduced no runtime API and does
 not impose a new release prerequisite.
+
+**Unreleased integration prerequisite:** ToQUBO 0.6.1 at release commit
+[`9feda34`](https://github.com/JuliaQUBO/ToQUBO.jl/tree/9feda34c0fb10a5ed8539dd4add915aa4ff9006c)
+has `violations`, but lacks `Attributes.MaxPenaltyUpdates` and
+`Attributes.PrimalFeasibilityCheck`. Both are present in the newer inspected
+default-branch commit `481ff10`, whose unchanged project version is not release
+evidence. Automatic-refinement and primal-status integration rows below may be
+prototyped against that pinned source. Their normal downstream CI and release
+gate requires the first installable ToQUBO release containing both interfaces,
+with its actual version recorded as the test/example minimum; that version is
+not established here. Coordinate this existing implementation's release under
+#244 and roadmap #76. No new compiler refactor is required by this finding.
 
 ### Proposed Public Interface and Existing Building Blocks
 
@@ -215,10 +229,11 @@ Support `MOI.TimeLimitSec()` for one composite invocation and
 Use `QUBODrivers.@setup` and implement `QUBODrivers.sample`, reading the model
 through `QUBOTools.backend`. Return a `QUBOTools.SampleSet` in the original
 frame. `QUBODrivers.set_model!` and `MOI.copy_to` are existing public model
-hooks. Implement optimizer-specific `MOI.get(..., MOI.TerminationStatus())`
-and `MOI.SolveTimeSec()` methods where the proposed semantics below differ
-from defaults. Do not call private `_sample!` or `_sampler_metadata`: construct
-the documented metadata dictionary and call `validate_metadata` in tests.
+hooks. Implement an optimizer-specific `MOI.get(..., MOI.TerminationStatus())`
+method for the proposed status semantics below; retain the shared
+`MOI.SolveTimeSec()` timing convention. Do not call private `_sample!` or
+`_sampler_metadata`: construct the documented metadata dictionary and call
+`validate_metadata` in tests.
 
 For each child, build a temporary MOI model using public `MOI.Utilities` model
 storage, domain constraints and `ScalarQuadraticFunction`, then `MOI.copy_to`
@@ -271,8 +286,8 @@ the capacity measure.
 2. For ``0<n\le B`` and a nonconstant objective, make one whole-model child
    call, without partitioning. Validate its complete candidates, independently
    evaluate the original objective, and return the best candidate (or the
-   initial incumbent on an allowed failure). Preserve its valid public
-   termination status unless a parent limit, failure or validation error
+   initial incumbent when the failure rules below require it). Preserve its
+   valid public termination status unless a parent limit, failure or validation error
    intervenes. This is pass-through of the optimization problem/status, not a
    promise to reproduce its entire sample distribution.
 3. Otherwise find connected components of the nonzero quadratic interaction
@@ -295,6 +310,13 @@ the capacity measure.
    without a strict improvement. A sweep visits all queued anchors once; an
    interrupted sweep counts as started but not completed. Incremental counters
    and stop reason must make this distinction visible.
+
+The reference path deliberately spends one child call per fitting component.
+For a nonconstant linear-only model with ``n>B``, that is ``n`` singleton calls;
+a smaller `max_child_calls` returns a partial incumbent with `ITERATION_LIMIT`,
+without a separable optimality claim. Packing disjoint components into calls
+of at most ``B`` variables is a later, separately tested optimization under
+#75. It is not required to implement this first serial reference path.
 
 Each child operation follows the same transaction:
 
@@ -355,7 +377,7 @@ There are three separate budget scopes:
 
 | Scope | Contract |
 | :-- | :-- |
-| One child | ``|U|\le B``; optional `child_time_limit_sec`; solver-specific work limits configured in the factory |
+| One child | At most `B` distinct variables; optional `child_time_limit_sec`; solver-specific work limits configured in the factory |
 | One composite `optimize!` | `max_child_calls`, `max_sweeps`, `max_candidate_evaluations`, stagnation, and `MOI.TimeLimitSec()` measured from invocation entry |
 | One outer ToQUBO solve/refinement | `MaxPenaltyUpdates` bounds additional recompilations; it does not make the composite's per-invocation limits a shared total |
 
@@ -382,14 +404,42 @@ records overrun, and launches no further work. Do not advertise
 the MVP advertises false. Candidate/result processing and final reconstruction
 also consume the parent budget; already validated incumbents remain returnable.
 
-The current ToQUBO refinement loop recompiles and invokes its child repeatedly;
-its forwarded `TimeLimitSec` is not a shared wall-clock deadline. For the MVP,
+The inspected, not-yet-released ToQUBO refinement loop recompiles and invokes
+its child repeatedly; its forwarded `TimeLimitSec` is not a shared wall-clock
+deadline. For the MVP,
 document per-invocation scope and test finite update/call caps. A caller needing
 an outer deadline must own a refinement loop with an absolute deadline and pass
 remaining allowances each time (including compilation and feasibility checks).
 The automatic refinement path must not promise that enforcement. A future
 shared-deadline hook requires a concrete integration failure and a focused #244
 proposal; no speculative compiler refactor is a prerequisite.
+
+Classify the child's **public** termination status before deciding the
+composite outcome. For fitting components and neighborhoods, use this explicit
+policy; a complete valid row is required except for the interruption case:
+
+| Child status | Decomposition action |
+| :-- | :-- |
+| `OPTIMAL` | Evaluate valid candidates; a fully processed call can certify that subproblem only |
+| `LOCALLY_SOLVED`, `ALMOST_OPTIMAL`, `ALMOST_LOCALLY_SOLVED` | Evaluate as heuristic candidates, without exactness; continue while parent budgets permit |
+| `TIME_LIMIT`, `ITERATION_LIMIT`, `NODE_LIMIT`, `SOLUTION_LIMIT`, `MEMORY_LIMIT`, `OBJECTIVE_LIMIT`, `NORM_LIMIT`, `OTHER_LIMIT`, `SLOW_PROGRESS` | Evaluate as heuristic candidates, record the child stop reason, and continue while parent budgets permit; a child limit does not consume a different parent scope by implication |
+| `INTERRUPTED` | Stop the composite with `INTERRUPTED`, retaining its last committed incumbent; no new child row is required and no in-flight row is accepted |
+| `INFEASIBLE`, `DUAL_INFEASIBLE`, `INFEASIBLE_OR_UNBOUNDED`, `LOCALLY_INFEASIBLE`, their `ALMOST_` infeasibility variants, `NUMERICAL_ERROR`, `OTHER_ERROR`, `INVALID_MODEL`, `INVALID_OPTION`, `OPTIMIZE_NOT_CALLED`, or any unclassified status | Fail with a child diagnostic; none certifies this finite unconstrained problem |
+
+An accepted success/limit status with no complete valid row is a failure.
+Always test the parent's clock and counters after a child returns: the child
+status alone cannot distinguish its own deadline from the forwarded remaining
+parent time. For whole-model pass-through, the same validation/failure policy
+applies, but a valid success/limit status is returned unchanged after complete
+processing, rather than starting further child calls.
+
+The MVP cancellation source is Julia `InterruptException`, caught around the
+parent invocation (including an exception propagated by a child). Discard the
+in-flight partial candidate and return the last committed state/energy pair
+with `INTERRUPTED`; convert other execution exceptions to diagnostic failures.
+Tests inject this exception at internal checkpoints without sleeps. A child
+that swallows interruption cannot be forcibly stopped by the parent. No MOI
+cancellation-request attribute or public cancellation-token API is promised.
 
 After input/configuration validation, use these result rules. A retained valid
 full incumbent implies `ResultCount()==1`, `PrimalStatus()==FEASIBLE_POINT` for
@@ -404,10 +454,10 @@ validated incumbent, count is zero and primal status is `NO_SOLUTION`.
 | Whole-model child completes validly, all returned results processed | Preserve its public status, including `OPTIMAL`, `TIME_LIMIT` or conservative `LOCALLY_SOLVED`; do not infer a proof from raw metadata |
 | Every independent component fits, every child returns valid `OPTIMAL`, all components completed | `OPTIMAL`; separability supplies the global proof, with one full energy evaluation |
 | Coupled neighborhoods finish or stagnate, or any component lacks an exact certificate | `LOCALLY_SOLVED` as a heuristic completion status; no global bound or certified local-minimum claim |
-| Parent deadline / child deadline stops work | `TIME_LIMIT`; retain only validated incumbent |
+| Parent deadline stops decomposition | `TIME_LIMIT`; retain only validated incumbent; a per-child timeout alone follows the continuation rule above |
 | Parent call, candidate, or sweep cap | `ITERATION_LIMIT`; metadata names the actual exhausted counter |
-| Cancellation observed between steps | `INTERRUPTED`; synchronous-child latency remains as documented |
-| Child exception, failed status, empty result, no complete valid result, non-finite energy, inconsistent mapping | Stop at first failure with `OTHER_ERROR`, preserve a previously validated incumbent and record child diagnostic |
+| `InterruptException` or child `INTERRUPTED` | `INTERRUPTED`; retain last committed incumbent; synchronous-child latency remains as documented |
+| Non-interruption child exception, failure-class status, empty result, no complete valid result, non-finite energy, inconsistent mapping | Stop at first failure with `OTHER_ERROR`, preserve a previously validated incumbent and record child diagnostic |
 | Invalid configuration / unsupported child contract / oversize in strict component mode | `INVALID_OPTION` where an invocation can return a status; setters may throw `ArgumentError`; clear prior results and give the precise diagnostic |
 
 A child `OPTIMAL` without a valid result is a failure. Reject incomplete,
@@ -415,11 +465,12 @@ wrong-domain, non-finite or inconsistent candidates, never fabricate free
 values; a malformed row invalidates that call's exactness and terminates it
 with the failure rule, even if earlier rows were valid. Child `INFEASIBLE` or
 `DUAL_INFEASIBLE` is inconsistent with a finite unconstrained binary/spin child
-and becomes a diagnostic failure, not global infeasibility. A valid early-stopped
-child candidate may improve the incumbent before terminating with its limit.
-Prioritize invalid data/failure over limit status; otherwise an encountered
-limit precedes heuristic completion. A proof completed before a later budget
-check remains a proof; a truncated result scan or partial component pass cannot
+and becomes a diagnostic failure, not global infeasibility. Prioritize detected
+invalid data/failure over limit status; interruption stops processing without
+accepting in-flight data. Otherwise a reached **parent** limit precedes heuristic
+completion. A valid early-stopped child candidate alone does not stop a sweep.
+A proof completed before a later budget check remains a proof; a truncated
+result scan or partial component pass cannot
 claim one. Never publish a heuristic objective as a certified bound or gap.
 
 For a configured seed ``s`` and one-based call attempt ``k``, use
@@ -458,13 +509,14 @@ Populate the existing required schema (`origin`, `algorithm`, `backend`,
 composite; `reads.final_number_of_reads` is one (zero with no result). State this
 meaning in metadata; physical child reads live only in the separate diagnostics.
 Include preparation, conditioning, MOI construction/copy, execution, result
-validation, lifting and full-objective evaluation in total time. Record child
-execution sum as `time.effective` and phase durations separately. Override the
-composite's `MOI.SolveTimeSec()` to return its invocation total; existing generic
-QUBODrivers samplers expose effective time through that attribute. Document the
-difference. Keep framework `total_time` as the enclosing measurement and record
-any result-attachment overhead separately; do not claim a child-only stopwatch
-measures decomposition. Outer compilation/refinement timing belongs to the
+validation, lifting and full-objective evaluation in `time.effective`: the
+composite algorithm is this driver's backend. Keep the generic
+`MOI.SolveTimeSec() == QUBODrivers.effective_time(sampler)` convention.
+Record child-execution sum and the other phase durations under `decomposition`.
+Leave `time.total` to the framework's enclosing measurement, including its
+post-sample callback/attachment preparation. Effective time must not exceed
+that enclosing total except for documented measurement tolerance. A child-only
+stopwatch does not measure decomposition. Outer compilation/refinement timing belongs to the
 outer caller and is not included by pretending it ran inside the composite.
 
 ### Offline Acceptance Matrix
@@ -482,10 +534,13 @@ energy. The exact child is a test tool, not the independent energy oracle.
 | Empty, all-zero/constant nonempty, one variable and all MOI-fixed variables | Hand-computed constant or two-state extrema; one complete sample, zero child calls for constant cases | `test/unit/edge_cases.jl` |
 | Budget one, repeated neighbor indices, oversized component, budget covering whole model; invalid zero/negative/noninteger/Bool budget | Call-recording child checks distinct-index cardinality; singleton neighborhoods at one, strict mode rejects oversize before calls, default sweeps, exactly one whole-model call | `test/unit/budgets.jl` |
 | Disjoint two-variable components plus isolates, all fitting | Exhaustive **global** scalar enumeration; same Min/Max optimum as assembled exact components and `OPTIMAL` only with complete certificates | `test/unit/components.jl` |
+| Four nonconstant isolated variables, `B=2`, call cap 3 | Record three singleton calls and `ITERATION_LIMIT` with a full incumbent; no complete separable proof until all four component calls finish | `test/unit/components.jl` |
 | Coupled three/four-variable graph larger than budget, exact local child | Enumerate global optimum as a reference; every accepted full energy strictly improves in the original sense; bounded sweep termination never claims global proof | `test/unit/sweeps.jl` |
 | Failed/throwing child, empty results, invalid domain, missing free value, false `OPTIMAL`, inconsistent map, non-finite energy | Controlled mock outputs; truthful failure, no invented values, last valid incumbent or no result; exactness revoked | `test/unit/results.jl` |
 | Duplicate rows and aggregated child multiplicities, e.g. counts 3 and 7 from separate components | Count construction events directly; emitted global multiplicity remains 1, no fictitious 21 joint reads, unknown physical counts remain unknown | `test/unit/metadata.jl` |
 | Zero and positive call/candidate/sweep/time caps, stagnation, child ignores limit, cancellation | Injectable internal monotonic clock and scripted work advances/call counters; no timing sleeps, no extra calls, correct status, observable overrun and phase costs | `test/unit/budgets.jl`, `test/unit/timing.jl` |
+| Valid child `TIME_LIMIT`/other limit statuses under a per-child cap, with parent time remaining; repeat at the parent deadline | Scripted child statuses and clock: continue to later neighborhoods in the first case, parent `TIME_LIMIT` and no next call in the second; neither case gains exactness | `test/unit/budgets.jl`, `test/unit/results.jl` |
+| `InterruptException` injected before a call and during reconstruction; child `INTERRUPTED` with/without rows | Keep last committed state/energy, discard partial work, return `INTERRUPTED`, no later call; no public cancellation attribute assumed | `test/unit/results.jl` |
 | Same seed/model and child; changed seed; child without seed support | Call log matches explicit modular seed formula; deterministic-child outputs repeat under work caps; unsupported case discloses limitation | `test/unit/seeding.jl` |
 | Reused optimizer with changed coefficients, scale/offset, domain/sense, dimension and reordered labels at equal dimension | Fresh-instance result/call log plus independent scalar evaluation; no old maps, graph, incumbent or proof flags survive | `test/unit/repeated_solves.jl` |
 | Driver conformance using small exact local child and existing ExactSampler | `using Test; QUBODrivers.test(config!, Optimizer)` with all groups enabled; required metadata, complete primals, timing/read/status semantics; explicitly test the conservative ExactSampler status | `test/conformance.jl` |
@@ -498,8 +553,10 @@ energy. The exact child is a test tool, not the independent energy oracle.
 
 The ToQUBO fixture must assert that slack/auxiliary variables were actually
 introduced; a fixture that compiles them away does not cover that row. Query
-`ToQUBO.violations` and enable the public primal-feasibility check. At the
-inspected version `MOI.ObjectiveValue` is forwarded from the compiled child, so
+`ToQUBO.violations` and, on the required newer ToQUBO source/release identified
+above, enable `Attributes.PrimalFeasibilityCheck`. Automatic-refinement and
+primal-status checks are not covered by installing 0.6.1 alone. At the
+inspected source revision `MOI.ObjectiveValue` is forwarded from the compiled child, so
 independently evaluate the decoded **source** objective instead of equating the
 two. Test infeasible decoded candidates as well as successful refinement. A
 valid compiled optimum with inadequate penalties is not a source optimum proof.
@@ -520,8 +577,11 @@ in that destination, keeping this design linked:
 3. **Conformance and compiler integration:** full driver suite, direct JuMP,
    constrained binary/bounded integer, auxiliary/slack, repeated refinement and
    budget tests. The same downstream implementation owner supplies pinned CI
-   evidence to #87 and #244. Upstream maintainers own any demonstrated minimal
-   defect fix; no empty upstream PR or mandatory runtime release if APIs suffice.
+   evidence to #87 and #244. The already-implemented ToQUBO refinement and
+   primal-status APIs need an installable release and actual test/example minimum
+   before normal dependency resolution can satisfy this entire matrix. Upstream
+   maintainers own that release and any demonstrated minimal defect fix; this
+   does not require an empty source PR or speculative API refactor.
 4. **Installable MVP and adoption:** package docs and offline example, release
    preflight/fresh-install checks, external sampler listing under #87, bounded
    benchmark/tutorial handoffs and QUBO.jl discovery/canary integration under #73.
@@ -540,7 +600,8 @@ Do not advertise the name-based command before registration is available.
 
 Release 0.1.0 only after ownership/install route are accepted, the complete MVP
 matrix and ordinary platform/Julia CI pass, public docs/example run, required
-upstream fixes are available at declared minimums, and the release candidate
+upstream APIs/fixes (including the ToQUBO test/example prerequisite above) are
+available at their declared minimums, and the release candidate
 resolves without development overrides. Document remaining child cancellation
 and reproducibility limits. Candidate fresh-install evidence is a pre-release
 gate; exact-tag and registry installation evidence follow their respective
@@ -580,7 +641,7 @@ not dependencies or claims that another library proves this optimizer correct.
 | [QUBOTools fixing/lifting, `a566070`](https://github.com/JuliaQUBO/QUBOTools.jl/blob/a566070b338fef659716db8922140e190379615e/src/library/form/form.jl), [label map](https://github.com/JuliaQUBO/QUBOTools.jl/blob/a566070b338fef659716db8922140e190379615e/src/library/model/variable_map.jl) and [conditioning manual](https://github.com/JuliaQUBO/QUBOTools.jl/blob/a566070b338fef659716db8922140e190379615e/docs/src/manual/4-models.md) | Exact fixed-boundary algebra, unscaled offset delta, original→reduced indices; retain labels separately. This is merged #139, not a new runtime API |
 | [QUBOTools topology at release `42963f9`](https://github.com/JuliaQUBO/QUBOTools.jl/blob/42963f9871f2f2b0f4166963818c7b8caaa29919/src/library/form/abstract.jl) | Full declared graph dimension, including isolates; 0.16.2 is the first released fix |
 | [QUBODrivers hooks, `3bf47da`](https://github.com/JuliaQUBO/QUBODrivers.jl/blob/3bf47da284f2ab8bdca9c6ab4ff0190d8d36f8be/src/interface/sampler.jl), [MOI wrapper](https://github.com/JuliaQUBO/QUBODrivers.jl/blob/3bf47da284f2ab8bdca9c6ab4ff0190d8d36f8be/src/library/sampler/wrappers/moi.jl), [metadata](https://github.com/JuliaQUBO/QUBODrivers.jl/blob/3bf47da284f2ab8bdca9c6ab4ff0190d8d36f8be/docs/src/manual/metadata.md), [test contract](https://github.com/JuliaQUBO/QUBODrivers.jl/blob/3bf47da284f2ab8bdca9c6ab4ff0190d8d36f8be/src/interface/test.jl) and [ExactSampler](https://github.com/JuliaQUBO/QUBODrivers.jl/blob/3bf47da284f2ab8bdca9c6ab4ff0190d8d36f8be/src/library/drivers/ExactSampler.jl) | Existing extension points, explicit traits and `Test` extension. Public termination and total/effective time require care as described above |
-| [ToQUBO result decoding, `481ff10`](https://github.com/JuliaQUBO/ToQUBO.jl/blob/481ff101d60372124a42c49ff1f2692664b699c7/src/attributes/solver.jl), [refinement loop](https://github.com/JuliaQUBO/ToQUBO.jl/blob/481ff101d60372124a42c49ff1f2692664b699c7/src/refinement.jl) and [refinement manual](https://github.com/JuliaQUBO/ToQUBO.jl/blob/481ff101d60372124a42c49ff1f2692664b699c7/docs/src/manual/5-refinement.md) | Recompilation, decoding and feasibility checks; no automatic shared refinement deadline; compiled and source objectives differ |
+| [ToQUBO result decoding, `481ff10`](https://github.com/JuliaQUBO/ToQUBO.jl/blob/481ff101d60372124a42c49ff1f2692664b699c7/src/attributes/solver.jl), [refinement loop](https://github.com/JuliaQUBO/ToQUBO.jl/blob/481ff101d60372124a42c49ff1f2692664b699c7/src/refinement.jl) and [refinement manual](https://github.com/JuliaQUBO/ToQUBO.jl/blob/481ff101d60372124a42c49ff1f2692664b699c7/docs/src/manual/5-refinement.md) | Newer than published 0.6.1: refinement and primal-status checking require the release handoff above. No automatic shared refinement deadline; compiled and source objectives differ |
 | [QSplit neighborhood selection, `4da64b0`](https://github.com/alpha-unito/QSplit/blob/4da64b072e702953038addd51cdf54f97f0f9516/qsplit/splitting/split_k_interactions.py), [halting helpers](https://github.com/alpha-unito/QSplit/blob/4da64b072e702953038addd51cdf54f97f0f9516/qsplit/halting_heuristic/stop.py), [deprecated local runner](https://github.com/alpha-unito/QSplit/blob/4da64b072e702953038addd51cdf54f97f0f9516/qsplit/local_runner.py) and [active CWL splitter](https://github.com/alpha-unito/QSplit/blob/4da64b072e702953038addd51cdf54f97f0f9516/qsplit/cwl/cli/split.py) | Interaction ranking/control ideas. With budget one, `[-num_neighbors:]` becomes `[-0:]` and selects the whole array. Its nonzero-based variable count also omits isolates. The active CWL path uses recursive matrix splitting; it is not this serial algorithm |
 | [D-Wave Hybrid decomposers, `ec17a70`](https://github.com/dwavesystems/dwave-hybrid/blob/ec17a700b0250123da9909ec82db4ecb2516993d/hybrid/decomposers.py), [induced model](https://github.com/dwavesystems/dwave-hybrid/blob/ec17a700b0250123da9909ec82db4ecb2516993d/hybrid/utils.py) and [SplatComposer](https://github.com/dwavesystems/dwave-hybrid/blob/ec17a700b0250123da9909ec82db4ecb2516993d/hybrid/composers.py) | Bounded selection, fixed-boundary terms and recomposition. `bqm_induced_by` explicitly resets offset to zero; it cannot supply Julia's full-energy identity. Neither library specifies MOI statuses |
 
