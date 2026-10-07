@@ -6,6 +6,11 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
+# Share this queue with doccleanup.yml: all refs write the same deployment branches.
+concurrency:
+  group: documentation-publishing
+  cancel-in-progress: false
+  queue: max
 jobs:
   build-docs:
     runs-on: ubuntu-latest

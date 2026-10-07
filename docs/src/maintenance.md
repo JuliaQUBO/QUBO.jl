@@ -221,6 +221,22 @@ The QUBO.jl v0.6.2 compatibility refresh follows the registered stack with
 0.16. While `PySA` v0.4.1 still caps `QUBOTools` at 0.14, PySA examples should
 remain plain `julia` snippets rather than Documenter `@example` blocks.
 
+## Documentation Publishing
+
+The documentation and preview cleanup workflows share the
+`documentation-publishing` concurrency group across all refs. The queue covers
+checkout, Documenter's `gh-pages` deployment, and aggregation to `gh-multi-pages`,
+the GitHub Pages source. `queue: max` retains up to 100 pending writers, and
+`cancel-in-progress: false` lets the active publisher finish. Future workflows
+that write either branch must use the same group before reading deployment state.
+
+Preview cleanup removes only the closed PR's directory with a normal
+fast-forward push. It retains branch history and other previews and releases;
+an absent preview is a no-op. A competing update outside this queue still causes
+a push failure rather than overwriting published work. PR aggregation continues
+to build without publishing, and Dependabot's documentation builds retain their
+deployment restrictions.
+
 ## Rollout Order
 
 Apply the policy to package repositories before solver or adapter repositories
