@@ -83,31 +83,44 @@ def green_checks(snapshot, head):
     return REQUIRED_CHECKS <= successful
 
 
+def merge_green_pull(github, candidate):
+    """Re-read one PR's live identity, SHA and merge gates before merging."""
+    if not dependabot_pull(candidate) or candidate["draft"]:
+        return
+    number = candidate["number"]
+    pull = github.api(f"pulls/{number}")
+    if pull["state"] != "open" or pull["draft"] or not dependabot_pull(pull):
+        return
+    head = pull["head"]["sha"]
+    if not green_checks(github.checks(number), head):
+        print(f"PR #{number}: waiting for successful current-head checks")
+        return
+    fresh = github.api(f"pulls/{number}")
+    if fresh.get("mergeable_state") == "behind":
+        print(f"PR #{number}: update its branch to main and wait for new CI")
+        return
+    if (fresh["state"] != "open" or fresh["draft"]
+            or not dependabot_pull(fresh) or fresh["head"]["sha"] != head
+            or fresh.get("mergeable") is not True
+            or fresh.get("mergeable_state") != "clean"):
+        print(f"PR #{number}: head changed or merge gates are not satisfied")
+        return
+    github.merge(fresh)
+    merged = github.api(f"pulls/{number}")
+    if not merged["merged"]:
+        raise RuntimeError(f"PR #{number}: merge was not confirmed")
+    print(f"PR #{number}: merged {head}")
+
+
 def merge_green_pulls(github):
-    """Re-read live identity, SHA and merge gates immediately before merging."""
+    """Continue after a PR's failure, returning errors for the final verdict."""
+    errors = []
     for candidate in github.pages("pulls?state=open&base=main&per_page=100"):
-        if not dependabot_pull(candidate) or candidate["draft"]:
-            continue
-        number = candidate["number"]
-        pull = github.api(f"pulls/{number}")
-        if pull["state"] != "open" or pull["draft"] or not dependabot_pull(pull):
-            continue
-        head = pull["head"]["sha"]
-        if not green_checks(github.checks(number), head):
-            print(f"PR #{number}: waiting for successful current-head checks")
-            continue
-        fresh = github.api(f"pulls/{number}")
-        if (fresh["state"] != "open" or fresh["draft"]
-                or not dependabot_pull(fresh) or fresh["head"]["sha"] != head
-                or fresh.get("mergeable") is not True
-                or fresh.get("mergeable_state") != "clean"):
-            print(f"PR #{number}: head changed or merge gates are not satisfied")
-            continue
-        github.merge(fresh)
-        merged = github.api(f"pulls/{number}")
-        if not merged["merged"]:
-            raise RuntimeError(f"PR #{number}: merge was not confirmed")
-        print(f"PR #{number}: merged {head}")
+        try:
+            merge_green_pull(github, candidate)
+        except (subprocess.CalledProcessError, RuntimeError) as error:
+            errors.append(f"PR #{candidate['number']} merge: {error}")
+    return errors
 
 
 def dispatched_run(github, pull, workflow, title):
@@ -154,30 +167,43 @@ def reconcile_publication(github, now=None):
     closed = github.pages(
         "pulls?state=closed&base=main&sort=updated&direction=desc&per_page=100"
     )
+    errors = []
     for candidate in closed:
         if (not dependabot_pull(candidate) or not candidate["merged_at"]
                 or candidate["merged_at"] < cutoff):
             continue
-        pull = github.api(f"pulls/{candidate['number']}")
-        if (not pull["merged"]
-                or (pull.get("merged_by") or {}).get("login") != "github-actions[bot]"):
-            continue
-        number = pull["number"]
-        if ensure_dispatch(
-            github, pull, "doccleanup.yml", "pr_number",
-            f"Doc Preview Cleanup PR #{number}",
-        ):
-            ensure_dispatch(
-                github, pull, "docs.yml", "dependabot_pr",
-                f"Dependabot documentation PR #{number}",
-            )
+        try:
+            pull = github.api(f"pulls/{candidate['number']}")
+            if (not pull["merged"] or (pull.get("merged_by") or {}).get("login")
+                    != "github-actions[bot]"):
+                continue
+            number = pull["number"]
+            if ensure_dispatch(
+                github, pull, "doccleanup.yml", "pr_number",
+                f"Doc Preview Cleanup PR #{number}",
+            ):
+                ensure_dispatch(
+                    github, pull, "docs.yml", "dependabot_pr",
+                    f"Dependabot documentation PR #{number}",
+                )
+        except (subprocess.CalledProcessError, RuntimeError) as error:
+            errors.append(f"PR #{candidate['number']} publication: {error}")
+    return errors
 
 
-def main():
+def main(github=None):
     """Handle completion events, scheduled reconciliation and manual invocations."""
-    github = GitHub()
-    merge_green_pulls(github)
-    reconcile_publication(github)
+    github = github or GitHub()
+    errors = []
+    # Publication must still be reconciled when a merge or its API read fails.
+    for name, phase in (("merge", merge_green_pulls),
+                        ("publication", reconcile_publication)):
+        try:
+            errors.extend(phase(github))
+        except (subprocess.CalledProcessError, RuntimeError) as error:
+            errors.append(f"{name}: {error}")
+    if errors:
+        raise RuntimeError("\n".join(errors))
 
 
 if __name__ == "__main__":

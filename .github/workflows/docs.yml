@@ -1,5 +1,5 @@
 name: Documentation
-run-name: "${{ inputs.dependabot_pr && format('Dependabot documentation PR #{0}', inputs.dependabot_pr) || 'Documentation' }}"
+run-name: "${{ inputs.dependabot_pr && format('Dependabot documentation PR #{0}', inputs.dependabot_pr) || github.event.pull_request.title || github.event.head_commit.message || 'Documentation' }}"
 on:
   push:
     branches: [main]

@@ -4,6 +4,7 @@ import copy
 import importlib.util
 import json
 import pathlib
+import subprocess
 import unittest
 from datetime import datetime, timezone
 from unittest.mock import patch
@@ -83,6 +84,42 @@ class FakeGitHub:
             "head_branch": "main", "created_at": "2026-10-07T20:01:00Z",
             "status": "queued", "conclusion": None,
         })
+
+
+class MultiplePullsGitHub(FakeGitHub):
+    """Expose an earlier failing PR and a later healthy PR in the same pass."""
+
+    def __init__(self):
+        super().__init__()
+        self.pulls = {number: make_pull() for number in (90, 72)}
+        for number, pull in self.pulls.items():
+            pull["number"] = number
+            pull["head"]["sha"] = f"head-{number}"
+        self.fail_merge = set()
+
+    def api(self, path):
+        return copy.deepcopy(self.pulls[int(path.split("/")[-1])])
+
+    def pages(self, path, key=None):
+        if path.startswith("actions/"):
+            return super().pages(path, key)
+        state = "open" if "state=open" in path else "closed"
+        return [copy.deepcopy(pull) for pull in self.pulls.values() if pull["state"] == state]
+
+    def checks(self, number):
+        snapshot = make_snapshot()
+        snapshot["headRefOid"] = self.pulls[number]["head"]["sha"]
+        return snapshot
+
+    def merge(self, pull):
+        number = pull["number"]
+        if number in self.fail_merge:
+            raise subprocess.CalledProcessError(1, ["gh", "pr", "merge", str(number)])
+        self.writes.append(("merge", number))
+        self.pulls[number].update(
+            state="closed", merged=True, merged_at="2026-10-07T20:00:00Z",
+            merge_commit_sha=f"merged-{number}", merged_by={"login": "github-actions[bot]"},
+        )
 
 
 class MergeGateTests(unittest.TestCase):
@@ -193,9 +230,46 @@ class PublicationTests(unittest.TestCase):
         github = self.merged_github()
         automation.reconcile_publication(github, self.now)
         github.runs["doccleanup.yml"][0].update(status="completed", conclusion="failure")
-        with self.assertRaisesRegex(RuntimeError, "failed; inspect and rerun"):
-            automation.reconcile_publication(github, self.now)
+        errors = automation.reconcile_publication(github, self.now)
+        self.assertEqual(len(errors), 1)
+        self.assertIn("failed; inspect and rerun", errors[0])
         self.assertEqual(len(github.writes), 1)
+
+    def test_failed_merge_does_not_starve_other_merges_or_publication(self):
+        github = MultiplePullsGitHub()
+        github.fail_merge.add(90)
+        with patch.object(automation, "datetime", wraps=datetime) as clock:
+            clock.now.return_value = self.now
+            with self.assertRaisesRegex(RuntimeError, "PR #90 merge"):
+                automation.main(github)
+        self.assertEqual(github.writes, [
+            ("merge", 72), ("dispatch", "doccleanup.yml", "pr_number", 72),
+        ])
+
+    def test_failed_publication_does_not_starve_other_pr_publication(self):
+        github = MultiplePullsGitHub()
+        for pull in list(github.pulls.values()):
+            github.merge(pull)
+        github.dispatch("doccleanup.yml", "pr_number", 90)
+        github.runs["doccleanup.yml"][0].update(status="completed", conclusion="failure")
+        github.writes.clear()
+        errors = automation.reconcile_publication(github, self.now)
+        self.assertEqual(len(errors), 1)
+        self.assertIn("PR #90 publication", errors[0])
+        self.assertEqual(github.writes, [("dispatch", "doccleanup.yml", "pr_number", 72)])
+        github.runs["doccleanup.yml"][1].update(status="completed", conclusion="success")
+        errors = automation.reconcile_publication(github, self.now)
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(github.writes[-1], ("dispatch", "docs.yml", "dependabot_pr", 72))
+
+    def test_failed_merge_list_read_still_reconciles_and_reports_failure(self):
+        github = self.merged_github()
+        with patch.object(automation, "merge_green_pulls", side_effect=RuntimeError("API unavailable")):
+            with patch.object(automation, "datetime", wraps=datetime) as clock:
+                clock.now.return_value = self.now
+                with self.assertRaisesRegex(RuntimeError, "API unavailable"):
+                    automation.main(github)
+        self.assertEqual(github.writes, [("dispatch", "doccleanup.yml", "pr_number", 72)])
 
     def test_only_recent_action_bot_merges_are_reconciled(self):
         for variant in ("human-merge", "old-merge", "closed-unmerged"):

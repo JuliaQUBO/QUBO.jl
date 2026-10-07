@@ -182,6 +182,13 @@ succeed. This applies to all update types, including major and grouped updates.
 Human-authored PRs, forks, drafts, missing checks, changed heads, conflicts,
 outdated branches, and unresolved merge gates are left for maintainers.
 Merges use squash with the verified head SHA and never bypass branch protection.
+Identity follows the PR author, so maintainer commits and GitHub's "Update branch"
+merge commits on a Dependabot branch are included when that head passes CI.
+
+Strict branch protection requires an up-to-date branch. After `main` advances,
+existing PRs such as PR #72 may need a maintainer to click "Update branch" or
+request `@dependabot rebase`, then wait for CI on the new head. The automation
+does not merge a behind branch using its older green checks.
 
 The workflow runs after CI, documentation, canary, and cleanup completion, with
 a 15-minute scheduled reconciliation and a manual dispatch for missed events or
@@ -191,6 +198,9 @@ workflows after merging, so the automation explicitly dispatches preview cleanup
 waits for successful completion, and then dispatches main documentation. Both
 publishers retain their shared queue. Dispatches use the latest `main`, so they
 include the dependency merge and any subsequent changes.
+The token merge also suppresses the ordinary `main` CI push run; CI badges and
+the Codecov baseline remain at their last main run. Strict branch protection
+still requires passing PR CI for the up-to-date merge result.
 
 Named workflow runs prevent duplicate dispatches during reconciliation, which
 covers token-authored Dependabot merges from the last seven days. Failed cleanup
@@ -199,6 +209,16 @@ the automation does not repeatedly dispatch replacements. Repository auto-merge
 must be enabled for maintainers who want to queue a PR manually. The automatic
 workflow itself waits for green checks and then merges immediately, avoiding
 deferred requests that could miss a newly reported failing check.
+
+Failures are isolated per PR, with merges and publication for other PRs continuing.
+The workflow reports all errors and exits unsuccessfully after both passes.
+GitHub documents `contents: write` for the
+[PR merge API](https://docs.github.com/en/rest/pulls/pulls#merge-a-pull-request)
+and [Dependabot merging with the Actions token](https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/automate-dependabot-with-actions).
+Actions updates use the same merge path. Token merges, including changes to
+workflow files, require live verification after activation. If GitHub rejects an
+Actions update for insufficient permission, a maintainer must merge that PR;
+the failure remains visible and does not prevent other PRs from progressing.
 
 ## Release Guardrails
 
