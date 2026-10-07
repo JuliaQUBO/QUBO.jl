@@ -221,6 +221,42 @@ The QUBO.jl v0.6.2 compatibility refresh follows the registered stack with
 0.16. While `PySA` v0.4.1 still caps `QUBOTools` at 0.14, PySA examples should
 remain plain `julia` snippets rather than Documenter `@example` blocks.
 
+## Documentation Publishing
+
+The documentation and preview cleanup workflows share the
+`documentation-publishing` concurrency group across all refs. The queue covers
+checkout, Documenter's `gh-pages` deployment, and aggregation to `gh-multi-pages`,
+the GitHub Pages source. `queue: max` retains up to 100 pending writers, and
+`cancel-in-progress: false` lets the active publisher finish. Future workflows
+that write either branch must use the same group before reading deployment state.
+
+These guarantees apply only to refs containing these workflow changes. Before
+closing an older PR such as PR #72, refresh its merge ref to include this version
+of the cleanup workflow. Avoid manual documentation runs or release tags from
+older refs: those workflows can bypass the queue, rewrite `gh-pages` history,
+or hide previews again.
+
+Preview cleanup removes only the closed PR's directory with a normal
+fast-forward push. It retains branch history and other previews and releases;
+an absent preview is a no-op. A competing update outside this queue still causes
+a push failure rather than overwriting published work. PR aggregation continues
+to build without publishing, and Dependabot's documentation builds retain their
+deployment restrictions.
+
+The aggregate retains previews published by Documenter. Their public URLs use
+the package prefix, for example
+`https://juliaqubo.github.io/QUBO.jl/QUBO.jl/previews/PR72/`. A PR run publishes
+only to `gh-pages`; the next main or manual documentation run refreshes the
+public aggregate. Documenter's `documenter/deploy` status link omits the package
+prefix, so reviewers should use the package-prefixed URL above.
+
+Retaining previews applies to all four aggregated packages, including historical
+preview directories still present on their source branches. This repository's
+cleanup handles QUBO.jl PR closures; sibling repositories own their preview
+cleanup, and pre-existing leftovers require separate cleanup. Once a preview is
+removed from its source branch, a subsequent aggregate refresh removes its
+hosted copy.
+
 ## Rollout Order
 
 Apply the policy to package repositories before solver or adapter repositories

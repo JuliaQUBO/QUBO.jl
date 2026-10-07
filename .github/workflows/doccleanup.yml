@@ -4,6 +4,12 @@ on:
   pull_request:
     types: [closed]
 
+# Acquire the same queue as docs.yml before checking out gh-pages.
+concurrency:
+  group: documentation-publishing
+  cancel-in-progress: false
+  queue: max
+
 jobs:
   doc-preview-cleanup:
     runs-on: ubuntu-latest
@@ -13,17 +19,16 @@ jobs:
         with:
           ref: gh-pages
 
-      - name: Delete preview and history
+      - name: Delete preview
         run: |
-            git config user.name "Documenter.jl"
-            git config user.email "documenter@juliadocs.github.io"
-            git rm -rf "previews/PR$PRNUM"
-            git commit -m "delete preview"
-            git branch gh-pages-new $(echo "delete history" | git commit-tree HEAD^{tree})
+          git config user.name "Documenter.jl"
+          git config user.email "documenter@juliadocs.github.io"
+          git rm -r --ignore-unmatch -- "previews/PR$PRNUM"
+          if git diff --cached --quiet; then
+            echo "No preview to delete for PR$PRNUM"
+          else
+            git commit -m "delete preview PR$PRNUM"
+            git push origin HEAD:gh-pages
+          fi
         env:
             PRNUM: ${{ github.event.number }}
-
-      - name: Push changes
-        run: |
-            git push --force origin gh-pages-new:gh-pages
-# Workflow copied from https://github.com/CliMA/TimeMachine.jl
