@@ -172,6 +172,34 @@ with explicit `contents: write` and `pull-requests: write` permissions and a
 dedicated secret such as `COMPATHELPER_PRIV` when the workflow must push
 branches that trigger CI.
 
+## Automatic Dependabot Merges
+
+In QUBO.jl, the Dependabot Auto-merge workflow merges same-repository Dependabot
+PRs into `main` after the three required Julia lanes, documentation, and every
+other reported current-head check have succeeded. Optional skipped or neutral
+checks are accepted, but required Julia lanes and documentation must explicitly
+succeed. This applies to all update types, including major and grouped updates.
+Human-authored PRs, forks, drafts, missing checks, changed heads, conflicts,
+outdated branches, and unresolved merge gates are left for maintainers.
+Merges use squash with the verified head SHA and never bypass branch protection.
+
+The workflow runs after CI, documentation, canary, and cleanup completion, with
+a 15-minute scheduled reconciliation and a manual dispatch for missed events or
+older open PRs. It executes only trusted `main` code and needs no personal-token
+secret. The built-in Actions token does not trigger ordinary push or PR-close
+workflows after merging, so the automation explicitly dispatches preview cleanup,
+waits for successful completion, and then dispatches main documentation. Both
+publishers retain their shared queue. Dispatches use the latest `main`, so they
+include the dependency merge and any subsequent changes.
+
+Named workflow runs prevent duplicate dispatches during reconciliation, which
+covers token-authored Dependabot merges from the last seven days. Failed cleanup
+or documentation runs remain failures and require inspection and a manual rerun;
+the automation does not repeatedly dispatch replacements. Repository auto-merge
+must be enabled for maintainers who want to queue a PR manually. The automatic
+workflow itself waits for green checks and then merges immediately, avoiding
+deferred requests that could miss a newly reported failing check.
+
 ## Release Guardrails
 
 Use package-local release checks before tagging or registering an individual

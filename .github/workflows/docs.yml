@@ -1,4 +1,5 @@
 name: Documentation
+run-name: "${{ inputs.dependabot_pr && format('Dependabot documentation PR #{0}', inputs.dependabot_pr) || 'Documentation' }}"
 on:
   push:
     branches: [main]
@@ -6,6 +7,11 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
+    inputs:
+      dependabot_pr:
+        description: Merged Dependabot PR whose documentation is being refreshed
+        type: string
+        required: false
 # Share this queue with doccleanup.yml: all refs write the same deployment branches.
 concurrency:
   group: documentation-publishing

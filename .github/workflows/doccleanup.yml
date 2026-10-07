@@ -1,8 +1,19 @@
 name: Doc Preview Cleanup
+run-name: "${{ format('Doc Preview Cleanup PR #{0}', github.event.pull_request.number || inputs.pr_number) }}"
 
 on:
   pull_request:
     types: [closed]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Closed PR whose preview should be removed
+        type: string
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: read
 
 # Acquire the same queue as docs.yml before checking out gh-pages.
 concurrency:
@@ -14,6 +25,17 @@ jobs:
   doc-preview-cleanup:
     runs-on: ubuntu-latest
     steps:
+      - name: Verify PR is closed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PRNUM: ${{ github.event.pull_request.number || inputs.pr_number }}
+        run: |
+          if [[ ! "$PRNUM" =~ ^[1-9][0-9]*$ ]]; then
+            echo "A positive PR number is required"
+            exit 1
+          fi
+          pr_state=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PRNUM" --jq '.state')
+          test "$pr_state" = closed
       - name: Checkout gh-pages branch
         uses: actions/checkout@v7.0.1
         with:
@@ -31,4 +53,4 @@ jobs:
             git push origin HEAD:gh-pages
           fi
         env:
-            PRNUM: ${{ github.event.number }}
+            PRNUM: ${{ github.event.pull_request.number || inputs.pr_number }}

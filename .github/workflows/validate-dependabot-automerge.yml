@@ -1,0 +1,28 @@
+name: Validate Dependabot Auto-merge
+
+on:
+  pull_request:
+    paths:
+      - scripts/dependabot_automerge.py
+      - .github/tests/test_dependabot_automerge.py
+      - .github/workflows/dependabot-automerge.yml
+      - .github/workflows/validate-dependabot-automerge.yml
+      - .github/workflows/docs.yml
+      - .github/workflows/doccleanup.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: '3.x'
+      - name: Install validation dependency
+        run: pip install pyyaml
+      - name: Test merge gates and publication recovery
+        run: python -m unittest discover -s .github/tests -p 'test_dependabot_automerge.py'
