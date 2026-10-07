@@ -41,6 +41,8 @@ function buildmultidocs(path::AbstractString, docs)
             engine = MultiDocumenter.FlexSearch,
         ),
         rootpath = "/QUBO.jl",
+        # Pages serves this aggregate, so retain Documenter's published PR previews.
+        hide_previews = false,
     )
 
     return nothing

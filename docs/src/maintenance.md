@@ -237,6 +237,13 @@ a push failure rather than overwriting published work. PR aggregation continues
 to build without publishing, and Dependabot's documentation builds retain their
 deployment restrictions.
 
+The aggregate retains previews published by Documenter. Their public URLs use
+the package prefix, for example
+`https://juliaqubo.github.io/QUBO.jl/QUBO.jl/previews/PR72/`. A PR run publishes
+only to `gh-pages`; the next main or manual documentation run refreshes the
+public aggregate. Cleanup removes the source preview, and a subsequent aggregate
+refresh removes its hosted copy.
+
 ## Rollout Order
 
 Apply the policy to package repositories before solver or adapter repositories
