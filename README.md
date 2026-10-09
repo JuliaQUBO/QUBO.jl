@@ -212,6 +212,23 @@ With [QUBOTools.jl](https://github.com/JuliaQUBO/QUBOTools.jl) it is possible to
 <div>
 </div>
 
+### QUBODecomposition.jl
+
+[QUBODecomposition.jl](https://github.com/JuliaQUBO/QUBODecomposition.jl) is a
+standalone composite optimizer maintained by [@bernalde](https://github.com/bernalde).
+It uses public QUBODrivers interfaces to dispatch fitting whole models, solve
+independent components, or run conditioned serial sweeps with explicit
+logical-variable budgets. It reconstructs complete states and evaluates their
+energies in the original model. Coupled sweeps are heuristic, with conservative
+public statuses and cooperative resource limits.
+
+The package has direct JuMP and released ToQUBO 0.7.1 integration evidence.
+It is currently unregistered and unreleased; see the
+[development manual](https://juliaqubo.github.io/QUBO.jl/QUBODecomposition.jl/dev/)
+for installation, configuration, results and acceptance coverage.
+It is an ecosystem package installed separately: `Pkg.add("QUBO")` and
+`using QUBO` do not install or re-export QUBODecomposition.
+
 ## Citing [QUBO.jl](https://github.com/JuliaQUBO/QUBO.jl) 📑
 
 If you find [QUBO.jl](https://github.com/JuliaQUBO/QUBO.jl) and its packages useful in your work, we kindly request that you cite the following [journal article](https://www.tandfonline.com/doi/full/10.1080/10556788.2026.2702926). The [arXiv preprint](https://arxiv.org/abs/2307.02577) remains available.

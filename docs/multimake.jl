@@ -25,6 +25,13 @@ docs = [
         giturl = "https://github.com/JuliaQUBO/QUBODrivers.jl.git",
     ),
     MultiDocumenter.MultiDocRef(
+        upstream = joinpath(temp_dir, "QUBODecomposition.jl"),
+        path = "QUBODecomposition.jl",
+        name = "QUBODecomposition.jl",
+        giturl = "https://github.com/JuliaQUBO/QUBODecomposition.jl.git",
+        branch = "gh-pages",
+    ),
+    MultiDocumenter.MultiDocRef(
         upstream = joinpath(temp_dir, "QUBOTools.jl"),
         path = "QUBOTools.jl",
         name = "QUBOTools.jl",
@@ -37,7 +44,9 @@ function buildmultidocs(path::AbstractString, docs)
         path,
         docs;
         search_engine = MultiDocumenter.SearchConfig(
-            index_versions = ["stable"],
+            # FlexSearch indexes the first existing channel per package:
+            # prefer stable, falling back to dev for unreleased packages.
+            index_versions = ["stable", "dev"],
             engine = MultiDocumenter.FlexSearch,
         ),
         rootpath = "/QUBO.jl",

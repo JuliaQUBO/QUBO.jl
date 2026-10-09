@@ -325,3 +325,31 @@ so the shared compiler and tooling layers stabilize first:
 For each package-level issue, update the issue with the Dependabot decision,
 whether a repository-specific exception applies, and the pull request that adds
 or confirms the repository's `.github/dependabot.yml`.
+
+## Aggregate Documentation Refresh
+
+The aggregate consumes each package's published `gh-pages` documentation, not
+its source checkout. Publish package documentation first, then refresh the QUBO
+aggregate through the existing Documentation workflow. QUBO.jl Pages serves
+`gh-multi-pages` at the repository root; package Actions Pages hosting does not
+change that arrangement.
+
+FlexSearch indexes the first existing channel for each package in the order
+`stable`, then `dev`. Released packages retain stable search results, while
+unreleased QUBODecomposition contributes its development manual. Only one
+channel per package is indexed; all existing versions and previews remain
+available for navigation. After merging an aggregate change, verify the live
+overview, package route, navigation, version selectors and actual search results.
+A local aggregate build does not establish that the public site has refreshed.
+
+To build without deployment and exercise the generated search widget and
+navigation handlers before the temporary output is removed, run from the repository root:
+
+```sh
+julia --project=docs/ -e 'push!(ARGS, "--skip-deploy"); include("docs/multimake.jl"); run(`node docs/check_aggregate_search.js $build_path`)'
+```
+
+The check needs Node.js and uses a small DOM adapter. It verifies generated
+search data, result targets/anchors, channel fallback and navigation handlers;
+browser layout and full Documenter version-selector interaction still require
+browser verification.
