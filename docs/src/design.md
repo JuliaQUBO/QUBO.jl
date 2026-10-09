@@ -900,10 +900,22 @@ committed deductions or losing dirty flags. A no-change quiescent call returns
 in O(1); a blocked candidate is not repeatedly rescanned without a relevant
 field change or explicit additional proof allowance.
 
-One fixing's adjacency update is transactional. Reserve bounded work before
-committing; if a limit or interruption arrives mid-update, undo its partial
-writes and retain the candidate for resumption. Returned state always contains
-only complete verified transactions. Clock checks surround bounded units;
+One fixing's adjacency update is transactional. The first release requires a
+transaction-sized structural allowance; it does not retain a partially applied
+adjacency update across calls. On a pre-commit `:work_limit` refusal, the report
+includes `required_next_terms`: a conservative sufficient grant for the pending
+fixing's remaining structural examination and update work, tied to its current
+state token. Proof allowance and deadline remain separate requirements. Cache
+this refusal while that state is unchanged: equal insufficient grants perform
+no repeated candidate scan or adjacency update and need not make progress.
+A caller must grant the reported structural allowance (and adequate proof/time
+allowance), or keep the valid prefix. The required grant is invalidated by a
+relevant state change, rollback or reset; it is not a whole-model estimate.
+
+Reserve bounded work before committing; if a limit or interruption arrives
+mid-update, undo its partial writes and retain the candidate for resumption.
+Returned state always contains only complete verified transactions. Clock checks
+surround bounded units;
 cooperative cancellation can overrun by one such unit and its restoration cost,
 which must be reported. An exact fallback must itself have bounded resumable or
 abortable steps; an unbounded big-integer call is not a hard deadline guarantee.
@@ -962,7 +974,7 @@ the same conditioner/verifier. Cost-shape assertions complement numerical tests.
 | Checkpoint/view/report misuse | #86/#89 | Foreign/stale/same-length different-branch/discarded-future tokens fail; copied exports retain historical scope; live consumers reject stale current-state evidence |
 | Coefficient/penalty/domain/sense/scale/offset/label-map generation changes | #85/#86/#89; #90 consumer | Same-size changes and ToQUBO recompilation reset all premises/maps; compare fresh instances; no hot-call whole-model fingerprint scan |
 | Cancellation, adjacent floats, subnormals, huge values, overflow and unsafe export | #87 | Exact dyadic oracle; rounding changes argmin counterexamples; uncertainty abstains; transport fails or identity-falls back as specified; active assumptions never disappear |
-| Interrupted/resumed propagation/export and exact fallback | #86–#89 | Scripted clock/work/interrupts at transaction boundaries; complete valid prefix, unfinished queue, no duplicate/refunded work, no partial exported model |
+| Interrupted/resumed propagation/export and exact fallback | #86–#89 | Scripted clock/work/interrupts at transaction boundaries; complete valid prefix, unfinished queue, no duplicate/refunded work, no partial exported model; a fixing with degree above a small grant reports refusal/required allowance without repeated hidden work, then completes with sufficient structural/proof/time grants |
 | No-change/local updates and unavoidable cascade/replay costs | #86/#88/#89; Benchmarks#30 | Instrument touched adjacency/trail/queue and allocations after warmup, verify untouched components are not scanned/copied; report complete replay/fallback costs |
 | Direct plain-workspace and optional sampler consumer | #90 | Core imports without adapter; exact/heuristic/malformed/empty/failed child scripts; complete lifting and truthful scope-qualified status; all-fixed skips child |
 | ToQUBO compiled bits, encoding/penalties and source feasibility | #90 | Restore every compiled bit before decoding; independent source objective/constraint residuals, including infeasible candidates and changed penalties |
