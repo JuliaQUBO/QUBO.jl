@@ -651,3 +651,436 @@ No foreign source is adapted by this design. If later code adapts QSplit or
 D-Wave Hybrid implementations, retain their applicable license/attribution
 notices and pin the adapted files/revision. Mathematical correctness and Julia
 status claims require the independent downstream oracles above.
+
+## [Certified Preprocessing: Proposed First-Release Contract](@id certified-preprocessing)
+
+This is the **unimplemented design proposal** for
+[QUBO#85](https://github.com/JuliaQUBO/QUBO.jl/issues/85), under
+[roadmap #84](https://github.com/JuliaQUBO/QUBO.jl/issues/84). It specifies a
+shared contract for [#86](https://github.com/JuliaQUBO/QUBO.jl/issues/86)–
+[#91](https://github.com/JuliaQUBO/QUBO.jl/issues/91),
+[QUBOBenchmarks#30](https://github.com/JuliaQUBO/QUBOBenchmarks.jl/issues/30)
+and [QUBODecomposition#16](https://github.com/JuliaQUBO/QUBODecomposition.jl/issues/16).
+No preprocessing runtime, repository, package installation, manual deployment,
+registration or release is delivered by this documentation slice. The accepted
+decomposition design above remains in force.
+
+### Destination and Package Boundary
+
+Propose the public repository **JuliaQUBO/QUBOPreprocessing.jl** and matching
+Julia module `QUBOPreprocessing`, with
+[@bernalde](https://github.com/bernalde) as proposed accepting maintainer and
+release authority. On 2026-10-09, the authenticated GitHub repository lookup
+returned 404: no destination was visible to that account. Creation, ownership
+acceptance, access continuity and bootstrap publication require a separate
+explicit handoff. There is no working package-name install command or deployed
+manual to advertise yet.
+
+Propose **MPL-2.0**, matching the inspected QUBO.jl and QUBOTools licenses.
+New files retain accurate contributor ownership; adapted files retain upstream
+notices. No foreign implementation is copied by this design. Before bootstrap,
+the accepting maintainer confirms the license and any obligations for material
+actually reused; importing a dependency does not transfer its copyright.
+
+| Surface | Owner and dependency direction |
+| :-- | :-- |
+| Model, labels, domain, sense, scale, offset, supplied-fixing algebra and lifting | Existing QUBOTools public APIs |
+| Certified decisions, arithmetic, scope, reversible workspace, safe export and reconstruction | QUBOPreprocessing → QUBOTools plus used Julia standard libraries |
+| Optional direct sampler consumer | QUBOPreprocessing Julia extension with QUBODrivers/MOI weak dependencies; plain workspace use does not load the extension |
+| Compilation, encoding, penalties and source feasibility | ToQUBO/PBO; JuMP and ToQUBO in integration/test/example environments |
+| Search, separators, components, incumbent and parent budgets | QUBODecomposition → preprocessing at its later integration; no reverse dependency |
+| Comparative cost and operating envelope | QUBOBenchmarks#30; benchmark harness stays outside the core |
+| Discovery and eventual registry canary | QUBO.jl; no runtime implementation or automatic re-export here |
+
+The proposed core floor is **Julia 1.10 and QUBOTools 0.16.2** (`julia = "1.10"`,
+`QUBOTools = "0.16.2"`, allowing compatible 0.16.x). The optional extension
+proposes **QUBODrivers 0.6.5 and MOI 1** (`QUBODrivers = "0.6.5"`,
+`MathOptInterface = "1"`). Inspected upstream projects declare those Julia and
+compatibility lines; the existing decomposition package uses these floors.
+This is source compatibility evidence, not a destination installation test:
+bootstrap must exercise the actual minimum versions in a fresh Julia 1.10
+project and current compatible versions in another project. JuMP 1 and ToQUBO
+0.7.1 are proposed integration floors, separately resolved; do not force JuMP
+into a pinned MOI 1.0.0 test when its own minimum requires a later MOI.
+
+There is no new mandatory JuMP, solver, Python, QPU, external process,
+QUBODecomposition or graph-flow dependency. QUBOTools itself already imports
+Graphs and other tooling dependencies: this proposal does not claim a tiny
+transitive dependency footprint. Additional heavy preprocessing methods must
+have no import or initialization cost in the default cheap path.
+
+### Guarantee and Numerical Transport
+
+Let the represented source objective be
+
+```math
+E(x)=\alpha\left(\beta+\sum_i L_i x_i+\sum_{i<j}Q_{ij}x_i x_j\right),
+```
+
+with its recorded domain and minimization/maximization sense. The first release
+accepts finite `Float64` stored coefficients, scale and offset. Their **exact
+binary values** define the mathematical problem; ordinary rounded evaluation
+is not its proof oracle. Reject nonfinite input and unsupported coefficient
+types explicitly, without silently converting them. Both binary and spin
+models, arbitrary ordered labels, isolates, empty models and finite negative,
+nonunit and zero scales are supported. Offset is inside the scale as above.
+
+Let `A` be the explicit caller assumptions and `D` the committed strict
+certified deductions. Substituting `A ∪ D` produces residual `R` with lifting
+map `lift`. For every complete valid residual state, exact represented energy
+satisfies `E(lift(y)) = R(y)`. Every optimum of the source restricted by `A`
+agrees with `D`; consequently a global residual optimum lifts to a global
+optimum **of that restricted problem**. When `A` is empty this is the original
+problem, and strict dominance preserves every original optimum. A caller's
+separator assignment is an assumption, never a globally certified fixing.
+Weak persistency, heuristic fixing, sample consensus, approximate pruning and
+unproved restrictions are outside 0.1.0.
+
+Three claims stay separate: exact reduction/transport, the child's exact
+residual solve, and the invocation's original global certificate. Certified
+preprocessing cannot upgrade an uncertified child. An all-fixed or constant
+residual can be solved locally with a complete original-domain assignment;
+free zero-scale variables stay free under strict dominance, although any
+complete state then optimizes the constant objective. A branch-local proof
+needs the outer algorithm's complete branch coverage before becoming an
+original global proof. A compiled ToQUBO certificate does not establish source
+feasibility or source optimality under invalid encoding or insufficient penalties.
+Sampling distributions and physical read counts are not preserved promises.
+
+For decisions, normalize to minimization by the sense and the **sign** of
+scale, avoiding eager floating multiplication that can overflow; zero scale
+admits no strict deduction. In the binary domain, bound the current linear
+field by `L_i = a_i + sum(min(0,b_ij))` and
+`U_i = a_i + sum(max(0,b_ij))`: a proven `L_i > 0` fixes 0 and a proven
+`U_i < 0` fixes 1. In spin, use `a_i ± sum(abs(b_ij))`, fixing -1/+1 for a
+strictly positive/negative field. Fixed-boundary contributions are included.
+Ties and uncertain signs abstain. Deterministic dirty-queue order makes bounded
+traces reproducible for equal inputs and work limits; deadlines may change the
+amount of completed work.
+
+The selected first-release arithmetic policy is a conservative enclosure fast
+path plus **bounded exact dyadic fallback on affected expressions**, with
+abstention when neither establishes strict sign. #87 owns its implementation
+and independent verifier. Enclosures must cover incremental updates and
+rollback; ordinary sums, epsilons and `isapprox` are not certificates. Keep exact
+expression provenance sufficient to reconstruct witnesses without converting
+the entire source to big integers on each update. Overflow, nonfinite
+intermediates, exhausted proof allowance or unresolved sign cannot commit a
+fixing. No process-global rounding mode may race between workspaces. Exact
+fallback time, storage and arithmetic work are observable, including operand
+sizes; an arithmetic operation count alone is not a constant-time claim.
+
+**Export is a separate certification gate.** Sound deductions do not justify
+rounding a residual into a different optimization problem. The 0.1.0 default
+`materialize(ws; coefficient_type=Float64, limits=...)` succeeds only when all
+residual coefficients, constant and scale can be transported exactly to the
+requested representation, with a complete energy identity and map. This gate
+also applies to further adapter conversions, including scale folding and MOI
+quadratic conventions. Recomputed sample energy or a tolerance agreement does
+not establish preservation of argmin. A future order-preserving transform needs
+its own proof; it is not the first-release fallback.
+
+If reduced export is unsafe and `A` is empty, return an explicitly marked
+**identity fallback** using the unchanged supported source snapshot, without
+any exported deductions; its reconstruction is identity and its certificate
+chain is empty. It need not modify the workspace's valid internal deductions.
+If assumptions are active, never drop them to return an unrestricted source:
+return `:unsupported_transport` with **no solver model**, retaining the valid
+workspace for rollback or a consumer that supports the exact restriction.
+Interrupted export similarly returns no partial model. An adapter unable to
+transport even the original source exactly must decline a certified route;
+an ordinary solve may proceed only under its explicitly weaker child contract.
+No reduction/export failure authorizes an original-problem `OPTIMAL` claim.
+
+### Workspace Ownership, Scope and Proposed API
+
+All names below are **proposed and unimplemented**. There is one workspace
+implementation, shared by incremental and one-shot use; no generic rule plugin
+framework is needed for the initial identity/strict-dominance stages.
+
+`Workspace(model; rules=:dominance)` copies the represented objective and
+ordered label mapping into a private immutable source snapshot, then owns all
+mutable adjacency, fields, enclosures, masks, dirty queue, buffers and undo
+trail. `rules=:identity` selects no inference. A caller still owns its input;
+workspace changes never mutate it, and later caller edits do not silently alter
+the snapshot. Labels must have stable equality/hash semantics; callers may not
+mutate label identities while retained. There is no shared mutable workspace
+state between concurrent callers, and one workspace is used serially.
+
+The opaque generation binds the snapshot's coefficients, penalties as embodied
+in those coefficients, domain, sense, scale, offset, dimension and ordered
+variable mappings. `generation(ws)` returns that identity. `reset!(ws, model)`
+constructs a new snapshot/generation in O(n+m) preparation, invalidating **all**
+old checkpoints, reports, assumptions, proofs and live query views. Failed
+validation leaves the old workspace intact. Arbitrary incremental coefficient
+editing is not supported in 0.1.0. Consumers must reset or construct anew after
+any source/reformulation/penalty change, including same-dimension relabeling;
+no hidden full-model hash/scan is done on every hot call. Reuse requires the
+consumer to establish that the source generation is unchanged.
+
+| Proposed call | Return and mutation contract |
+| :-- | :-- |
+| `checkpoint(ws)` | Opaque token for workspace, generation and exact retained trail/queue prefix; O(1), no model copy |
+| `assume!(ws, label => value)` | `MutationReport` with scope, changed-event range and work counts; validates original label/domain and commits an explicit assumption transaction |
+| `propagate!(ws; limits=...)` | `PropagationReport` with current state token, scope, changed-event range, stop reason, per-call and cumulative work; commits only verified deductions and retains unfinished queue |
+| `changes(ws, checkpoint_or_report)` | Borrowed iterator over fixed/unfixed/provenance events since a retained checkpoint, or that report's event range; O(1) creation, O(k) traversal, no full graph scan/copy |
+| `rollback!(ws, cp)` | `MutationReport` for undo events and costs; restores fields, constants, masks, queue, scopes and proof validity to `cp` |
+| `unfix!(ws, label)` | `MutationReport`; removes a caller assumption using the replay path below; does not arbitrarily remove a proved deduction |
+| `materialize(ws; coefficient_type=Float64, limits=...)` | Owned `ExportResult`: `:certified`, `:identity_fallback`, `:unsupported_transport`, or a bounded-stop reason; model/map/certificate only on success |
+| `reconstruct(export_result, y)` | Owned complete original-order state plus original-energy evaluation record; validates export, state length/domain and map coverage; no workspace mutation |
+| `preprocess(model; rules=:dominance, limits=...)` | `(workspace, propagation_report)` built by construction plus `propagate!`; materialization remains explicit even on the one-shot path |
+
+`assume!` repeats an already explicit identical assignment as a no-op. A matching
+certified value may be recorded as a new **explicit** assumption, so replay
+retains the caller's choice independently of the deduction. A conflicting
+current fixing, invalid label/value or malformed limit throws `ArgumentError`
+transactionally. To explore a value conflicting with a deduction, restore a
+checkpoint before that deduction or use a fresh identity workspace, impose the
+assumption, then propagate; root deductions are not premises for arbitrary
+contrary branches. `unfix!` on an absent assumption is a no-op; on a deduction
+without a caller assumption it fails, since removing a proof premise requires
+rollback rather than inventing an assumption. Changing an assumed value is
+unfix/restore followed by a new assumption, never an overwrite.
+
+Mandatory records distinguish `:global_deduction`, `:assumption` and
+`:conditional_deduction`. A deduction is global only with an empty assumption
+scope and global predecessors. Otherwise it is conservatively conditional,
+even if a stronger proof might exist. Compact immutable scope nodes refer to
+parent and assumption ID rather than copying every active assumption into every
+record. Each deduction stores generation, original index/value, rule, scope,
+bound enclosure or exact witness reference, and predecessor references sufficient
+for independently structured re-verification. Reports retain counts and stop
+reason with verbose tracing off; detailed diagnostics/proof serialization are
+explicit extra work. A source hash authenticates identity, not the mathematics.
+
+Checkpoints are workspace-specific retained-prefix capabilities. Reject foreign,
+old-generation and discarded-future tokens, including a token at the same trail
+length on a different branch. The rollback target and ancestors remain usable;
+its discarded descendants cannot be reused. Queries/views are borrowed and expire
+on the next mutation; callers copy only needed events before mutating. Reports'
+state/proof validity is checked against the current generation and retained
+branch, not merely variable values. A report from an undone branch cannot be
+consumed as current evidence. An owned successful export is a frozen snapshot:
+rollback does not rewrite it, but it still certifies only its recorded historical
+source/scope; a consumer must match those identities before treating it as current.
+
+LIFO rollback undoes recorded changes, including conditional descendants, before
+further propagation/export. A non-LIFO `unfix!` conservatively rolls back to the
+retained baseline **before the first active caller assumption**, discards all
+conditional deductions, and replays only retained explicit assumptions in their
+original order, omitting the removed assumption. Re-propagation is a subsequent
+explicit bounded call; replay never promotes old deductions to assumptions.
+Independent root deductions at that baseline may remain. Scope descendants and
+their checkpoints/reports are invalidated. The operation costs O(undone trail +
+retained assumption inventory + replayed touched adjacency), plus later actual
+propagation; it may revisit a whole active branch. It is not O(degree) arbitrary
+unfix. #89 must test matching-deduction assumptions, conflicting branches and
+multiple removals against fresh scoped enumeration.
+
+### Bounds, Costs and Resumption
+
+`limits` is a validated record with nonnegative integer caps (excluding `Bool`)
+for examined terms, committed deductions and exact-fallback steps, and an optional
+finite nonnegative remaining time in seconds, converted to a monotonic deadline.
+Default propagation work caps are unbounded; consumers select finite caps for
+inner-loop use. Zero allowance permits inspection but no new charged work.
+Reports expose examined variables/edges/terms, queue work, committed deductions,
+trail writes/undos, fallback count/steps/operand sizes, elapsed time and overrun;
+materialization and reconstruction costs are recorded separately. Counters are
+monotonic for performed work and are not refunded by rollback. Each resume gets
+an explicit new allowance; a parent deducts all prior calls from its total.
+
+Stop reasons are `:quiescent`, `:all_fixed`, `:work_limit`, `:proof_limit`,
+`:deadline`, `:interrupted` and `:numeric_uncertainty`. The first two describe
+completion of the selected rules, not solver optimality. Numerical uncertainty
+without available fallback leaves the candidate unfixed and records why; a
+caller can resume with more proof allowance or accept that certified prefix.
+Deadline/interruption/work stops retain pending candidates, without duplicating
+committed deductions or losing dirty flags. A no-change quiescent call returns
+in O(1); a blocked candidate is not repeatedly rescanned without a relevant
+field change or explicit additional proof allowance.
+
+One fixing's adjacency update is transactional. Reserve bounded work before
+committing; if a limit or interruption arrives mid-update, undo its partial
+writes and retain the candidate for resumption. Returned state always contains
+only complete verified transactions. Clock checks surround bounded units;
+cooperative cancellation can overrun by one such unit and its restoration cost,
+which must be reported. An exact fallback must itself have bounded resumable or
+abortable steps; an unbounded big-integer call is not a hard deadline guarantee.
+`assume!`, `rollback!` and replay must finish or restore a valid pre-call state
+before returning/throwing; they do not promise a caller's propagation deadline
+bounds their mandatory restoration cost. Parent algorithms charge those costs.
+
+| Operation | Cost contract, before measurement |
+| :-- | :-- |
+| Sparse snapshot/preparation | O(n+m) storage and structural work, reusable signed adjacency/maps/buffers; dense input conversion can inspect O(n²) entries once |
+| Fixing and propagation | Touched adjacency, queue and actual cascades plus bounded proof work; no constant-time promise for global cascades |
+| Checkpoint/no-change changes query | O(1) token/view; enumerate only actual events, O(k); no hidden residual construction |
+| Rollback | Proportional to undone trail changes, including queue and proof bookkeeping |
+| Non-LIFO replay | Explicit branch undo/inventory/replay cost above; potentially whole branch |
+| Full materialization/proof export | Explicit O(n+m) structural traversal/copy plus certified arithmetic/transport and requested proof output; caller-owned result |
+| Complete reconstruction/energy | O(n+m) traversal plus chosen numeric evaluation/verification cost; complete original state, never fill missing child values silently |
+
+Structural big-O counts exclude variable-size proof arithmetic, whose costs are
+reported separately. No claimed performance benefit follows from this design.
+The default pass is cheap dominance; later probing or roof-duality requires
+separate selection, bounds, proof semantics and measured adoption.
+
+For [QUBOBenchmarks#30](https://github.com/JuliaQUBO/QUBOBenchmarks.jl/issues/30),
+acceptance must record cold/JIT setup and memory against n,m; warmed no-change,
+single bounded-degree update, short/global cascades, LIFO rollback and non-LIFO
+replay latency/allocations; uncertainty/fallback/verification; materialization
+and full reconstruction; and end-to-end direct/decomposition solves. Compare
+incremental reuse, rebuilding each step and preprocessing off with identical
+assumptions, child/start/seeds and total budgets. Include sparse/disconnected,
+dense, no-reduction and near-cancellation fixtures, guarded tiny exact oracles,
+versions/source hashes, machine/environment, repetitions, variability and failures.
+
+Set concrete acceptable overhead/break-even targets from the baseline before
+accepting results. Disclose the amortization iteration count and avoid double
+counting proof or solver time. Deterministic CI checks count touched work and
+allocation growth to detect whole-model scans on unrelated components; noisy
+wall-time thresholds and large campaigns stay optional. The intended repeated
+sparse workload must improve complete cycle time and allocations versus rebuilding,
+or the implementation/adoption envelope must be revised. Record accept/revise/defer
+for expensive methods and no-benefit cases; variable reduction alone is insufficient.
+
+### Independent Acceptance Matrix and Consumer Boundary
+
+These are future implementation checks, **not tests executed by this design PR**.
+Oracles must use independent scalar polynomials and exact binary-value rational
+references on guarded tiny instances, rather than merely compare two calls to
+the same conditioner/verifier. Cost-shape assertions complement numerical tests.
+
+| Contract and failure surface | Owner | Independent acceptance evidence |
+| :-- | :-- | :-- |
+| Identity/no-op, empty/constant/all-fixed, isolates and ordered labels | #85 identity skeleton; #86 | Enumerate complete original states; identity maps and unchanged coefficients; all-fixed empty residual has original fixed-state energy |
+| Binary/spin; Min/Max; positive, negative, nonunit and zero scale; offsets | #85–#88 | Independent scalar/exact energies for every guarded state and reconstructed state; zero scale/ties produce no strict fixings |
+| Strict dominance and cascades, graph splits | #88 with #87 | Enumerate all scoped optima and show every deduction holds in each; solve residual exactly and compare optimum values |
+| Global, assumption and conditional provenance | #87/#89 | A deduction triggered only by an assumption is never global; tampered premises/bounds/values/generation rejected by independent verifier |
+| Nested rollback and non-LIFO unfix/replay | #86/#89 | Randomized bounded traces versus fresh scoped enumeration; restore fields/constants/queue/maps; remove an assumption and invalidate descendants before reuse |
+| Checkpoint/view/report misuse | #86/#89 | Foreign/stale/same-length different-branch/discarded-future tokens fail; copied exports retain historical scope; live consumers reject stale current-state evidence |
+| Coefficient/penalty/domain/sense/scale/offset/label-map generation changes | #85/#86/#89; #90 consumer | Same-size changes and ToQUBO recompilation reset all premises/maps; compare fresh instances; no hot-call whole-model fingerprint scan |
+| Cancellation, adjacent floats, subnormals, huge values, overflow and unsafe export | #87 | Exact dyadic oracle; rounding changes argmin counterexamples; uncertainty abstains; transport fails or identity-falls back as specified; active assumptions never disappear |
+| Interrupted/resumed propagation/export and exact fallback | #86–#89 | Scripted clock/work/interrupts at transaction boundaries; complete valid prefix, unfinished queue, no duplicate/refunded work, no partial exported model |
+| No-change/local updates and unavoidable cascade/replay costs | #86/#88/#89; Benchmarks#30 | Instrument touched adjacency/trail/queue and allocations after warmup, verify untouched components are not scanned/copied; report complete replay/fallback costs |
+| Direct plain-workspace and optional sampler consumer | #90 | Core imports without adapter; exact/heuristic/malformed/empty/failed child scripts; complete lifting and truthful scope-qualified status; all-fixed skips child |
+| ToQUBO compiled bits, encoding/penalties and source feasibility | #90 | Restore every compiled bit before decoding; independent source objective/constraint residuals, including infeasible candidates and changed penalties |
+| Root preprocessing and capacity/status/deadline composition | Decomposition#16 | On/off exhaustive comparison, preprocessor-induced component split, MOI-fixed plus reduced-map composition, parent costs, stale generation rejection and unchanged off/default behavior |
+| Installation, documentation, floors and release/adoption | #85 bootstrap; #91 | Fresh candidate/minimum/current resolution, then separately tag/registry/import identity and runnable examples; served docs/canary verified after publication |
+
+Issue numbers in this matrix refer to QUBO.jl while incubated; their links in the
+opening paragraph identify the current trackers. After an authorized transfer,
+refresh references preserving GitHub redirects and history.
+
+The first optional adapter (#90) creates a fresh supplied child, materializes
+through the export gate, validates complete residual states, reconstructs every
+original variable and reports independently evaluated original energy. It charges
+preprocessing, fallback, export, child and reconstruction to one parent budget,
+keeping only a fully validated incumbent on timeout/failure. A public child
+`OPTIMAL` is reusable only with a matching scope and complete certified transport
+chain. QUBODrivers' ExactSampler has a conservative public status; a separately
+verified exhaustive test adapter may expose its certificate without changing the
+shared driver contract. Empty/partial/malformed results invent neither bits nor
+proofs. Scope-restricted success is not unrestricted original `OPTIMAL`.
+
+Decomposition#16 separately owns **opt-in root preprocessing** before residual
+component discovery and capacity checks. Automatic preprocessing of every
+neighborhood or separator branch is not the default and needs separate complete
+cost evidence. Exact separator conditioning has priority over deferred graph
+partition sweeps (#13); neither those sweeps nor another strategy is a prerequisite
+for this contract. The existing shared conditioner remains the reference until
+profiling demonstrates a specific upstream optimization gap.
+
+### Proposed Usage (Not Executable Yet)
+
+The following is pseudocode for the proposed contract; it is deliberately a
+plain `julia` block, not a runnable Documenter example. `model` is a caller-owned
+QUBOTools model, and `solve_residual` is a consumer with its own status/proof contract.
+
+```julia
+ws = Workspace(model; rules=:dominance)
+root = propagate!(ws; limits=root_allowance)
+cp = checkpoint(ws)
+try
+    assume!(ws, :separator_bit => 1) # explicit restriction, not a global proof
+    branch = propagate!(ws; limits=branch_allowance)
+    for event in changes(ws, cp)    # consume before next mutation; no residual copy
+        inspect(event)
+    end
+    exported = materialize(ws; coefficient_type=Float64, limits=export_allowance)
+    if exported.status == :certified
+        child_result = solve_residual(exported.model)
+        # Validate child state/status; its proof applies only to exported.scope.
+        full_state, energy = reconstruct(exported, child_result.state)
+    end
+finally
+    rollback!(ws, cp)               # invalidates branch consequences before reuse
+end
+
+# One-shot convenience uses the same workspace; export is still explicit.
+ws_once, report = preprocess(model; rules=:dominance, limits=one_shot_allowance)
+exported_once = materialize(ws_once; coefficient_type=Float64, limits=export_allowance)
+```
+
+This example assumes the chosen branch value does not conflict with the root's
+current deductions. For a contrary branch use a checkpoint before those deductions
+or a fresh identity workspace as specified above. A consumer handles all export
+statuses and validates its child before reconstruction/certificate propagation.
+
+### Bootstrap, Issue Transfer and Release Sequence
+
+This PR completes the proposed architecture/API/acceptance contract of #85 for
+human review. Repository existence, accepted maintainer/license, actual package
+identity-path tests and isolated minimum/current installs remain **outstanding**.
+No #85 checkbox for delivered runtime or installation is satisfied by prose.
+
+The next separately authorized bootstrap handoff creates the public destination,
+records accepting maintainer/release continuity and MPL notices, and opens a focused
+skeleton/identity-path draft PR there. It includes `Project.toml` with a new UUID
+and verified compat, `src/QUBOPreprocessing.jl`, separate `docs/Project.toml`,
+`docs/make.jl`, `test/runtests.jl` and identity fixtures, README, CONTRIBUTING and
+release instructions. Adopt the ecosystem's minimum/current Julia CI, optional
+Windows support lane, docs workflow and Dependabot maintenance policy; contribution
+policy requires human review of AI-assisted changes. The rule set initially stays
+empty (`:identity`), exposing snapshot/generation, explicit materialization and
+complete identity reconstruction without claiming dominance is implemented.
+Test empty/constants, labels/isolates/domains/senses/scales/offsets and source
+ownership in an isolated project before expanding the API. A candidate 0.1.0
+project version is not a tag, registry entry or published release.
+
+After the destination exists and is accepted, a separately authorized administrative
+step transfers package-local children #85–#91 (retaining the remaining #85 bootstrap
+criteria) and later package-local children when approved; preserve history/redirects
+and refresh epic, matrix and dependency links. QUBO#84 remains the ecosystem roadmap,
+Benchmarks#30 the evidence owner and Decomposition#16 the integration owner. This
+PR transfers no issues and creates no repositories or settings.
+
+The dependency order is: identity bootstrap → aligned **workspace (#86) and
+arithmetic (#87)** → strict dominance (#88) → reversible scoped updates (#89) →
+direct consumers (#90) and accepted cost evidence (Benchmarks#30) → core release
+(#91) → production decomposition integration (Decomposition#16). Benchmark fixtures
+start with the workspace; candidate downstream integration may use explicitly pinned
+isolated source environments before release, without a production dependency cycle.
+
+For eventual General registration, the accepting maintainer verifies candidate
+metadata/license/compat/release notes and independent correctness/performance gates,
+then fresh candidate install/import/examples at actual minimum/current versions.
+A separately authorized release executes merged source → Registrator submission →
+General merge → matching tag/release through the documented TagBot/maintainer route
+→ fresh registry install/import/examples with source/version identity. Verify served
+package docs, then QUBO discovery/canary and downstream normally resolving dependency
+floors. There is no registration/tag/install action in this design slice and no
+forced ecosystem package release without a runtime/compatibility change.
+
+### Refreshed Evidence and Reuse Limits
+
+Inspected on 2026-10-09; source compatibility and precedents are distinct from
+execution evidence for the proposed package.
+
+| Pinned source | Relevant contract and limitation |
+| :-- | :-- |
+| [QUBOTools conditioning manual](https://github.com/JuliaQUBO/QUBOTools.jl/blob/3da98ae2baafb84f49e1dbe1360d9d055590e4cd/docs/src/manual/4-models.md), [fix/lift implementation](https://github.com/JuliaQUBO/QUBOTools.jl/blob/3da98ae2baafb84f49e1dbe1360d9d055590e4cd/src/library/form/form.jl), [compat](https://github.com/JuliaQUBO/QUBOTools.jl/blob/3da98ae2baafb84f49e1dbe1360d9d055590e4cd/Project.toml) | Original→reduced map retains free order/isolates; labels separate; offset delta is unscaled and already included. Float roundoff is allowed by this shared helper, so certified transport still needs #87's gate |
+| [Merged separator PR #21](https://github.com/JuliaQUBO/QUBODecomposition.jl/pull/21), [transaction](https://github.com/JuliaQUBO/QUBODecomposition.jl/blob/3c35523f5586dbaf59994748c1b746200ceb0879/src/solve.jl), [separator implementation](https://github.com/JuliaQUBO/QUBODecomposition.jl/blob/3c35523f5586dbaf59994748c1b746200ceb0879/src/separator.jl), [result contract](https://github.com/JuliaQUBO/QUBODecomposition.jl/blob/3c35523f5586dbaf59994748c1b746200ceb0879/docs/src/results.md) | Private branch state, complete validated lifting/original-energy commit, global proof needs complete separator coverage and certified residual components. Its Float64/public-child contract is not formal exact transport certification for the new engine |
+| [Separator cost evidence](https://github.com/JuliaQUBO/QUBODecomposition.jl/blob/3c35523f5586dbaf59994748c1b746200ceb0879/examples/separator/README.md) | Three tiny-fixture separator medians were about 7.1×, 12.6× and 6.7× slower than direct exhaustive solving at producing revision b8bf8ad; invocation totals include conditioning, while per-call conditioning fields are zero. This motivates measuring complete costs, not replacing the shared conditioner on these timings alone |
+| [Decomposition policy](https://github.com/JuliaQUBO/QUBODecomposition.jl/blob/3c35523f5586dbaf59994748c1b746200ceb0879/CONTRIBUTING.md), [compat](https://github.com/JuliaQUBO/QUBODecomposition.jl/blob/3c35523f5586dbaf59994748c1b746200ceb0879/Project.toml), [driver compat](https://github.com/JuliaQUBO/QUBODrivers.jl/blob/3485f22d2544c61265717729e53e6ddca0e0789b/Project.toml), [Maintenance Policy](@ref) | Ownership, human review, Julia/dependency floors and separate release/publication gates; not proof that the new destination installs |
