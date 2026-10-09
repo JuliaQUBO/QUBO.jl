@@ -14,6 +14,12 @@ for (const pkg of packages) {
     assert(refs.every(e => e.ref.startsWith(`/QUBO.jl/${pkg}/${channel}/`)), `${pkg} uses only ${channel}`);
 }
 const decompositionChannel = fs.existsSync(path.join(root, 'QUBODecomposition.jl', 'stable')) ? 'stable' : 'dev';
+const homepage = path.join(root, 'QUBODecomposition.jl', 'dev', 'index.html');
+const homepageHTML = fs.readFileSync(homepage, 'utf8');
+const bootstrap = homepageHTML.match(/window\.MULTIDOCUMENTER_ROOT_PATH\s*=\s*'[^']*'/);
+assert(bootstrap, 'generated page contains the search base-path bootstrap');
+const scriptURLs = [...homepageHTML.matchAll(/<script[^>]*src="([^"]+)"/g)].map(m => m[1]);
+
 
 class Element {
     constructor() {
@@ -40,7 +46,7 @@ label.matches = selector => selector === '.dropdown-label' ||
     (selector === '.nav-expanded > .dropdown-label' && dropdown.classes.has('nav-expanded'));
 const requests = [];
 const context = {
-    window: {MULTIDOCUMENTER_ROOT_PATH: '/QUBO.jl/'},
+    window: {},
     document: {
         readyState: 'interactive', body,
         getElementById: id => elements[id], createElement: () => new Element(),
@@ -55,8 +61,12 @@ const context = {
     },
 };
 vm.createContext(context);
+vm.runInContext(bootstrap[0], context);
+assert.equal(context.window.MULTIDOCUMENTER_ROOT_PATH, '/QUBO.jl/');
 for (const asset of ['flexsearch.bundle.js', 'flexsearch_integration.js', 'multidoc_injector.js']) {
-    vm.runInContext(fs.readFileSync(path.join(root, 'assets/default', asset), 'utf8'), context);
+    const url = scriptURLs.find(url => url.endsWith('/' + asset));
+    assert(url, `generated page references ${asset}`);
+    vm.runInContext(fs.readFileSync(path.resolve(path.dirname(homepage), url), 'utf8'), context);
 }
 async function check() {
     elements['search-input'].fire('focus');
