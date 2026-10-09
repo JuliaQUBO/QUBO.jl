@@ -1,0 +1,187 @@
+<!DOCTYPE html><HTML lang="en"><head><script charset="utf-8" src="../../../assets/default/multidoc_injector.js" type="text/javascript"></script><script charset="utf-8" type="text/javascript">window.MULTIDOCUMENTER_ROOT_PATH = '/QUBO.jl/'</script><script charset="utf-8" src="../../../assets/default/flexsearch.bundle.js" type="text/javascript"></script><script charset="utf-8" src="../../../assets/default/flexsearch_integration.js" type="text/javascript"></script><meta charset="UTF-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><title>Executable examples · QUBODecomposition.jl</title><meta content="Executable examples · QUBODecomposition.jl" name="title"/><meta content="Executable examples · QUBODecomposition.jl" property="og:title"/><meta content="Executable examples · QUBODecomposition.jl" property="twitter:title"/><meta content="Documentation for QUBODecomposition.jl." name="description"/><meta content="Documentation for QUBODecomposition.jl." property="og:description"/><meta content="Documentation for QUBODecomposition.jl." property="twitter:description"/><meta content="https://juliaqubo.github.io/QUBODecomposition.jl/dev/examples/" property="og:url"/><meta content="https://juliaqubo.github.io/QUBODecomposition.jl/dev/examples/" property="twitter:url"/><link href="nothing/QUBO.jl/QUBODecomposition.jl/dev/examples/" rel="canonical"/><script data-outdated-warner="" src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.63.2/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script data-main="../assets/documenter.js" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" data-theme-name="catppuccin-mocha" href="../assets/themes/catppuccin-mocha.css" rel="stylesheet" type="text/css"/><link class="docs-theme-link" data-theme-name="catppuccin-macchiato" href="../assets/themes/catppuccin-macchiato.css" rel="stylesheet" type="text/css"/><link class="docs-theme-link" data-theme-name="catppuccin-frappe" href="../assets/themes/catppuccin-frappe.css" rel="stylesheet" type="text/css"/><link class="docs-theme-link" data-theme-name="catppuccin-latte" href="../assets/themes/catppuccin-latte.css" rel="stylesheet" type="text/css"/><link class="docs-theme-link" data-theme-name="documenter-dark" data-theme-primary-dark="" href="../assets/themes/documenter-dark.css" rel="stylesheet" type="text/css"/><link class="docs-theme-link" data-theme-name="documenter-light" data-theme-primary="" href="../assets/themes/documenter-light.css" rel="stylesheet" type="text/css"/><script src="../assets/themeswap.js"></script><link href="../../../assets/default/multidoc.css" rel="stylesheet" type="text/css"/><link href="../../../assets/default/flexsearch.css" rel="stylesheet" type="text/css"/></head><body><nav id="multi-page-nav"><div class="hidden-on-mobile" id="nav-items"><a class="nav-link nav-item" href="../../../QUBO.jl/">QUBO.jl</a><a class="nav-link nav-item" href="../../../ToQUBO.jl/">ToQUBO.jl</a><a class="nav-link nav-item" href="../../../QUBODrivers.jl/">QUBODrivers.jl</a><a class="nav-link active nav-item" href="../../">QUBODecomposition.jl</a><a class="nav-link nav-item" href="../../../QUBOTools.jl/">QUBOTools.jl</a><div class="search nav-item"><input id="search-input" placeholder="Search everywhere..."/><ul class="suggestions hidden" id="search-result-container"></ul><div class="search-keybinding">/</div></div></div><button id="multidoc-toggler"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path></svg></button></nav><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../">QUBODecomposition.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">Overview</a></li><li><a class="tocitem" href="../start/">Installation and quick start</a></li><li><span class="tocitem">Manual</span><ul><li><a class="tocitem" href="../configuration/">Construction and configuration</a></li><li><a class="tocitem" href="../strategies/">Strategies</a></li><li><a class="tocitem" href="../results/">Results and statuses</a></li><li><a class="tocitem" href="../budgets/">Budgets, timing, seeds and reads</a></li><li><a class="tocitem" href="../integration/">JuMP and ToQUBO</a></li></ul></li><li class="is-active"><a class="tocitem" href="">Executable examples</a><ul class="internal"><li><a class="tocitem" href="#Fitting-whole-model"><span>Fitting whole model</span></a></li><li><a class="tocitem" href="#Larger-than-child-capacity"><span>Larger than child capacity</span></a></li><li><a class="tocitem" href="#ToQUBO-refinement"><span>ToQUBO refinement</span></a></li><li><a class="tocitem" href="#Caller-owned-deadline"><span>Caller-owned deadline</span></a></li></ul></li><li><a class="tocitem" href="../api/">Public API</a></li><li><a class="tocitem" href="../acceptance/">Acceptance coverage</a></li><li><a class="tocitem" href="../deployment/">Publication and ecosystem handoff</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" href="#" id="documenter-sidebar-button"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href="">Executable examples</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href="">Executable examples</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/JuliaQUBO/QUBODecomposition.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/JuliaQUBO/QUBODecomposition.jl/blob/main/docs/src/examples.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" href="#" id="documenter-settings-button" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" href="javascript:;" id="documenter-article-toggle-button" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Executable-examples"><a class="docs-heading-anchor" href="#Executable-examples">Executable examples</a><a id="Executable-examples-1"></a><a class="docs-heading-anchor-permalink" href="#Executable-examples" title="Permalink"></a></h1><p>The code below is read from the repository scripts during the build, so there is one executable source for each example. All children are public ExactSampler instances and need no credentials. After dependency setup the scripts work offline. ExactSampler reports <code>LOCALLY_SOLVED</code>. Heuristic neighborhood solves do not certify a coupled global optimum, even when a fixture reaches its known optimum.</p><p>For standalone ToQUBO setup and execution, see the <a href="https://github.com/JuliaQUBO/QUBODecomposition.jl/blob/main/examples/toqubo/README.md">example environment instructions</a>. The docs environment can also run all four scripts directly.</p><h2 id="Fitting-whole-model"><a class="docs-heading-anchor" href="#Fitting-whole-model">Fitting whole model</a><a id="Fitting-whole-model-1"></a><a class="docs-heading-anchor-permalink" href="#Fitting-whole-model" title="Permalink"></a></h2><pre><code class="language-julia hljs"># SPDX-License-Identifier: MPL-2.0
+using QUBODecomposition, QUBODrivers, QUBOTools
+import MathOptInterface as MOI
+
+optimizer = QUBODecomposition.Optimizer(
+    child_optimizer = () -&gt; QUBODrivers.ExactSampler.Optimizer(),
+    max_variables = 3,
+    strategy = :whole_model,
+    seed = 123,
+)
+source = MOI.Utilities.Model{Float64}()
+x = MOI.add_variables(source, 3) # x[3] is an isolate
+for v in x
+    MOI.add_constraint(source, v, MOI.ZeroOne())
+end
+f = MOI.ScalarQuadraticFunction(
+    [MOI.ScalarQuadraticTerm(4.0, x[1], x[2])],
+    [MOI.ScalarAffineTerm(-3.0, x[1]), MOI.ScalarAffineTerm(2.0, x[2])],
+    5.0,
+)
+MOI.set(source, MOI.ObjectiveFunction{typeof(f)}(), f)
+MOI.set(source, MOI.ObjectiveSense(), MOI.MIN_SENSE)
+map = MOI.copy_to(optimizer, source)
+MOI.optimize!(optimizer)
+@assert MOI.get(optimizer, MOI.ObjectiveValue()) == 2.0
+@assert MOI.get(optimizer, MOI.VariablePrimal(), map[x[1]]) == 1.0
+@assert MOI.get(optimizer, MOI.VariablePrimal(), map[x[2]]) == 0.0
+@assert MOI.get(optimizer, MOI.TerminationStatus()) == MOI.LOCALLY_SOLVED
+@assert length(QUBOTools.state(optimizer, 1)) == 3
+</code></pre><pre><code class="language-julia hljs">(; objective=MOI.get(optimizer, MOI.ObjectiveValue()), status=MOI.get(optimizer, MOI.TerminationStatus()))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">(objective = 2.0, status = MathOptInterface.LOCALLY_SOLVED)</code></pre><h2 id="Larger-than-child-capacity"><a class="docs-heading-anchor" href="#Larger-than-child-capacity">Larger than child capacity</a><a id="Larger-than-child-capacity-1"></a><a class="docs-heading-anchor-permalink" href="#Larger-than-child-capacity" title="Permalink"></a></h2><pre><code class="language-julia hljs"># SPDX-License-Identifier: MPL-2.0
+using QUBODecomposition, QUBODrivers, QUBOTools
+import MathOptInterface as MOI
+
+# Four coupled logical variables, one isolate, and a fixed sixth variable.
+# Each child handles at most two free variables; ExactSampler's public status is
+# conservative and neighborhood optima cannot establish a coupled global proof.
+optimizer = QUBODecomposition.Optimizer(
+    child_optimizer = () -&gt; QUBODrivers.ExactSampler.Optimizer(),
+    max_variables = 2,
+    strategy = :components_then_sweeps,
+    max_sweeps = 10,
+    stagnation_sweeps = 2,
+    seed = 123,
+)
+source = MOI.Utilities.UniversalFallback(MOI.Utilities.Model{Float64}())
+x = MOI.add_variables(source, 6)
+for v in x
+    MOI.add_constraint(source, v, MOI.ZeroOne())
+end
+MOI.add_constraint(source, x[6], MOI.EqualTo(1.0))
+f = MOI.ScalarQuadraticFunction(
+    [MOI.ScalarQuadraticTerm(4.0, x[1], x[2]),
+     MOI.ScalarQuadraticTerm(-2.0, x[2], x[3]),
+     MOI.ScalarQuadraticTerm(1.0, x[3], x[4])],
+    [MOI.ScalarAffineTerm(-3.0, x[1]), MOI.ScalarAffineTerm(2.0, x[2]),
+     MOI.ScalarAffineTerm(-1.0, x[3]), MOI.ScalarAffineTerm(-2.0, x[5]),
+     MOI.ScalarAffineTerm(3.0, x[6])],
+    5.0,
+)
+MOI.set(source, MOI.ObjectiveFunction{typeof(f)}(), f)
+MOI.set(source, MOI.ObjectiveSense(), MOI.MIN_SENSE)
+map = MOI.copy_to(optimizer, source)
+MOI.optimize!(optimizer)
+full_state = [MOI.get(optimizer, MOI.VariablePrimal(), map[v]) for v in x]
+energy = 5 - 3*full_state[1] + 2*full_state[2] - full_state[3] -
+    2*full_state[5] + 3*full_state[6] + 4*full_state[1]*full_state[2] -
+    2*full_state[2]*full_state[3] + full_state[3]*full_state[4]
+@assert length(full_state) == 6 &amp;&amp; full_state[6] == 1
+@assert energy == MOI.get(optimizer, MOI.ObjectiveValue())
+@assert MOI.get(optimizer, MOI.TerminationStatus()) == MOI.LOCALLY_SOLVED
+@assert all(length(c["selected_indices"]) &lt;= 2 for c in QUBOTools.metadata(QUBOTools.solution(optimizer))["decomposition"]["calls"])
+println((; full_state, energy, status=MOI.get(optimizer, MOI.TerminationStatus())))
+</code></pre><pre><code class="language-julia hljs">(; full_state, energy, status=MOI.get(optimizer, MOI.TerminationStatus()))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">(full_state = [1.0, 0.0, 1.0, 0.0, 1.0, 1.0], energy = 2.0, status = MathOptInterface.LOCALLY_SOLVED)</code></pre><h2 id="ToQUBO-refinement"><a class="docs-heading-anchor" href="#ToQUBO-refinement">ToQUBO refinement</a><a id="ToQUBO-refinement-1"></a><a class="docs-heading-anchor-permalink" href="#ToQUBO-refinement" title="Permalink"></a></h2><p>The weak penalty gives decoded source objective <strong>11</strong>, compiled objective <strong>10.9</strong> and <code>INFEASIBLE_POINT</code>. Refinement checks actual source residuals and reaches source objective <strong>8</strong> for this fixture. Budget two uses sweeps; budget eight fits all three bits.</p><pre><code class="language-julia hljs"># SPDX-License-Identifier: MPL-2.0
+module RefinementExample
+using JuMP, ToQUBO, QUBODecomposition, QUBODrivers, QUBOTools
+import MathOptInterface as MOI
+
+function run(; budget=2)
+    composite=QUBODecomposition.Optimizer(
+        child_optimizer=()-&gt;QUBODrivers.ExactSampler.Optimizer(),
+        max_variables=budget,seed=123,max_child_calls=100,
+        # Include the initial evaluation and every row of every child scan.
+        max_candidate_evaluations=1+100*2^budget,
+    )
+    model=Model(()-&gt;ToQUBO.Optimizer(()-&gt;composite))
+    @variable(model,x[1:2],Bin)
+    @objective(model,Max,5+3*x[1]+3*x[2])
+    c=@constraint(model,x[1]+x[2]&lt;=1)
+    set_attribute(c,ToQUBO.Attributes.ConstraintEncodingPenaltyHint(),-0.1)
+    optimize!(model)
+    @assert primal_status(model)==MOI.INFEASIBLE_POINT
+    @assert ToQUBO.source_objective_value(model)==11
+    @assert objective_value(model)≈10.9 # source objective minus the weak penalty
+    set_attribute(model,ToQUBO.Attributes.MaxPenaltyUpdates(),5)
+    optimize!(model)
+    state=value.(x)
+    @assert state[1]+state[2]&lt;=1
+    @assert isempty(ToQUBO.violations(model))
+    @assert ToQUBO.source_objective_value(model)==5+3*sum(state)
+    @assert termination_status(model)==MOI.LOCALLY_SOLVED
+    @assert length(QUBOTools.state(composite,1))==3
+    # With B=2, three compiled bits exceed child capacity. Even exact child
+    # neighborhoods have no coupled global certificate. ExactSampler itself
+    # publicly reports LOCALLY_SOLVED on a fitting whole model, too.
+    return (; state,source_objective=ToQUBO.source_objective_value(model),
+        penalized_objective=objective_value(model),status=termination_status(model),
+        source_feasible=ToQUBO.is_feasible(model),
+        updates=get_attribute(model,ToQUBO.Attributes.PenaltyUpdateCount()))
+end
+end
+if abspath(PROGRAM_FILE)==@__FILE__
+    println(RefinementExample.run(;budget=2))
+    println(RefinementExample.run(;budget=8))
+end
+</code></pre><pre><code class="language-julia hljs">small = RefinementExample.run(; budget=2)
+fitting = RefinementExample.run(; budget=8)
+@assert small.source_feasible &amp;&amp; fitting.source_feasible
+@assert small.source_objective == fitting.source_objective == 8
+(; small, fitting)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">(small = (state = [0.0, 1.0], source_objective = 8.0, penalized_objective = 8.0, status = MathOptInterface.LOCALLY_SOLVED, source_feasible = true, updates = 2), fitting = (state = [0.0, 1.0], source_objective = 8.0, penalized_objective = 8.0, status = MathOptInterface.LOCALLY_SOLVED, source_feasible = true, updates = 2))</code></pre><h2 id="Caller-owned-deadline"><a class="docs-heading-anchor" href="#Caller-owned-deadline">Caller-owned deadline</a><a id="Caller-owned-deadline-1"></a><a class="docs-heading-anchor-permalink" href="#Caller-owned-deadline" title="Permalink"></a></h2><p>The outer loop charges compilation, copying, execution and source checks against one absolute allowance. Cancellation remains cooperative for opaque children.</p><pre><code class="language-julia hljs"># SPDX-License-Identifier: MPL-2.0
+module DeadlineExample
+using JuMP, ToQUBO, QUBODecomposition, QUBODrivers, QUBOTools
+import MathOptInterface as MOI
+
+# The caller owns an absolute deadline. Compile without an internal optimizer,
+# then dispatch the compiled model with only the remaining time. Source analysis
+# is explicit for this small fixture; project every bit before evaluating it.
+function run(; seconds=60.0,max_updates=5,budget=2,
+    child=()-&gt;QUBODrivers.ExactSampler.Optimizer(),
+    clock=()-&gt;time_ns()/1e9,checkpoint=_ -&gt; nothing)
+    deadline=clock()+seconds
+    compiler=ToQUBO.Optimizer()
+    model=Model(()-&gt;compiler)
+    @variable(model,x[1:2],Bin)
+    @objective(model,Max,5+3*x[1]+3*x[2])
+    c=@constraint(model,x[1]+x[2]&lt;=1)
+    set_attribute(model,ToQUBO.Attributes.MaxPenaltyUpdates(),0)
+    composite=QUBODecomposition.Optimizer(;child_optimizer=child,max_variables=budget,
+        max_child_calls=100,max_candidate_evaluations=1+100*2^budget)
+    composite.clock=clock
+    dispatched_limits=Float64[]
+    history=Any[]
+    reason=:updates
+    for k in 0:max_updates
+        clock()&gt;=deadline &amp;&amp; (reason=:deadline;break)
+        set_attribute(c,ToQUBO.Attributes.ConstraintEncodingPenaltyHint(),-0.1*10.0^k)
+        optimize!(model) # compilation time is charged before dispatch
+        checkpoint(:compiled)
+        clock()&gt;=deadline &amp;&amp; (reason=:deadline;break)
+        target=MOI.get(compiler,ToQUBO.Attributes.TargetModel())
+        map=MOI.copy_to(composite,target)
+        checkpoint(:copied)
+        remaining=deadline-clock()
+        remaining&lt;=0 &amp;&amp; (reason=:deadline;break)
+        MOI.set(composite,MOI.TimeLimitSec(),remaining)
+        push!(dispatched_limits,remaining)
+        MOI.optimize!(composite)
+        checkpoint(:solved)
+        MOI.get(composite,MOI.ResultCount())==0 &amp;&amp; (reason=:empty;break)
+        bits=Dict(v=&gt;MOI.get(composite,MOI.VariablePrimal(),map[v])
+            for v in MOI.get(target,MOI.ListOfVariableIndices()))
+        decoded=ToQUBO.project_original_state(compiler,bits)
+        a,b=decoded[index(x[1])],decoded[index(x[2])]
+        residual=a+b-1
+        source_value=5+3*a+3*b
+        push!(history,(;bits=copy(bits),decoded=[a,b],residual,source_value,
+            penalized_value=MOI.get(composite,MOI.ObjectiveValue()),
+            status=MOI.get(composite,MOI.TerminationStatus())))
+        checkpoint(:checked) # feasibility work is charged before the next round
+        clock()&gt;=deadline &amp;&amp; (reason=:deadline;break)
+        if residual&lt;=1e-6
+            reason=:feasible;break
+        end
+    end
+    # A synchronous opaque child may overrun. Checks prevent subsequent dispatch;
+    # they cannot preempt that child. CompilationTime is only the last compile.
+    return (;reason,history,dispatched_limits,deadline,
+        last_compilation_sec=MOI.get(compiler,ToQUBO.Attributes.CompilationTime()),
+        composite_effective_sec=QUBODrivers.effective_time(composite))
+end
+end
+if abspath(PROGRAM_FILE)==@__FILE__
+    println(DeadlineExample.run())
+end
+</code></pre><pre><code class="language-julia hljs">result = DeadlineExample.run()
+@assert result.reason == :feasible
+@assert last(result.history).source_value == 8
+(; reason=result.reason, final=last(result.history))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">(reason = :feasible, final = (bits = Dict{MathOptInterface.VariableIndex, Float64}(MOI.VariableIndex(2) =&gt; 1.0, MOI.VariableIndex(3) =&gt; 0.0, MOI.VariableIndex(1) =&gt; 0.0), decoded = [0.0, 1.0], residual = 0.0, source_value = 8.0, penalized_value = 8.0, status = MathOptInterface.LOCALLY_SOLVED))</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../integration/">« JuMP and ToQUBO</a><a class="docs-footer-nextpage" href="../api/">Public API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label></p><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div><p></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.19.0 on <span class="colophon-date" title="Friday 9 October 2026 03:49">Friday 9 October 2026</span>. Using Julia version 1.10.12.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></HTML>
