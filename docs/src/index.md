@@ -11,6 +11,21 @@ It combines three complementary packages:
 - [`QUBOTools.jl`](https://github.com/JuliaQUBO/QUBOTools.jl) to inspect,
   convert, and manipulate compiled QUBO instances
 
+The ecosystem also includes the standalone
+[`QUBODecomposition.jl`](https://github.com/JuliaQUBO/QUBODecomposition.jl)
+composite optimizer, maintained by [@bernalde](https://github.com/bernalde).
+It uses public QUBODrivers interfaces for fitting whole models, disconnected
+components and conditioned serial sweeps with explicit logical-variable budgets.
+Complete states are reconstructed and scored against the original model; coupled
+sweeps are heuristic, with conservative public statuses and cooperative limits.
+Direct JuMP and released ToQUBO 0.7.1 integration are covered by its
+[acceptance evidence](https://juliaqubo.github.io/QUBO.jl/QUBODecomposition.jl/dev/acceptance/).
+
+QUBODecomposition is unregistered and unreleased. Follow its
+[installation manual](https://juliaqubo.github.io/QUBO.jl/QUBODecomposition.jl/dev/start/)
+for a separate checkout. Ecosystem membership does not add it to QUBO's bundled
+dependencies: `Pkg.add("QUBO")` and `using QUBO` do not install or re-export it.
+
 ## QUBO in Brief
 
 A QUBO model has a binary decision vector, a linear-or-quadratic objective, and
@@ -146,6 +161,16 @@ set_attribute.(c, Ref(ToQUBO.Attributes.ConstraintEncodingPenaltyHint()), rho)
         <div class="qubo-package-links">
             <a href="https://juliaqubo.github.io/QUBO.jl/QUBOTools.jl/dev/">Docs</a>
             <a href="https://github.com/JuliaQUBO/QUBOTools.jl">Repository</a>
+        </div>
+    </div>
+    <div class="qubo-package-card">
+        <h3>QUBODecomposition.jl</h3>
+        <p>Compose QUBODrivers children through whole-model calls, independent
+        components and budgeted conditioned sweeps. Reconstruct full states and
+        evaluate original energies; coupled sweeps remain heuristic.</p>
+        <div class="qubo-package-links">
+            <a href="https://juliaqubo.github.io/QUBO.jl/QUBODecomposition.jl/dev/">Docs</a>
+            <a href="https://github.com/JuliaQUBO/QUBODecomposition.jl">Repository</a>
         </div>
     </div>
 </div>

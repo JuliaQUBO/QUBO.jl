@@ -121,24 +121,36 @@ JuMP/MOI model
   -> binary quadratic MOI target model
 ```
 
-## Standalone Decomposition: First Design Slice
+## [Standalone Decomposition: Accepted Design and Implementation](@id Standalone-Decomposition:-First-Design-Slice)
 
-This is the proposed implementation contract for
-[issue #74](https://github.com/JuliaQUBO/QUBO.jl/issues/74), under the settled
-standalone architecture in [epic #73](https://github.com/JuliaQUBO/QUBO.jl/issues/73).
-The optimizer and names below are **proposals, not available QUBO.jl APIs**.
-This design does not deliver a runnable package or close #74. Runtime publication
-waits for maintainers to establish the destination and accept its ownership.
+The standalone architecture accepted in
+[epic #73](https://github.com/JuliaQUBO/QUBO.jl/issues/73) is implemented in
+[JuliaQUBO/QUBODecomposition.jl](https://github.com/JuliaQUBO/QUBODecomposition.jl).
+The original QUBO.jl issue #74 was transferred with its history to the
+[implementation tracker](https://github.com/JuliaQUBO/QUBODecomposition.jl/issues/1).
+The contracts below preserve the accepted design; the
+[package manual](https://juliaqubo.github.io/QUBO.jl/QUBODecomposition.jl/dev/)
+is authoritative for current configuration, algorithms, results and usage.
+These APIs belong to the standalone package and are not re-exported by QUBO.
+
+Whole-model dispatch, disconnected components, conditioned serial sweeps,
+complete-state reconstruction and original-energy evaluation are implemented.
+The package's [acceptance matrix](https://juliaqubo.github.io/QUBO.jl/QUBODecomposition.jl/dev/acceptance/)
+records delivered rows 1–20, including driver conformance, direct JuMP and
+released ToQUBO 0.7.1 composition/repeated compilation. Coupled sweeps remain
+heuristic: exact neighborhoods do not prove a coupled global optimum.
+Release/fresh-install row 21, registration and ecosystem adoption remain
+separate gates; the package is still unregistered and unreleased.
 
 ### Destination, Ownership, and Dependencies
 
-The concrete proposal is a public **JuliaQUBO/QUBODecomposition.jl** repository,
-Julia package/module `QUBODecomposition`, and `QUBODecomposition.Optimizer`.
-The name and destination remain provisional. Propose JuliaQUBO as repository
-owner, with a named accepting maintainer responsible for sampler correctness,
-release/access continuity, dependency updates, and downstream integration CI.
-Acceptance must record that person's GitHub handle and release authority; this
-document does not assign an unwilling person or claim repository creation.
+The established repository is **JuliaQUBO/QUBODecomposition.jl**, with Julia
+package/module `QUBODecomposition` and `QUBODecomposition.Optimizer`.
+[@bernalde](https://github.com/bernalde) is the accepted maintainer and release
+authority, responsible for sampler correctness, release/access continuity,
+dependency updates and downstream integration CI. General registration is the
+accepted first-release route; a project version of 0.1.0 does not establish
+that a tag, release or registry installation exists.
 
 | Responsibility | Owning implementation/test location |
 | :-- | :-- |
@@ -148,7 +160,7 @@ document does not assign an unwilling person or claim repository creation.
 | ToQUBO composition, decoding, source feasibility and penalty-refinement integration | Standalone `test/integration/toqubo.jl`; coordination in [ToQUBO#244](https://github.com/JuliaQUBO/ToQUBO.jl/issues/244) |
 | Entrypoint discovery and eventual ecosystem canary | QUBO.jl docs/canary under #73; no automatic re-export or dependency |
 
-Proposed production dependencies are QUBOTools, QUBODrivers and MathOptInterface,
+The production dependencies are QUBOTools, QUBODrivers and MathOptInterface,
 plus only used Julia standard libraries. Use a small local adjacency traversal
 from public quadratic terms for the first serial implementation; a direct
 Graphs dependency is needed only if its API is actually called. JuMP, ToQUBO
@@ -156,33 +168,30 @@ and `Test` belong in the standalone test/example environments. Python, QSplit,
 D-Wave Hybrid, external services and a concrete solver are not production
 requirements. The user supplies the child optimizer.
 
-Start the supported compatibility floor at Julia 1.10, QUBOTools **0.16.2**,
-QUBODrivers **0.6.5**, and MathOptInterface **1**. JuMP 1 and released ToQUBO
-**0.6.1** provide the initial composition test/example baseline. The registered
-QUBODrivers 0.6.5 exposes the seed, metadata, timing/read traits and configurable
-test entry point used here. These are proposed compatibility floors, not a claim
-that every earlier release fails. Resolve and test actual lower bounds before
-the standalone release. In particular,
-`QUBOTools = "0.16.2"` excludes the defective earlier 0.16 graph exports.
-QUBOTools 0.16.2 is already [released](https://github.com/JuliaQUBO/QUBOTools.jl/releases/tag/v0.16.2)
-and [registered](https://github.com/JuliaRegistries/General/pull/170908).
-[Conditioning PR #139](https://github.com/JuliaQUBO/QUBOTools.jl/pull/139) merged
-documentation/tests after that release; it introduced no runtime API and does
-not impose a new release prerequisite.
+The supported runtime floor is Julia 1.10, QUBOTools **0.16.2**,
+QUBODrivers **0.6.5**, and MathOptInterface **1**. JuMP **1** and released
+ToQUBO **0.7.1** are test/example dependencies; they do not broaden QUBO's
+runtime dependencies or ToQUBO compatibility. The package CI tests the runtime
+floor with MOI 1.0.0 and all driver-conformance groups; direct JuMP runs in the
+compatible integration environments (JuMP 1 requires MOI >=1.1.1).
 
-**Unreleased integration prerequisite:** ToQUBO 0.6.1 at release commit
-[`9feda34`](https://github.com/JuliaQUBO/ToQUBO.jl/tree/9feda34c0fb10a5ed8539dd4add915aa4ff9006c)
-has `violations`, but lacks `Attributes.MaxPenaltyUpdates` and
-`Attributes.PrimalFeasibilityCheck`. Both are present in the newer inspected
-default-branch commit `481ff10`, whose unchanged project version is not release
-evidence. Automatic-refinement and primal-status integration rows below may be
-prototyped against that pinned source. Their normal downstream CI and release
-gate requires the first installable ToQUBO release containing both interfaces,
-with its actual version recorded as the test/example minimum; that version is
-not established here. Coordinate this existing implementation's release under
-#244 and roadmap #76. No new compiler refactor is required by this finding.
+QUBOTools 0.16.2 is [released](https://github.com/JuliaQUBO/QUBOTools.jl/releases/tag/v0.16.2)
+and [registered](https://github.com/JuliaRegistries/General/pull/170908), preserving
+isolates in graph exports. [Conditioning PR #139](https://github.com/JuliaQUBO/QUBOTools.jl/pull/139)
+added documentation/tests without a new runtime API or release prerequisite.
+Registered QUBODrivers 0.6.5 supplies the public seed, metadata, timing/read traits
+and conformance entry point.
 
-### Proposed Public Interface and Existing Building Blocks
+**Released integration prerequisite:** ToQUBO
+[0.7.1](https://github.com/JuliaQUBO/ToQUBO.jl/releases/tag/v0.7.1) includes public
+`MaxPenaltyUpdates`, `PrimalFeasibilityCheck` and the ordinary-recompilation fix.
+The downstream test/example minimum and pinned integration CI lane now require
+0.7.1, with passing ordinary repeated-solve and source-feasibility evidence.
+This supersedes the historical 0.6.1 baseline and unreleased-source prerequisite;
+[ToQUBO#244](https://github.com/JuliaQUBO/ToQUBO.jl/issues/244) records the release
+and downstream coordination. No upstream development override is required.
+
+### [Public Interface and Existing Building Blocks](@id Proposed-Public-Interface-and-Existing-Building-Blocks)
 
 Construction accepts one zero-argument child factory returning a fresh, empty
 MOI optimizer per child call. It must not return a shared live optimizer.
@@ -192,8 +201,9 @@ reject non-finite coefficients, scale, offset and evaluated energies. Preserve
 finite scale, including zero and negative scale, by evaluating the complete
 scaled objective and retaining the original sense.
 
-The following is an **API sketch to implement downstream**, deliberately a
-plain code block rather than an executable example:
+The accepted construction below matches the standalone public interface.
+It requires a separately installed development checkout; the package manual
+contains executable examples and the detailed configuration contract:
 
 ```julia
 using JuMP, QUBODrivers, ToQUBO, QUBODecomposition
@@ -216,7 +226,7 @@ compiled_model = Model(() -> ToQUBO.Optimizer(composite)) # source constraints
 
 `Optimizer()` must also exist for driver conformance and allow configuration
 before `optimize!`; `child_optimizer` and `max_variables` are required before
-solving. Keyword names above also name proposed raw optimizer attributes.
+solving. Keyword names above also name raw optimizer attributes.
 Unknown attributes fail explicitly. `max_variables` is a positive integer
 (excluding `Bool`), even for an empty model. Other work limits are nonnegative
 integers excluding `Bool`; `stagnation_sweeps` is positive. Time limits are
@@ -226,11 +236,13 @@ configuration fails before any child call and clears prior solve results.
 Support `MOI.TimeLimitSec()` for one composite invocation and
 `QUBODrivers.RandomSeed()` through the public `"seed"` attribute.
 
-Use `QUBODrivers.@setup` and implement `QUBODrivers.sample`, reading the model
+The original design proposed `QUBODrivers.@setup`; the implementation uses it
+for internal model storage and defines the composite optimizer explicitly.
+Both use the public driver interfaces. Implement `QUBODrivers.sample`, reading the model
 through `QUBOTools.backend`. Return a `QUBOTools.SampleSet` in the original
 frame. `QUBODrivers.set_model!` and `MOI.copy_to` are existing public model
 hooks. Implement an optimizer-specific `MOI.get(..., MOI.TerminationStatus())`
-method for the proposed status semantics below; retain the shared
+method for the status semantics below; retain the shared
 `MOI.SolveTimeSec()` timing convention. Do not call private `_sample!` or
 `_sampler_metadata`: construct the documented metadata dictionary and call
 `validate_metadata` in tests.
@@ -521,27 +533,32 @@ outer caller and is not included by pretending it ran inside the composite.
 
 ### Offline Acceptance Matrix
 
-All paths below are **future files in the standalone repository**. This design
-PR validates its documentation and equations; it does not claim that these
-runtime tests exist or pass. Every numerical oracle must evaluate original
-scalar coefficients independently of fixing/lifting and the child's reported
-energy. The exact child is a test tool, not the independent energy oracle.
+This table retains the accepted numerical oracles and acceptance criteria.
+Runtime/conformance/compiler-integration rows 1–20 have delivered coverage in
+the standalone repository; row 21 still requires release and fresh installation.
+Paths now refer to the actual implementation suite; the package's
+[coverage table](https://juliaqubo.github.io/QUBO.jl/QUBODecomposition.jl/dev/acceptance/)
+records fixture details and limits, including the quadratic product lift used
+for cubic coverage (direct nonlinear cubic source input remains unsupported).
+Every numerical oracle evaluates original scalar coefficients independently of
+fixing/lifting and the child's reported energy. The exact child is a test tool,
+not the independent energy oracle.
 
 | Requirement / fixture | Independent oracle and expected outcome | Downstream owner/path |
 | :-- | :-- | :-- |
-| Binary/spin × Min/Max × dictionary/sparse/dense forms, non-unit positive/negative scale and nonzero offset | Enumerate domain tuples; compare scalar full energy with reduced-and-lifted energy and both extrema; validate zero scale separately | `test/unit/conditioning.jl` |
-| Worked four-variable expression above; symbol labels and reordered integer labels; internal/trailing isolates | Explicit label dictionary and scalar formula; exact map round trip, all labels returned, conditional extrema as stated | `test/unit/conditioning.jl`, `test/unit/mappings.jl` |
-| Empty, all-zero/constant nonempty, one variable and all MOI-fixed variables | Hand-computed constant or two-state extrema; one complete sample, zero child calls for constant cases | `test/unit/edge_cases.jl` |
+| Binary/spin × Min/Max × dictionary/sparse/dense forms, non-unit positive/negative scale and nonzero offset | Enumerate domain tuples; compare scalar full energy with reduced-and-lifted energy and both extrema; validate zero scale separately | `test/unit/serial.jl` |
+| Worked four-variable expression above; symbol labels and reordered integer labels; internal/trailing isolates | Explicit label dictionary and scalar formula; exact map round trip, all labels returned, conditional extrema as stated | `test/unit/serial.jl` |
+| Empty, all-zero/constant nonempty, one variable and all MOI-fixed variables | Hand-computed constant or two-state extrema; one complete sample, zero child calls for constant cases | `test/unit/whole_model.jl` |
 | Budget one, repeated neighbor indices, oversized component, budget covering whole model; invalid zero/negative/noninteger/Bool budget | Call-recording child checks distinct-index cardinality; singleton neighborhoods at one, strict mode rejects oversize before calls, default sweeps, exactly one whole-model call | `test/unit/budgets.jl` |
-| Disjoint two-variable components plus isolates, all fitting | Exhaustive **global** scalar enumeration; same Min/Max optimum as assembled exact components and `OPTIMAL` only with complete certificates | `test/unit/components.jl` |
-| Four nonconstant isolated variables, `B=2`, call cap 3 | Record three singleton calls and `ITERATION_LIMIT` with a full incumbent; no complete separable proof until all four component calls finish | `test/unit/components.jl` |
-| Coupled three/four-variable graph larger than budget, exact local child | Enumerate global optimum as a reference; every accepted full energy strictly improves in the original sense; bounded sweep termination never claims global proof | `test/unit/sweeps.jl` |
+| Disjoint two-variable components plus isolates, all fitting | Exhaustive **global** scalar enumeration; same Min/Max optimum as assembled exact components and `OPTIMAL` only with complete certificates | `test/unit/serial.jl` |
+| Four nonconstant isolated variables, `B=2`, call cap 3 | Record three singleton calls and `ITERATION_LIMIT` with a full incumbent; no complete separable proof until all four component calls finish | `test/unit/serial.jl` |
+| Coupled three/four-variable graph larger than budget, exact local child | Enumerate global optimum as a reference; every accepted full energy strictly improves in the original sense; bounded sweep termination never claims global proof | `test/unit/serial.jl` |
 | Failed/throwing child, empty results, invalid domain, missing free value, false `OPTIMAL`, inconsistent map, non-finite energy | Controlled mock outputs; truthful failure, no invented values, last valid incumbent or no result; exactness revoked | `test/unit/results.jl` |
-| Duplicate rows and aggregated child multiplicities, e.g. counts 3 and 7 from separate components | Count construction events directly; emitted global multiplicity remains 1, no fictitious 21 joint reads, unknown physical counts remain unknown | `test/unit/metadata.jl` |
-| Zero and positive call/candidate/sweep/time caps, stagnation, child ignores limit, cancellation | Injectable internal monotonic clock and scripted work advances/call counters; no timing sleeps, no extra calls, correct status, observable overrun and phase costs | `test/unit/budgets.jl`, `test/unit/timing.jl` |
+| Duplicate rows and aggregated child multiplicities, e.g. counts 3 and 7 from separate components | Count construction events directly; emitted global multiplicity remains 1, no fictitious 21 joint reads, unknown physical counts remain unknown | `test/unit/serial.jl` |
+| Zero and positive call/candidate/sweep/time caps, stagnation, child ignores limit, cancellation | Injectable internal monotonic clock and scripted work advances/call counters; no timing sleeps, no extra calls, correct status, observable overrun and phase costs | `test/unit/budgets.jl`, `test/unit/serial.jl` |
 | Valid child `TIME_LIMIT`/other limit statuses under a per-child cap, with parent time remaining; repeat at the parent deadline | Scripted child statuses and clock: continue to later neighborhoods in the first case, parent `TIME_LIMIT` and no next call in the second; neither case gains exactness | `test/unit/budgets.jl`, `test/unit/results.jl` |
 | `InterruptException` injected before a call and during reconstruction; child `INTERRUPTED` with/without rows | Keep last committed state/energy, discard partial work, return `INTERRUPTED`, no later call; no public cancellation attribute assumed | `test/unit/results.jl` |
-| Same seed/model and child; changed seed; child without seed support | Call log matches explicit modular seed formula; deterministic-child outputs repeat under work caps; unsupported case discloses limitation | `test/unit/seeding.jl` |
+| Same seed/model and child; changed seed; child without seed support | Call log matches explicit modular seed formula; deterministic-child outputs repeat under work caps; unsupported case discloses limitation | `test/unit/serial.jl` |
 | Reused optimizer with changed coefficients, scale/offset, domain/sense, dimension and reordered labels at equal dimension | Fresh-instance result/call log plus independent scalar evaluation; no old maps, graph, incumbent or proof flags survive | `test/unit/repeated_solves.jl` |
 | Driver conformance using small exact local child and existing ExactSampler | `using Test; QUBODrivers.test(config!, Optimizer)` with all groups enabled; required metadata, complete primals, timing/read/status semantics; explicitly test the conservative ExactSampler status | `test/conformance.jl` |
 | Direct `JuMP.Model(composite)` binary and spin quadratic models in both senses, nonzero constants, fixed variables | Enumerate original JuMP-domain assignments and evaluate source polynomial independently; compare returned primals/value and mapped fixed values | `test/integration/jump.jl` |
@@ -549,54 +566,36 @@ energy. The exact child is a test tool, not the independent energy oracle.
 | ToQUBO bounded integer and auxiliary/slack fixture in both senses: `0<=z<=3`, binary `b`, `z+2b<=3`, objective `7+2z+b`; add a separately enumerated binary cubic objective to force quadratization | Enumerate source domain for feasible Min/Max values 7/13; enumerate small compiled domains including all auxiliary/slack bits, evaluate both polynomials independently; source feasibility via residuals and public ToQUBO checks, not penalized energy alone | `test/integration/toqubo.jl` |
 | Recompile same ToQUBO optimizer after coefficient/penalty/mapping changes, including same-size different encodings | Capturing child proves new coefficients and maps arrive on every invocation; compare fresh compile, decoded values and source feasibility; missing compiled bits cannot appear as valid source results | `test/integration/repeated_refinement.jl` |
 | ToQUBO outer refinement versus per-invocation limits | Scripted clock/call log shows up to `1+MaxPenaltyUpdates` invocations, each with its own limits; explicit outer-loop fixture deducts compilation and child work from one deadline | `test/integration/repeated_refinement.jl` |
-| Fresh-environment install and tutorial smoke | Installed package identity/version and public construction path, small exact known optimum plus larger-than-budget heuristic case, no development overrides | `test/install/` and `examples/local_mvp.jl` |
+| Fresh-environment install and tutorial smoke | Installed package identity/version and public construction path, small exact known optimum plus larger-than-budget heuristic case, no development overrides | `examples/whole_model.jl` and `examples/serial_sweeps.jl` (fresh-install gate pending) |
 
 The ToQUBO fixture must assert that slack/auxiliary variables were actually
 introduced; a fixture that compiles them away does not cover that row. Query
-`ToQUBO.violations` and, on the required newer ToQUBO source/release identified
-above, enable `Attributes.PrimalFeasibilityCheck`. Automatic-refinement and
-primal-status checks are not covered by installing 0.6.1 alone. At the
-inspected source revision `MOI.ObjectiveValue` is forwarded from the compiled child, so
+`ToQUBO.violations` and, on released ToQUBO 0.7.1, enable `Attributes.PrimalFeasibilityCheck`. Automatic-refinement and
+primal-status checks are not covered by installing 0.6.1 alone. In the inspected released integration `MOI.ObjectiveValue` is forwarded from the compiled child, so
 independently evaluate the decoded **source** objective instead of equating the
 two. Test infeasible decoded candidates as well as successful refinement. A
 valid compiled optimum with inadequate penalties is not a source optimum proof.
 
-### Runtime PR Sequence and Release Handoff
+### [Runtime Delivery and Release Handoff](@id Runtime-PR-Sequence-and-Release-Handoff)
 
-After maintainer acceptance of destination/ownership, implement cohesive PRs
-in that destination, keeping this design linked:
+The accepted implementation sequence has delivered the package boundary and
+whole-model path, serial components/sweeps, complete driver conformance and
+compiler integration. The implementation tracker and package manual preserve
+the acceptance evidence. Development documentation is published, and the
+[QUBODrivers catalog](https://juliaqubo.github.io/QUBODrivers.jl/dev/manual/3-samplers/)
+links the external composite optimizer and composition/metadata contracts.
+QUBO.jl discovery and aggregation are tracked in
+[#82](https://github.com/JuliaQUBO/QUBO.jl/issues/82); deployed verification remains
+required after reviewed aggregate changes merge.
 
-1. **Package boundary and whole-model path:** package skeleton/compat, proposed
-   configuration and public driver hooks, snapshot/reset and mapping logic,
-   complete incumbent/result validation, one-call pass-through, edge cases and
-   exact local test child. Include metadata/status tests from the beginning.
-2. **Serial decomposition:** fitting components, oversized-component policy,
-   conditioned sweeps, limits/seeds/timing and independent numerical matrix.
-   Establish monotone coupled behavior and separable exactness; reuse released
-   fixing/lifting before performance work.
-3. **Conformance and compiler integration:** full driver suite, direct JuMP,
-   constrained binary/bounded integer, auxiliary/slack, repeated refinement and
-   budget tests. The same downstream implementation owner supplies pinned CI
-   evidence to #87 and #244. The already-implemented ToQUBO refinement and
-   primal-status APIs need an installable release and actual test/example minimum
-   before normal dependency resolution can satisfy this entire matrix. Upstream
-   maintainers own that release and any demonstrated minimal defect fix; this
-   does not require an empty source PR or speculative API refactor.
-4. **Installable MVP and adoption:** package docs and offline example, release
-   preflight/fresh-install checks, external sampler listing under #87, bounded
-   benchmark/tutorial handoffs and QUBO.jl discovery/canary integration under #73.
-
-Propose an explicit-tag URL installation as the initial route once a real
-repository and `v0.1.0` tag exist, followed by General registration if accepted:
-`Pkg.add(url="https://github.com/JuliaQUBO/QUBODecomposition.jl", rev="v0.1.0")`.
-This is a **future command with a provisional URL**, not a currently supported
-installation. Before tagging, test the candidate commit in a fresh environment;
-after tagging, test that exact tag in a fresh project and depot, verify package
-identity, import, offline example and version, and record the resolved Manifest.
-For registration, prepare valid package identity/license/compat and release
-notes, register through the destination's approved workflow, then verify
-`Pkg.add("QUBODecomposition")` through the normal registry/package-server path.
-Do not advertise the name-based command before registration is available.
+General registration is the accepted first-release route. Prepare valid package
+identity/license/compat and release notes, run candidate fresh-environment checks,
+and register through the destination's approved maintainer workflow. Then verify
+`Pkg.add("QUBODecomposition")` through the normal registry/package-server path,
+with package identity, import, version and offline examples in a fresh project
+and depot. Until registration and installation are verified, follow the
+[checkout installation manual](https://juliaqubo.github.io/QUBO.jl/QUBODecomposition.jl/dev/start/).
+There is currently no supported stable channel or v0.1.0 tag-install claim.
 
 Release 0.1.0 only after ownership/install route are accepted, the complete MVP
 matrix and ordinary platform/Julia CI pass, public docs/example run, required
@@ -620,19 +619,22 @@ honest result are useful; a speedup claim or full benchmark campaign is not a
 conditioning remain [#75](https://github.com/JuliaQUBO/QUBO.jl/issues/75).
 External workflow execution remains with the separate benchmark workflow track.
 
-The remaining maintainer decisions are: accept the final name/repository;
-record the accepting maintainer and release authority; approve the proposed API,
-status and budget semantics; and choose URL-only first release versus immediate
-General registration. The missing destination blocks runtime publication but
-not acceptance of this design. Closing #74 requires the runnable destination,
-all MVP acceptance evidence, supported installation/maintenance documentation,
-and linked conformance, integration, tutorial and canary handoffs in
-[roadmap #76](https://github.com/JuliaQUBO/QUBO.jl/issues/76). Use `Refs #74` for
-this design PR and any partial runtime slice.
+Destination, accepting maintainer/release authority and General registration
+route are settled. The remaining release gate is the standalone maintainer's
+candidate preflight and fresh-install evidence, followed by registration/tag
+and registry installation verification. The transferred
+[MVP tracker](https://github.com/JuliaQUBO/QUBODecomposition.jl/issues/1) remains
+open for those gates and the linked conformance, integration, tutorial and
+canary handoffs in [roadmap #76](https://github.com/JuliaQUBO/QUBO.jl/issues/76).
+Use references to that tracker for partial follow-ups; documentation discovery
+does not itself complete the release or adoption plan.
 
 ### Inspected Sources and Reuse Limits
 
-The following revisions were refreshed on 2026-10-07. Links document evidence,
+The original design pinned the following revisions on 2026-10-07. Current
+standalone implementation and release facts were refreshed on 2026-10-09 against
+[package main `7f7ea81`](https://github.com/JuliaQUBO/QUBODecomposition.jl/tree/7f7ea818fad9af229c3d871efdc3e1e679953aeb).
+Historical links document evidence,
 not dependencies or claims that another library proves this optimizer correct.
 
 | Source | Reusable contract or concept and limitation |
@@ -641,7 +643,7 @@ not dependencies or claims that another library proves this optimizer correct.
 | [QUBOTools fixing/lifting, `a566070`](https://github.com/JuliaQUBO/QUBOTools.jl/blob/a566070b338fef659716db8922140e190379615e/src/library/form/form.jl), [label map](https://github.com/JuliaQUBO/QUBOTools.jl/blob/a566070b338fef659716db8922140e190379615e/src/library/model/variable_map.jl) and [conditioning manual](https://github.com/JuliaQUBO/QUBOTools.jl/blob/a566070b338fef659716db8922140e190379615e/docs/src/manual/4-models.md) | Exact fixed-boundary algebra, unscaled offset delta, original→reduced indices; retain labels separately. This is merged #139, not a new runtime API |
 | [QUBOTools topology at release `42963f9`](https://github.com/JuliaQUBO/QUBOTools.jl/blob/42963f9871f2f2b0f4166963818c7b8caaa29919/src/library/form/abstract.jl) | Full declared graph dimension, including isolates; 0.16.2 is the first released fix |
 | [QUBODrivers hooks, `3bf47da`](https://github.com/JuliaQUBO/QUBODrivers.jl/blob/3bf47da284f2ab8bdca9c6ab4ff0190d8d36f8be/src/interface/sampler.jl), [MOI wrapper](https://github.com/JuliaQUBO/QUBODrivers.jl/blob/3bf47da284f2ab8bdca9c6ab4ff0190d8d36f8be/src/library/sampler/wrappers/moi.jl), [metadata](https://github.com/JuliaQUBO/QUBODrivers.jl/blob/3bf47da284f2ab8bdca9c6ab4ff0190d8d36f8be/docs/src/manual/metadata.md), [test contract](https://github.com/JuliaQUBO/QUBODrivers.jl/blob/3bf47da284f2ab8bdca9c6ab4ff0190d8d36f8be/src/interface/test.jl) and [ExactSampler](https://github.com/JuliaQUBO/QUBODrivers.jl/blob/3bf47da284f2ab8bdca9c6ab4ff0190d8d36f8be/src/library/drivers/ExactSampler.jl) | Existing extension points, explicit traits and `Test` extension. Public termination and total/effective time require care as described above |
-| [ToQUBO result decoding, `481ff10`](https://github.com/JuliaQUBO/ToQUBO.jl/blob/481ff101d60372124a42c49ff1f2692664b699c7/src/attributes/solver.jl), [refinement loop](https://github.com/JuliaQUBO/ToQUBO.jl/blob/481ff101d60372124a42c49ff1f2692664b699c7/src/refinement.jl) and [refinement manual](https://github.com/JuliaQUBO/ToQUBO.jl/blob/481ff101d60372124a42c49ff1f2692664b699c7/docs/src/manual/5-refinement.md) | Newer than published 0.6.1: refinement and primal-status checking require the release handoff above. No automatic shared refinement deadline; compiled and source objectives differ |
+| [ToQUBO result decoding, `481ff10`](https://github.com/JuliaQUBO/ToQUBO.jl/blob/481ff101d60372124a42c49ff1f2692664b699c7/src/attributes/solver.jl), [refinement loop](https://github.com/JuliaQUBO/ToQUBO.jl/blob/481ff101d60372124a42c49ff1f2692664b699c7/src/refinement.jl) and [refinement manual](https://github.com/JuliaQUBO/ToQUBO.jl/blob/481ff101d60372124a42c49ff1f2692664b699c7/docs/src/manual/5-refinement.md) | Historical development source; refinement, primal-status checking and the later recompilation fix are now available in released ToQUBO 0.7.1. No automatic shared refinement deadline; compiled and source objectives differ |
 | [QSplit neighborhood selection, `4da64b0`](https://github.com/alpha-unito/QSplit/blob/4da64b072e702953038addd51cdf54f97f0f9516/qsplit/splitting/split_k_interactions.py), [halting helpers](https://github.com/alpha-unito/QSplit/blob/4da64b072e702953038addd51cdf54f97f0f9516/qsplit/halting_heuristic/stop.py), [deprecated local runner](https://github.com/alpha-unito/QSplit/blob/4da64b072e702953038addd51cdf54f97f0f9516/qsplit/local_runner.py) and [active CWL splitter](https://github.com/alpha-unito/QSplit/blob/4da64b072e702953038addd51cdf54f97f0f9516/qsplit/cwl/cli/split.py) | Interaction ranking/control ideas. With budget one, `[-num_neighbors:]` becomes `[-0:]` and selects the whole array. Its nonzero-based variable count also omits isolates. The active CWL path uses recursive matrix splitting; it is not this serial algorithm |
 | [D-Wave Hybrid decomposers, `ec17a70`](https://github.com/dwavesystems/dwave-hybrid/blob/ec17a700b0250123da9909ec82db4ecb2516993d/hybrid/decomposers.py), [induced model](https://github.com/dwavesystems/dwave-hybrid/blob/ec17a700b0250123da9909ec82db4ecb2516993d/hybrid/utils.py) and [SplatComposer](https://github.com/dwavesystems/dwave-hybrid/blob/ec17a700b0250123da9909ec82db4ecb2516993d/hybrid/composers.py) | Bounded selection, fixed-boundary terms and recomposition. `bqm_induced_by` explicitly resets offset to zero; it cannot supply Julia's full-energy identity. Neither library specifies MOI statuses |
 
