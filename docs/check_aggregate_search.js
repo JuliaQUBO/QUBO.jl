@@ -15,8 +15,12 @@ function checkCanonicals(directory, pkg) {
         if (entry.isDirectory()) checkCanonicals(filename, pkg);
         else if (entry.isFile() && entry.name.endsWith('.html')) {
             const html = fs.readFileSync(filename, 'utf8');
-            for (const tag of html.matchAll(/<link\b[^>]*>/g)) {
-                if (!/\brel="canonical"/.test(tag[0])) continue;
+            const canonicalTags = [...html.matchAll(/<link\b[^>]*>/g)]
+                .filter(tag => /\brel="canonical"/.test(tag[0]));
+            if (html.includes('id="documenter"')) {
+                assert.equal(canonicalTags.length, 1, `${filename} has exactly one canonical link`);
+            }
+            for (const tag of canonicalTags) {
                 const href = tag[0].match(/\bhref="([^"]+)"/);
                 assert(href, `${filename} has a canonical target`);
                 const url = new URL(href[1]);
