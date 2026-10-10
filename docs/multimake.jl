@@ -50,6 +50,7 @@ function buildmultidocs(path::AbstractString, docs)
             engine = MultiDocumenter.FlexSearch,
         ),
         rootpath = "/QUBO.jl",
+        canonical_domain = "https://juliaqubo.github.io",
         # Pages serves this aggregate, so retain Documenter's published PR previews.
         hide_previews = false,
     )

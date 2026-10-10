@@ -6,6 +6,51 @@ const path = require('node:path');
 const vm = require('node:vm');
 const root = path.resolve(process.argv[2]);
 const packages = ['QUBO.jl', 'ToQUBO.jl', 'QUBODrivers.jl', 'QUBOTools.jl', 'QUBODecomposition.jl'];
+const canonicalRoot = 'https://juliaqubo.github.io/QUBO.jl/';
+let canonicalCount = 0;
+const canonicalPages = [];
+function checkCanonicals(directory, pkg) {
+    for (const entry of fs.readdirSync(directory, {withFileTypes: true})) {
+        const filename = path.join(directory, entry.name);
+        if (entry.isDirectory()) checkCanonicals(filename, pkg);
+        else if (entry.isFile() && entry.name.endsWith('.html')) {
+            const html = fs.readFileSync(filename, 'utf8');
+            for (const tag of html.matchAll(/<link\b[^>]*>/g)) {
+                if (!/\brel="canonical"/.test(tag[0])) continue;
+                const href = tag[0].match(/\bhref="([^"]+)"/);
+                assert(href, `${filename} has a canonical target`);
+                const url = new URL(href[1]);
+                assert.equal(url.origin, 'https://juliaqubo.github.io');
+                assert(url.href.startsWith(`${canonicalRoot}${pkg}/`), `${filename} uses its aggregate package prefix`);
+                assert(!url.href.includes('nothing') && !url.pathname.slice('/QUBO.jl/'.length).includes('/QUBO.jl/'),
+                    `${filename} has no malformed or duplicated aggregate prefix`);
+                canonicalCount++;
+                canonicalPages.push(filename);
+            }
+        }
+    }
+}
+for (const pkg of packages) {
+    const previousCount = canonicalCount;
+    checkCanonicals(path.join(root, pkg), pkg);
+    assert(canonicalCount > previousCount, `${pkg} contains canonical links`);
+    const redirect = fs.readFileSync(path.join(root, pkg, 'index.html'), 'utf8');
+    const channel = redirect.match(/url=(?:\.\/)?([^"<>]+)\//i)[1];
+    const channelRoot = path.join(root, pkg, channel);
+    const resolvedChannelRoot = fs.realpathSync(channelRoot);
+    const home = fs.readFileSync(path.join(channelRoot, 'index.html'), 'utf8');
+    assert(home.includes(`href="${canonicalRoot}${pkg}/${channel}/"`), `${pkg} retains its canonical channel`);
+    const nested = canonicalPages.find(filename => filename.startsWith(resolvedChannelRoot + path.sep) &&
+        filename !== path.join(resolvedChannelRoot, 'index.html'));
+    assert(nested, `${pkg} has a representative nested page`);
+    const nestedHTML = fs.readFileSync(nested, 'utf8');
+    const nestedRoute = path.relative(resolvedChannelRoot, nested).split(path.sep).join('/').replace(/index\.html$/, '');
+    assert(nestedHTML.includes(`href="${canonicalRoot}${pkg}/${channel}/${nestedRoute}"`),
+        `${pkg} nested page points to the available canonical route`);
+    const dev = fs.readFileSync(path.join(root, pkg, 'dev', 'index.html'), 'utf8');
+    assert(dev.includes(`href="${canonicalRoot}${pkg}/${channel}/"`), `${pkg} dev home respects the canonical channel`);
+}
+console.log(`PASS: ${canonicalCount} absolute aggregate canonicals across five packages, home/nested routes and canonical channels`);
 const entries = JSON.parse(fs.readFileSync(path.join(root, 'index.json')));
 for (const pkg of packages) {
     const channel = fs.existsSync(path.join(root, pkg, 'stable')) ? 'stable' : 'dev';
