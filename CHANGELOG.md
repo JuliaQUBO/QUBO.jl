@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.6.3 (unreleased)
+## 0.6.3 (2026-10-12)
 
 - Support registered ToQUBO 0.7.1 and later 0.7 patch releases while retaining
   compatibility with ToQUBO 0.4, 0.5, and 0.6.
