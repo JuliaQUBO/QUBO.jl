@@ -269,24 +269,25 @@ The QUBO.jl v0.6.2 compatibility refresh follows the registered stack with
 0.16. While `PySA` v0.4.1 still caps `QUBOTools` at 0.14, PySA examples should
 remain plain `julia` snippets rather than Documenter `@example` blocks.
 
-The QUBO.jl v0.6.3 candidate extends the root and documentation compatibility
-bounds to `ToQUBO = "0.4, 0.5, 0.6, 0.7.1"`. This preserves the previously
-supported lines and admits ToQUBO 0.7 starting at 0.7.1. Validate package tests
-and executable documentation with registered ToQUBO 0.7.1 before release.
-Composition checks using a source-installed QUBO candidate must identify its
-exact commit and use separate environments for the two existing canary tiers,
-with registered dependencies, the global core freshness gate, and the same
-optional Python import policy. Such checks establish candidate compatibility;
-they do not establish registry-only recovery.
+QUBO.jl v0.6.3 declares root and documentation compatibility with
+`ToQUBO = "0.4, 0.5, 0.6, 0.7.1"`, preserving the previously supported lines
+and admitting ToQUBO 0.7 starting at 0.7.1.
 
-Registered QUBO 0.6.2 excludes ToQUBO 0.7.1, so both unchanged registry-only
-canary tiers can still fail their freshness check after this candidate PR is
-merged. Recovery requires human review/merge, publication of the QUBO patch
-through General, a fresh unqualified `Pkg.add("QUBO")`, and both unchanged
-canary tiers passing. Keep that failure visible until publication; do not pin
-ToQUBO to an older release, replace registry resolution with the checkout, or
-spend retry budgets on the unchanged registered restriction. Then resume the
-separate QUBODecomposition 0.1.1 release preparation.
+Before a compatibility release, validate package tests and executable
+documentation with the newly supported registered dependencies. Composition
+checks using a source-installed QUBO candidate must identify its exact commit
+and use separate environments for the two existing canary tiers, with
+registered dependencies, the global core freshness gate, and the same optional
+Python import policy. These checks establish candidate compatibility; they do
+not establish registry-only recovery.
+
+Registered QUBO 0.6.2 excludes ToQUBO 0.7.1. Changing the source checkout does
+not update that registered constraint, so both unchanged registry-only canary
+tiers can remain red until the corrected patch reaches General. Verify recovery
+with a fresh unqualified `Pkg.add("QUBO")` and both unchanged canary tiers.
+Keep freshness failures visible: do not pin ToQUBO to an older release or
+replace registry resolution with the checkout. Repeated runs against an
+unchanged registered constraint cannot demonstrate recovery.
 
 ## Documentation Publishing
 

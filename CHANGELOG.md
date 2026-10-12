@@ -9,6 +9,4 @@
 
 The registry-only ecosystem canary recovers only after this patch reaches
 General and both existing tiers pass with registered packages. Source candidate
-validation is separate evidence. Refresh the software version and release date
-in `CITATION.cff` when the release is published; its current fields describe the
-latest published release.
+validation is separate evidence.
