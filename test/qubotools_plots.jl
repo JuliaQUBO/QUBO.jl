@@ -27,6 +27,9 @@ function test_qubotools_plots()
 
         model = solved_qubo_model()
 
+        @test QUBO.source_model(model) isa QUBO.MOI.ModelLike
+        @test QUBO.target_model(model) isa QUBO.MOI.ModelLike
+
         backend = QUBOTools.backend(model)
 
         @test backend isa QUBOTools.Model

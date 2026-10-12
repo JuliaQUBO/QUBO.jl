@@ -24,10 +24,10 @@ function test_ecosystem_canary()
         ]
 
         latest_versions = Dict(
-            "PseudoBooleanOptimization" => v"0.2.6",
-            "QUBOTools" => v"0.15.0",
-            "ToQUBO" => v"0.5.0",
-            "QUBODrivers" => v"0.6.3",
+            "PseudoBooleanOptimization" => v"0.3.0",
+            "QUBOTools" => v"0.16.2",
+            "ToQUBO" => v"0.7.1",
+            "QUBODrivers" => v"0.6.5",
         )
         fresh_manifest = copy(latest_versions)
         stale_manifest = merge(fresh_manifest, Dict("QUBOTools" => v"0.14.4"))
@@ -43,6 +43,17 @@ function test_ecosystem_canary()
         @test !all(result -> result.ok, stale_pbo_results)
         @test only(result for result in stale_pbo_results if result.package == "PseudoBooleanOptimization").resolved ==
             v"0.2.5"
+        stale_toqubo_manifest = merge(fresh_manifest, Dict("ToQUBO" => v"0.6.1"))
+        stale_toqubo_results = core_version_results(CORE_PACKAGE_NAMES, latest_versions, stale_toqubo_manifest)
+        @test !all(result -> result.ok, stale_toqubo_results)
+        @test !only(result for result in stale_toqubo_results if result.package == "ToQUBO").ok
+        for package in CORE_PACKAGE_NAMES
+            missing_manifest = copy(fresh_manifest)
+            delete!(missing_manifest, package)
+            missing_results = core_version_results(CORE_PACKAGE_NAMES, latest_versions, missing_manifest)
+            @test !all(result -> result.ok, missing_results)
+            @test only(result for result in missing_results if result.package == package).resolved === nothing
+        end
         @test version_label(nothing) == "missing"
 
         stable_version_info = Dict(
