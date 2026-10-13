@@ -25,10 +25,10 @@ This project aggregates and extends functionality from its complementary package
 The ecosystem canary composes the latest registered versions of maintained QUBO
 packages in fresh Julia environments to catch compatibility drift across
 package boundaries. It also fails when `PseudoBooleanOptimization`,
-`QUBOTools`, `ToQUBO`, or `QUBODrivers` resolve below their latest registered
-versions that are stable, unyanked, and compatible with the Julia version
+`QUBOTools`, `ToQUBO`, `QUBODrivers`, or `QUBODecomposition` resolve below
+their latest registered versions that are stable, unyanked, and compatible with the Julia version
 running the canary. A red canary means at least one tier no longer resolves,
-imports, or reaches the latest core stack; inspect the workflow log's
+imports, or reaches the latest freshness-checked versions; inspect the workflow log's
 compatibility matrix first, then update the offending package bounds or release
 the missing compatibility work.
 
@@ -223,10 +223,18 @@ energies in the original model. Coupled sweeps are heuristic, with conservative
 public statuses and cooperative resource limits.
 
 The package has direct JuMP and released ToQUBO 0.7.1 integration evidence.
-It is currently unregistered and unreleased; see the
-[development manual](https://juliaqubo.github.io/QUBO.jl/QUBODecomposition.jl/dev/)
-for installation, configuration, results and acceptance coverage.
-It is an ecosystem package installed separately: `Pkg.add("QUBO")` and
+QUBODecomposition is registered in General and released, with verified
+fresh installation and [stable documentation](https://juliaqubo.github.io/QUBODecomposition.jl/stable/).
+Install it separately from the registry:
+
+```julia
+import Pkg
+Pkg.add("QUBODecomposition")
+using QUBODecomposition
+```
+
+The stable manual covers configuration, results and acceptance coverage.
+The standalone architecture is unchanged: `Pkg.add("QUBO")` and
 `using QUBO` do not install or re-export QUBODecomposition.
 
 ## Citing [QUBO.jl](https://github.com/JuliaQUBO/QUBO.jl) 📑

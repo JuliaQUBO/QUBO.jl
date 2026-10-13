@@ -129,18 +129,21 @@ The standalone architecture accepted in
 The original QUBO.jl issue #74 was transferred with its history to the
 [implementation tracker](https://github.com/JuliaQUBO/QUBODecomposition.jl/issues/1).
 The contracts below preserve the accepted design; the
-[package manual](https://juliaqubo.github.io/QUBO.jl/QUBODecomposition.jl/dev/)
+[package manual](https://juliaqubo.github.io/QUBODecomposition.jl/stable/)
 is authoritative for current configuration, algorithms, results and usage.
 These APIs belong to the standalone package and are not re-exported by QUBO.
 
 Whole-model dispatch, disconnected components, conditioned serial sweeps,
 complete-state reconstruction and original-energy evaluation are implemented.
-The package's [acceptance matrix](https://juliaqubo.github.io/QUBO.jl/QUBODecomposition.jl/dev/acceptance/)
+The package's [acceptance matrix](https://juliaqubo.github.io/QUBODecomposition.jl/stable/acceptance/)
 records delivered rows 1–20, including driver conformance, direct JuMP and
 released ToQUBO 0.7.1 composition/repeated compilation. Coupled sweeps remain
 heuristic: exact neighborhoods do not prove a coupled global optimum.
-Release/fresh-install row 21, registration and ecosystem adoption remain
-separate gates; the package is still unregistered and unreleased.
+QUBODecomposition 0.1.1 is registered in General and released; its
+[release/install/documentation evidence](https://github.com/JuliaQUBO/QUBODecomposition.jl/issues/1#issuecomment-6136826438)
+includes fresh-project/fresh-depot installation and stable documentation.
+Remaining ecosystem adoption and deployed QUBO aggregate verification are
+separate from those delivered package-local gates.
 
 ### Destination, Ownership, and Dependencies
 
@@ -148,9 +151,9 @@ The established repository is **JuliaQUBO/QUBODecomposition.jl**, with Julia
 package/module `QUBODecomposition` and `QUBODecomposition.Optimizer`.
 [@bernalde](https://github.com/bernalde) is the accepted maintainer and release
 authority, responsible for sampler correctness, release/access continuity,
-dependency updates and downstream integration CI. General registration is the
-accepted first-release route; a project version of 0.1.0 does not establish
-that a tag, release or registry installation exists.
+dependency updates and downstream integration CI. General is the established
+registry installation route; the published release is verified independently
+of the project version.
 
 | Responsibility | Owning implementation/test location |
 | :-- | :-- |
@@ -202,8 +205,16 @@ finite scale, including zero and negative scale, by evaluating the complete
 scaled objective and retaining the original sense.
 
 The accepted construction below matches the standalone public interface.
-It requires a separately installed development checkout; the package manual
-contains executable examples and the detailed configuration contract:
+It requires the separately installed registered package and the direct
+dependencies used by this JuMP/ToQUBO example:
+
+```julia
+import Pkg
+Pkg.add(["JuMP", "QUBODrivers", "ToQUBO", "QUBODecomposition"])
+```
+
+The stable package manual contains executable examples and the detailed
+configuration contract:
 
 ```julia
 using JuMP, QUBODrivers, ToQUBO, QUBODecomposition
@@ -416,7 +427,7 @@ records overrun, and launches no further work. Do not advertise
 the MVP advertises false. Candidate/result processing and final reconstruction
 also consume the parent budget; already validated incumbents remain returnable.
 
-The inspected, not-yet-released ToQUBO refinement loop recompiles and invokes
+The released ToQUBO 0.7.1 refinement loop recompiles and invokes
 its child repeatedly; its forwarded `TimeLimitSec` is not a shared wall-clock
 deadline. For the MVP,
 document per-invocation scope and test finite update/call caps. A caller needing
@@ -535,9 +546,10 @@ outer caller and is not included by pretending it ran inside the composite.
 
 This table retains the accepted numerical oracles and acceptance criteria.
 Runtime/conformance/compiler-integration rows 1–20 have delivered coverage in
-the standalone repository; row 21 still requires release and fresh installation.
+the standalone repository. Row 21's package-local release, fresh-install and
+stable-documentation gates are delivered; ecosystem adoption remains separate.
 Paths now refer to the actual implementation suite; the package's
-[coverage table](https://juliaqubo.github.io/QUBO.jl/QUBODecomposition.jl/dev/acceptance/)
+[coverage table](https://juliaqubo.github.io/QUBODecomposition.jl/stable/acceptance/)
 records fixture details and limits, including the quadratic product lift used
 for cubic coverage (direct nonlinear cubic source input remains unsupported).
 Every numerical oracle evaluates original scalar coefficients independently of
@@ -566,7 +578,7 @@ not the independent energy oracle.
 | ToQUBO bounded integer and auxiliary/slack fixture in both senses: `0<=z<=3`, binary `b`, `z+2b<=3`, objective `7+2z+b`; add a separately enumerated binary cubic objective to force quadratization | Enumerate source domain for feasible Min/Max values 7/13; enumerate small compiled domains including all auxiliary/slack bits, evaluate both polynomials independently; source feasibility via residuals and public ToQUBO checks, not penalized energy alone | `test/integration/toqubo.jl` |
 | Recompile same ToQUBO optimizer after coefficient/penalty/mapping changes, including same-size different encodings | Capturing child proves new coefficients and maps arrive on every invocation; compare fresh compile, decoded values and source feasibility; missing compiled bits cannot appear as valid source results | `test/integration/repeated_refinement.jl` |
 | ToQUBO outer refinement versus per-invocation limits | Scripted clock/call log shows up to `1+MaxPenaltyUpdates` invocations, each with its own limits; explicit outer-loop fixture deducts compilation and child work from one deadline | `test/integration/repeated_refinement.jl` |
-| Fresh-environment install and tutorial smoke | Installed package identity/version and public construction path, small exact known optimum plus larger-than-budget heuristic case, no development overrides | `examples/whole_model.jl` and `examples/serial_sweeps.jl` (fresh-install gate pending) |
+| Fresh-environment install and tutorial smoke | Installed package identity/version and public construction path, small exact known optimum plus larger-than-budget heuristic case, no development overrides | `examples/whole_model.jl` and `examples/serial_sweeps.jl` (installed release smoke verified) |
 
 The ToQUBO fixture must assert that slack/auxiliary variables were actually
 introduced; a fixture that compiles them away does not cover that row. Query
@@ -581,33 +593,31 @@ valid compiled optimum with inadequate penalties is not a source optimum proof.
 The accepted implementation sequence has delivered the package boundary and
 whole-model path, serial components/sweeps, complete driver conformance and
 compiler integration. The implementation tracker and package manual preserve
-the acceptance evidence. Development documentation is published, and the
+the acceptance evidence. Stable and development documentation are published, and the
 [QUBODrivers catalog](https://juliaqubo.github.io/QUBODrivers.jl/dev/manual/3-samplers/)
 links the external composite optimizer and composition/metadata contracts.
 QUBO.jl discovery and aggregation are tracked in
 [#82](https://github.com/JuliaQUBO/QUBO.jl/issues/82); deployed verification remains
 required after reviewed aggregate changes merge.
 
-General registration is the accepted first-release route. Prepare valid package
-identity/license/compat and release notes, run candidate fresh-environment checks,
-and register through the destination's approved maintainer workflow. Then verify
-`Pkg.add("QUBODecomposition")` through the normal registry/package-server path,
-with package identity, import, version and offline examples in a fresh project
-and depot. Until registration and installation are verified, follow the
-[checkout installation manual](https://juliaqubo.github.io/QUBO.jl/QUBODecomposition.jl/dev/start/).
-There is currently no supported stable channel or v0.1.0 tag-install claim.
+QUBODecomposition 0.1.1's [release](https://github.com/JuliaQUBO/QUBODecomposition.jl/releases/tag/v0.1.1)
+and [General registration](https://github.com/JuliaRegistries/General/pull/171526)
+are delivered. Fresh unqualified `Pkg.add("QUBODecomposition")` in a fresh
+project and depot verified its identity, import and installed integration;
+the [stable manual](https://juliaqubo.github.io/QUBODecomposition.jl/stable/)
+is published. Its installation manual retains deliberate development-checkout
+guidance. Historical manuals and earlier release records remain unchanged.
 
-Release 0.1.0 only after ownership/install route are accepted, the complete MVP
-matrix and ordinary platform/Julia CI pass, public docs/example run, required
-upstream APIs/fixes (including the ToQUBO test/example prerequisite above) are
-available at their declared minimums, and the release candidate
-resolves without development overrides. Document remaining child cancellation
-and reproducibility limits. Candidate fresh-install evidence is a pre-release
-gate; exact-tag and registry installation evidence follow their respective
-publication steps. A registry-based canary cannot be a prerequisite to the
-first registration. Add it **after** registration, or use a distinct explicit-tag
-composition smoke test while URL-only. Do not weaken the existing registry
-freshness gate to accommodate an unregistered package.
+QUBO's registry-only ecosystem canary now includes the separately installed
+package in both tiers and checks its latest stable, unyanked General release
+compatible with the running Julia version, alongside all four existing core
+packages. This adoption does not add a QUBO runtime dependency or re-export,
+and requires no QUBO version bump. Do not replace registry resolution with a
+source override or weaken freshness to accommodate stale downstream bounds.
+For ecosystem documentation updates, verify main checks after merge and use
+the existing QUBO Documentation workflow to publish and refresh the aggregate.
+Then verify served content and main canary adoption. A PR build does not
+establish publication.
 
 Hand a pinned commit/tag, fixtures, child configuration, complete timing and
 resource budgets to [QUBOBenchmarks#27](https://github.com/JuliaQUBO/QUBOBenchmarks.jl/issues/27)
@@ -619,21 +629,21 @@ honest result are useful; a speedup claim or full benchmark campaign is not a
 conditioning remain [#75](https://github.com/JuliaQUBO/QUBO.jl/issues/75).
 External workflow execution remains with the separate benchmark workflow track.
 
-Destination, accepting maintainer/release authority and General registration
-route are settled. The remaining release gate is the standalone maintainer's
-candidate preflight and fresh-install evidence, followed by registration/tag
-and registry installation verification. The transferred
-[MVP tracker](https://github.com/JuliaQUBO/QUBODecomposition.jl/issues/1) remains
-open for those gates and the linked conformance, integration, tutorial and
-canary handoffs in [roadmap #76](https://github.com/JuliaQUBO/QUBO.jl/issues/76).
-Use references to that tracker for partial follow-ups; documentation discovery
-does not itself complete the release or adoption plan.
+Destination, accepting maintainer/release authority, General registration,
+release, installed integration and stable documentation are delivered. The
+transferred [MVP tracker](https://github.com/JuliaQUBO/QUBODecomposition.jl/issues/1)
+retains the package-local evidence and remaining ecosystem, tutorial and canary
+handoffs in [roadmap #76](https://github.com/JuliaQUBO/QUBO.jl/issues/76). Use
+references for partial follow-ups; documentation discovery does not itself
+complete every ecosystem adoption criterion.
 
 ### Inspected Sources and Reuse Limits
 
 The original design pinned the following revisions on 2026-10-07. Current
-standalone implementation and release facts were refreshed on 2026-10-09 against
+standalone implementation facts were refreshed on 2026-10-09 against
 [package main `7f7ea81`](https://github.com/JuliaQUBO/QUBODecomposition.jl/tree/7f7ea818fad9af229c3d871efdc3e1e679953aeb).
+Release/install/docs facts now follow verified 0.1.1 commit
+[`e1579e9`](https://github.com/JuliaQUBO/QUBODecomposition.jl/commit/e1579e98f6ff77bdbe88fa45d0bd2e62efb2758c).
 Historical links document evidence,
 not dependencies or claims that another library proves this optimizer correct.
 

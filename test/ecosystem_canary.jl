@@ -21,6 +21,7 @@ function test_ecosystem_canary()
             "QUBOTools",
             "ToQUBO",
             "QUBODrivers",
+            "QUBODecomposition",
         ]
 
         latest_versions = Dict(
@@ -28,6 +29,7 @@ function test_ecosystem_canary()
             "QUBOTools" => v"0.16.2",
             "ToQUBO" => v"0.7.1",
             "QUBODrivers" => v"0.6.5",
+            "QUBODecomposition" => v"0.1.1",
         )
         fresh_manifest = copy(latest_versions)
         stale_manifest = merge(fresh_manifest, Dict("QUBOTools" => v"0.14.4"))
@@ -47,6 +49,22 @@ function test_ecosystem_canary()
         stale_toqubo_results = core_version_results(CORE_PACKAGE_NAMES, latest_versions, stale_toqubo_manifest)
         @test !all(result -> result.ok, stale_toqubo_results)
         @test !only(result for result in stale_toqubo_results if result.package == "ToQUBO").ok
+        for (package, stale_version) in [
+            "QUBODrivers" => v"0.6.4",
+            "QUBODecomposition" => v"0.1.0",
+        ]
+            results = core_version_results(
+                CORE_PACKAGE_NAMES,
+                latest_versions,
+                merge(fresh_manifest, Dict(package => stale_version)),
+            )
+            @test !all(result -> result.ok, results)
+            @test !only(result for result in results if result.package == package).ok
+        end
+        # Follow future registry releases rather than freezing the adoption version.
+        newer_versions = merge(latest_versions, Dict("QUBODecomposition" => v"0.1.2"))
+        @test !all(result -> result.ok, core_version_results(CORE_PACKAGE_NAMES, newer_versions, fresh_manifest))
+        @test all(result -> result.ok, core_version_results(CORE_PACKAGE_NAMES, newer_versions, newer_versions))
         for package in CORE_PACKAGE_NAMES
             missing_manifest = copy(fresh_manifest)
             delete!(missing_manifest, package)
@@ -84,8 +102,22 @@ function test_ecosystem_canary()
         maintenance = read(joinpath(root, "docs", "src", "maintenance.md"), String)
         script = read(joinpath(root, "scripts", "ecosystem_canary.jl"), String)
 
-        for package in CORE_PACKAGE_NAMES
-            @test occursin(package, workflow)
+        # Inspect each executable command, so a mention in another tier or a
+        # diagnostic alone cannot satisfy mandatory resolution/import membership.
+        commands = [split(match.captures[1]) for match in eachmatch(r"run: >\r?\n((?:          [^\r\n]*\r?\n)+)", workflow)]
+        @test length(commands) == 4
+        for tier in ("tier-1", "tier-2")
+            command = only(command for command in commands if "--tier" in command && tier in command)
+            @test command[1:2] == ["julia", "scripts/ecosystem_canary.jl"]
+            parsed_tier, optional, package_names = parse_args(command[3:end])
+            @test parsed_tier == tier
+            @test all(package -> package in package_names, CORE_PACKAGE_NAMES)
+            @test "QUBODecomposition" ∉ optional
+            @test optional == (tier == "tier-1" ? Set{String}() : Set(["DWave", "PySA", "CIMOptimizer", "QiskitOpt"]))
+            tier_commands = tier == "tier-1" ? commands[1:2] : commands[3:4]
+            @test tier_commands[2] == command
+            @test tier_commands[1][1:2] == ["julia", "scripts/compat_matrix.jl"]
+            @test Set(tier_commands[1][3:end]) == Set(package_names)
         end
         @test occursin("intentionally global", maintenance)
         @test occursin("Pkg.add(packages)", script)
