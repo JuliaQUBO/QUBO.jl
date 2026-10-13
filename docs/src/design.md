@@ -205,11 +205,12 @@ finite scale, including zero and negative scale, by evaluating the complete
 scaled objective and retaining the original sense.
 
 The accepted construction below matches the standalone public interface.
-It requires the separately installed registered package:
+It requires the separately installed registered package and the direct
+dependencies used by this JuMP/ToQUBO example:
 
 ```julia
 import Pkg
-Pkg.add("QUBODecomposition")
+Pkg.add(["JuMP", "QUBODrivers", "ToQUBO", "QUBODecomposition"])
 ```
 
 The stable package manual contains executable examples and the detailed
@@ -613,9 +614,10 @@ compatible with the running Julia version, alongside all four existing core
 packages. This adoption does not add a QUBO runtime dependency or re-export,
 and requires no QUBO version bump. Do not replace registry resolution with a
 source override or weaken freshness to accommodate stale downstream bounds.
-After human review and merge, verify main checks, allow the existing QUBO
-Documentation workflow to publish and refresh the aggregate, then verify served
-content and main canary adoption. A PR build does not establish publication.
+For ecosystem documentation updates, verify main checks after merge and use
+the existing QUBO Documentation workflow to publish and refresh the aggregate.
+Then verify served content and main canary adoption. A PR build does not
+establish publication.
 
 Hand a pinned commit/tag, fixtures, child configuration, complete timing and
 resource budgets to [QUBOBenchmarks#27](https://github.com/JuliaQUBO/QUBOBenchmarks.jl/issues/27)

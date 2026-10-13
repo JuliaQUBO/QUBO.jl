@@ -114,7 +114,7 @@ function check_latest_core_packages(registry, tier, packages)
     results = core_version_results(CORE_PACKAGE_NAMES, latest_versions, manifest_versions)
 
     println()
-    println("Core package freshness check:")
+    println("Package freshness check:")
     for result in results
         status = result.ok ? "ok" : "stale"
         println(
@@ -126,7 +126,7 @@ function check_latest_core_packages(registry, tier, packages)
     all(result -> result.ok, results) && return
 
     println()
-    println("Ecosystem canary resolved an older core package version for $tier.")
+    println("Ecosystem canary resolved a stale or missing freshness-checked package for $tier.")
     println("This usually means a downstream compat bound still excludes the latest registered release.")
     println("Compatibility matrix for this tier:")
     print_compat_matrix(unique(vcat(CORE_PACKAGE_NAMES, packages)))

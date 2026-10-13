@@ -21,7 +21,7 @@ sweeps are heuristic, with conservative public statuses and cooperative limits.
 Direct JuMP and released ToQUBO 0.7.1 integration are covered by its
 [acceptance evidence](https://juliaqubo.github.io/QUBODecomposition.jl/stable/acceptance/).
 
-QUBODecomposition 0.1.1 is registered in General and released, with verified
+QUBODecomposition is registered in General and released, with verified
 fresh installation and stable documentation. Install it separately:
 
 ```julia
@@ -178,7 +178,7 @@ set_attribute.(c, Ref(ToQUBO.Attributes.ConstraintEncodingPenaltyHint()), rho)
         components and budgeted conditioned sweeps. Reconstruct full states and
         evaluate original energies; coupled sweeps remain heuristic.</p>
         <div class="qubo-package-links">
-            <a href="https://juliaqubo.github.io/QUBODecomposition.jl/stable/">Docs</a>
+            <a href="https://juliaqubo.github.io/QUBO.jl/QUBODecomposition.jl/stable/">Docs</a>
             <a href="https://github.com/JuliaQUBO/QUBODecomposition.jl">Repository</a>
         </div>
     </div>

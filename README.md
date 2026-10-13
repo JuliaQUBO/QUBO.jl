@@ -28,7 +28,7 @@ package boundaries. It also fails when `PseudoBooleanOptimization`,
 `QUBOTools`, `ToQUBO`, `QUBODrivers`, or `QUBODecomposition` resolve below
 their latest registered versions that are stable, unyanked, and compatible with the Julia version
 running the canary. A red canary means at least one tier no longer resolves,
-imports, or reaches the latest core stack; inspect the workflow log's
+imports, or reaches the latest freshness-checked versions; inspect the workflow log's
 compatibility matrix first, then update the offending package bounds or release
 the missing compatibility work.
 
@@ -223,7 +223,7 @@ energies in the original model. Coupled sweeps are heuristic, with conservative
 public statuses and cooperative resource limits.
 
 The package has direct JuMP and released ToQUBO 0.7.1 integration evidence.
-QUBODecomposition 0.1.1 is registered in General and released, with verified
+QUBODecomposition is registered in General and released, with verified
 fresh installation and [stable documentation](https://juliaqubo.github.io/QUBODecomposition.jl/stable/).
 Install it separately from the registry:
 
@@ -234,7 +234,6 @@ using QUBODecomposition
 ```
 
 The stable manual covers configuration, results and acceptance coverage.
-QUBO documentation publication and aggregate refresh follow ecosystem adoption.
 The standalone architecture is unchanged: `Pkg.add("QUBO")` and
 `using QUBO` do not install or re-export QUBODecomposition.
 

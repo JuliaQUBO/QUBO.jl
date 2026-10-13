@@ -108,12 +108,14 @@ function test_ecosystem_canary()
         @test length(commands) == 4
         for tier in ("tier-1", "tier-2")
             command = only(command for command in commands if "--tier" in command && tier in command)
+            @test command[1:2] == ["julia", "scripts/ecosystem_canary.jl"]
             parsed_tier, optional, package_names = parse_args(command[3:end])
             @test parsed_tier == tier
             @test all(package -> package in package_names, CORE_PACKAGE_NAMES)
             @test "QUBODecomposition" ∉ optional
             @test optional == (tier == "tier-1" ? Set{String}() : Set(["DWave", "PySA", "CIMOptimizer", "QiskitOpt"]))
             tier_commands = tier == "tier-1" ? commands[1:2] : commands[3:4]
+            @test tier_commands[2] == command
             @test tier_commands[1][1:2] == ["julia", "scripts/compat_matrix.jl"]
             @test Set(tier_commands[1][3:end]) == Set(package_names)
         end
