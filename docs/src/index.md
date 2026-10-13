@@ -19,12 +19,21 @@ components and conditioned serial sweeps with explicit logical-variable budgets.
 Complete states are reconstructed and scored against the original model; coupled
 sweeps are heuristic, with conservative public statuses and cooperative limits.
 Direct JuMP and released ToQUBO 0.7.1 integration are covered by its
-[acceptance evidence](https://juliaqubo.github.io/QUBO.jl/QUBODecomposition.jl/dev/acceptance/).
+[acceptance evidence](https://juliaqubo.github.io/QUBODecomposition.jl/stable/acceptance/).
 
-QUBODecomposition is unregistered and unreleased. Follow its
-[installation manual](https://juliaqubo.github.io/QUBO.jl/QUBODecomposition.jl/dev/start/)
-for a separate checkout. Ecosystem membership does not add it to QUBO's bundled
-dependencies: `Pkg.add("QUBO")` and `using QUBO` do not install or re-export it.
+QUBODecomposition 0.1.1 is registered in General and released, with verified
+fresh installation and stable documentation. Install it separately:
+
+```julia
+import Pkg
+Pkg.add("QUBODecomposition")
+using QUBODecomposition
+```
+
+Follow its [installation manual](https://juliaqubo.github.io/QUBODecomposition.jl/stable/start/)
+for usage and deliberate development checkouts. Ecosystem membership does not
+add it to QUBO's bundled dependencies: `Pkg.add("QUBO")` and `using QUBO` do
+not install or re-export it.
 
 ## QUBO in Brief
 
@@ -169,7 +178,7 @@ set_attribute.(c, Ref(ToQUBO.Attributes.ConstraintEncodingPenaltyHint()), rho)
         components and budgeted conditioned sweeps. Reconstruct full states and
         evaluate original energies; coupled sweeps remain heuristic.</p>
         <div class="qubo-package-links">
-            <a href="https://juliaqubo.github.io/QUBO.jl/QUBODecomposition.jl/dev/">Docs</a>
+            <a href="https://juliaqubo.github.io/QUBODecomposition.jl/stable/">Docs</a>
             <a href="https://github.com/JuliaQUBO/QUBODecomposition.jl">Repository</a>
         </div>
     </div>
