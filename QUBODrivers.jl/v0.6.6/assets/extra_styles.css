@@ -1,0 +1,4 @@
+.docs-sidebar .docs-logo > img {
+    max-height: 16rem !important;
+    margin: auto;
+}
