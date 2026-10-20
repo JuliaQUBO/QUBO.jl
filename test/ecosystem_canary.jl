@@ -22,6 +22,7 @@ function test_ecosystem_canary()
             "ToQUBO",
             "QUBODrivers",
             "QUBODecomposition",
+            "QUBOPreprocessing",
         ]
 
         latest_versions = Dict(
@@ -30,6 +31,7 @@ function test_ecosystem_canary()
             "ToQUBO" => v"0.7.1",
             "QUBODrivers" => v"0.6.5",
             "QUBODecomposition" => v"0.1.1",
+            "QUBOPreprocessing" => v"0.1.0",
         )
         fresh_manifest = copy(latest_versions)
         stale_manifest = merge(fresh_manifest, Dict("QUBOTools" => v"0.14.4"))
@@ -65,6 +67,9 @@ function test_ecosystem_canary()
         newer_versions = merge(latest_versions, Dict("QUBODecomposition" => v"0.1.2"))
         @test !all(result -> result.ok, core_version_results(CORE_PACKAGE_NAMES, newer_versions, fresh_manifest))
         @test all(result -> result.ok, core_version_results(CORE_PACKAGE_NAMES, newer_versions, newer_versions))
+        newer_preprocessing = merge(latest_versions, Dict("QUBOPreprocessing" => v"0.1.1"))
+        @test !all(result -> result.ok, core_version_results(CORE_PACKAGE_NAMES, newer_preprocessing, fresh_manifest))
+        @test all(result -> result.ok, core_version_results(CORE_PACKAGE_NAMES, newer_preprocessing, newer_preprocessing))
         for package in CORE_PACKAGE_NAMES
             missing_manifest = copy(fresh_manifest)
             delete!(missing_manifest, package)
@@ -113,6 +118,7 @@ function test_ecosystem_canary()
             @test parsed_tier == tier
             @test all(package -> package in package_names, CORE_PACKAGE_NAMES)
             @test "QUBODecomposition" ∉ optional
+            @test "QUBOPreprocessing" ∉ optional
             @test optional == (tier == "tier-1" ? Set{String}() : Set(["DWave", "PySA", "CIMOptimizer", "QiskitOpt"]))
             tier_commands = tier == "tier-1" ? commands[1:2] : commands[3:4]
             @test tier_commands[2] == command

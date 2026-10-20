@@ -22,10 +22,20 @@
 [QUBO.jl](https://github.com/JuliaQUBO/QUBO.jl) is an all-in-one package for working with QUBO models in [JuMP](https://github.com/jump-dev/JuMP.jl) and interfacing with their solvers.
 This project aggregates and extends functionality from its complementary packages [ToQUBO.jl](https://github.com/JuliaQUBO/ToQUBO.jl), [QUBODrivers.jl](https://github.com/JuliaQUBO/QUBODrivers.jl) and [QUBOTools.jl](https://github.com/JuliaQUBO/QUBOTools.jl).
 
+The ecosystem also includes standalone
+[QUBODecomposition.jl](https://github.com/JuliaQUBO/QUBODecomposition.jl) for
+capacity-limited composite solving and
+[QUBOPreprocessing.jl](https://github.com/JuliaQUBO/QUBOPreprocessing.jl) for certified
+strict-dominance reductions and reusable assumption/rollback workspaces. Install
+them separately; `using QUBO` does not re-export these packages. See the
+[preprocessing manual](https://juliaqubo.github.io/QUBOPreprocessing.jl/stable/) for
+installation, original-state reconstruction, scope guarantees and measured costs.
+
 The ecosystem canary composes the latest registered versions of maintained QUBO
 packages in fresh Julia environments to catch compatibility drift across
 package boundaries. It also fails when `PseudoBooleanOptimization`,
-`QUBOTools`, `ToQUBO`, `QUBODrivers`, or `QUBODecomposition` resolve below
+`QUBOTools`, `ToQUBO`, `QUBODrivers`, `QUBODecomposition`, or
+`QUBOPreprocessing` resolve below
 their latest registered versions that are stable, unyanked, and compatible with the Julia version
 running the canary. A red canary means at least one tier no longer resolves,
 imports, or reaches the latest freshness-checked versions; inspect the workflow log's
