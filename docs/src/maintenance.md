@@ -247,14 +247,14 @@ whenever a coordinated release wave changes cross-package compatibility. The
 canary composes the latest registered package versions in fresh environments
 and prints the registered compatibility matrix on every run, then again on
 resolution failure. It also verifies that the resolved
-`PseudoBooleanOptimization`, `QUBOTools`, `ToQUBO`, `QUBODrivers`, and
-`QUBODecomposition` versions are the latest stable, unyanked registered releases compatible with the Julia
+`PseudoBooleanOptimization`, `QUBOTools`, `ToQUBO`, `QUBODrivers`,
+`QUBODecomposition`, and `QUBOPreprocessing` versions are the latest stable, unyanked registered releases compatible with the Julia
 version running the canary, so stale downstream bounds are caught even when the
 resolver can still find an older compatible solution. The core freshness gate
 is intentionally global: custom runs should include the core packages in the
-package list, including the separately installed `QUBODecomposition`, because
+package list, including the separately installed `QUBODecomposition` and `QUBOPreprocessing`, because
 a missing freshness-checked package is treated as stale. Both workflow tiers
-require its import; only the existing Python-backed packages have optional
+require both standalone imports; only the existing Python-backed packages have optional
 imports after successful resolution. It is the post-release coordination check: it verifies that the ecosystem still installs
 and imports together, but it is not a substitute for package-local preflight
 before Registrator is triggered.
@@ -320,7 +320,7 @@ only to `gh-pages`; the next main or manual documentation run refreshes the
 public aggregate. Documenter's `documenter/deploy` status link omits the package
 prefix, so reviewers should use the package-prefixed URL above.
 
-Retaining previews applies to all four aggregated packages, including historical
+Retaining previews applies to all aggregated packages, including historical
 preview directories still present on their source branches. This repository's
 cleanup handles QUBO.jl PR closures; sibling repositories own their preview
 cleanup, and pre-existing leftovers require separate cleanup. Once a preview is
@@ -357,8 +357,8 @@ aggregate through the existing Documentation workflow. QUBO.jl Pages serves
 change that arrangement.
 
 FlexSearch indexes the first existing channel for each package in the order
-`stable`, then `dev`. Released packages, including registered QUBODecomposition
-0.1.1, contribute their stable manuals; packages without stable documentation fall
+`stable`, then `dev`. Released packages, including QUBODecomposition and QUBOPreprocessing, contribute
+their stable manuals; packages without stable documentation fall
 back to dev. Only one channel per package is indexed; all existing versions and previews remain
 available for navigation. After merging an aggregate change, verify the live
 overview, package route, navigation, version selectors and actual search results.

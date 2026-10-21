@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const root = path.resolve(process.argv[2]);
-const packages = ['QUBO.jl', 'ToQUBO.jl', 'QUBODrivers.jl', 'QUBOTools.jl', 'QUBODecomposition.jl'];
+const packages = ['QUBO.jl', 'ToQUBO.jl', 'QUBODrivers.jl', 'QUBOTools.jl', 'QUBODecomposition.jl', 'QUBOPreprocessing.jl'];
 const canonicalRoot = 'https://juliaqubo.github.io/QUBO.jl/';
 let canonicalCount = 0;
 const canonicalPages = [];
@@ -54,7 +54,7 @@ for (const pkg of packages) {
     const dev = fs.readFileSync(path.join(root, pkg, 'dev', 'index.html'), 'utf8');
     assert(dev.includes(`href="${canonicalRoot}${pkg}/${channel}/"`), `${pkg} dev home respects the canonical channel`);
 }
-console.log(`PASS: ${canonicalCount} absolute aggregate canonicals across five packages, home/nested routes and canonical channels`);
+console.log(`PASS: ${canonicalCount} absolute aggregate canonicals across six packages, home/nested routes and canonical channels`);
 const entries = JSON.parse(fs.readFileSync(path.join(root, 'index.json')));
 for (const pkg of packages) {
     const channel = fs.existsSync(path.join(root, pkg, 'stable')) ? 'stable' : 'dev';
@@ -130,6 +130,18 @@ async function check() {
     const [page, anchor] = target.split('#');
     const html = fs.readFileSync(path.join(root, page.slice('/QUBO.jl/'.length), 'index.html'), 'utf8');
     assert(anchor && html.includes(`id="${anchor}"`), 'result targets a real page and anchor');
+    elements['search-input'].value = 'preprocessing';
+    elements['search-input'].fire('keyup');
+    const preprocessingChannel = fs.existsSync(path.join(root, 'QUBOPreprocessing.jl', 'stable')) ? 'stable' : 'dev';
+    const preprocessingTarget = elements['search-result-container'].children
+        .map(li => li.children[0].attributes.href)
+        .find(ref => ref.startsWith(`/QUBO.jl/QUBOPreprocessing.jl/${preprocessingChannel}/`));
+    assert(preprocessingTarget, 'preprocessing is searchable in the available manual channel');
+    const [preprocessingPage, preprocessingAnchor] = preprocessingTarget.split('#');
+    const preprocessingHTML = fs.readFileSync(path.join(root,
+        preprocessingPage.slice('/QUBO.jl/'.length), 'index.html'), 'utf8');
+    assert(preprocessingAnchor && preprocessingHTML.includes(`id="${preprocessingAnchor}"`),
+        'preprocessing search result targets a real page and anchor');
     elements['search-input'].value = 'quadratization';
     elements['search-input'].fire('keyup');
     assert(elements['search-result-container'].children.some(li =>
@@ -142,6 +154,6 @@ async function check() {
     assert(dropdown.classes.has('nav-expanded'));
     body.fire('click', {target: label});
     assert(!dropdown.classes.has('nav-expanded'));
-    console.log(`PASS: five package channels, actual search widget (${target}), stable results, base path and navigation handlers`);
+    console.log(`PASS: six package channels, actual search widget (${target}), stable results, base path and navigation handlers`);
 }
 check().catch(error => { console.error(error); process.exitCode = 1; });

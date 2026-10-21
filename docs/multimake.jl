@@ -32,6 +32,13 @@ docs = [
         branch = "gh-pages",
     ),
     MultiDocumenter.MultiDocRef(
+        upstream = joinpath(temp_dir, "QUBOPreprocessing.jl"),
+        path = "QUBOPreprocessing.jl",
+        name = "QUBOPreprocessing.jl",
+        giturl = "https://github.com/JuliaQUBO/QUBOPreprocessing.jl.git",
+        branch = "gh-pages",
+    ),
+    MultiDocumenter.MultiDocRef(
         upstream = joinpath(temp_dir, "QUBOTools.jl"),
         path = "QUBOTools.jl",
         name = "QUBOTools.jl",

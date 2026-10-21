@@ -35,6 +35,23 @@ for usage and deliberate development checkouts. Ecosystem membership does not
 add it to QUBO's bundled dependencies: `Pkg.add("QUBO")` and `using QUBO` do
 not install or re-export it.
 
+The standalone [QUBOPreprocessing.jl](https://github.com/JuliaQUBO/QUBOPreprocessing.jl)
+package provides certified strict-dominance reductions, independently verifiable
+proofs, original-state reconstruction and reusable branch workspaces. Install it
+separately with `Pkg.add("QUBOPreprocessing")`; QUBO does not bundle or re-export it.
+Without caller assumptions, a globally solved certified residual reconstructs an
+original global optimum. Caller assumptions restrict that guarantee to their
+scope, and preprocessing does not upgrade a heuristic solver or certify ToQUBO
+source feasibility under inadequate penalties. Numerical energies retain Float64
+limitations even when stored-value reduction proofs are exact.
+
+Use its [manual](https://juliaqubo.github.io/QUBOPreprocessing.jl/stable/) for the
+API and examples, and its [measured operating envelope](https://juliaqubo.github.io/QUBOPreprocessing.jl/stable/performance/)
+for complete costs and no-benefit cases. QUBODecomposition **0.1.5 or later**
+provides an [opt-in root adapter](https://juliaqubo.github.io/QUBODecomposition.jl/stable/preprocessing/)
+using this package. It remains off by default; follow the guide for supported
+routes and budgets.
+
 ## QUBO in Brief
 
 A QUBO model has a binary decision vector, a linear-or-quadratic objective, and
