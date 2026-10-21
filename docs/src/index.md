@@ -47,9 +47,10 @@ limitations even when stored-value reduction proofs are exact.
 
 Use its [manual](https://juliaqubo.github.io/QUBOPreprocessing.jl/stable/) for the
 API and examples, and its [measured operating envelope](https://juliaqubo.github.io/QUBOPreprocessing.jl/stable/performance/)
-for complete costs and no-benefit cases. QUBODecomposition's opt-in root adapter
-uses this package; select a release documenting that integration and follow its
-support policy. Preprocessing remains off by default in decomposition.
+for complete costs and no-benefit cases. QUBODecomposition **0.1.5 or later**
+provides an [opt-in root adapter](https://juliaqubo.github.io/QUBODecomposition.jl/stable/preprocessing/)
+using this package. It remains off by default; follow the guide for supported
+routes and budgets.
 
 ## QUBO in Brief
 
