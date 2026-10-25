@@ -161,6 +161,30 @@ rho = [5.0, 10.0, 20.0]
 set_attribute.(c, Ref(ToQUBO.Attributes.ConstraintEncodingPenaltyHint()), rho)
 ```
 
+### Karp-21 Problem Library (`QUBO.Karp21`)
+
+`QUBO.Karp21` includes JuMP-native model builders for all 21 NP-complete
+problems from Karp (1972) — including `satisfiability`, `three_sat`,
+`zero_one_integer_programming`, `clique`, `independent_set`, `set_packing`,
+`vertex_cover`, `set_cover`, `feedback_vertex_set`, `feedback_arc_set`,
+`directed_hamiltonian_cycle`, `hamiltonian_cycle`, `hamiltonian_path`,
+`travelling_salesman`, `graph_coloring`, `chromatic_number`, `clique_cover`,
+`exact_cover`, `hitting_set`, `steiner_tree`, `three_dimensional_matching`,
+`knapsack`, `subset_sum`, `job_sequencing`, `number_partition`, and `max_cut`:
+
+```julia
+using JuMP
+using QUBO
+
+model = Karp21.clique(
+    4,
+    [(1, 2), (2, 3), (1, 3), (3, 4)];
+    optimizer = () -> ToQUBO.Optimizer(ExactSampler.Optimizer),
+)
+optimize!(model)
+report = ToQUBO.feasibility_report(model)
+```
+
 ## Overview 🗺️
 
 For package boundaries and the compilation flow, see the

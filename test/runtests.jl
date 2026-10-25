@@ -3,6 +3,7 @@ using JuMP
 using QUBO
 
 include("spin_model.jl")
+include("karp21.jl")
 include("multimake_utils.jl")
 include("docs_assets.jl")
 include("package_metadata.jl")
@@ -15,6 +16,7 @@ function main()
     test_qubotools_plots()
     test_ecosystem_canary()
     test_spin_model()
+    test_karp21()
     test_multimake_utils()
 
     return nothing

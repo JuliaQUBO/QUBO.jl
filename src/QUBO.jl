@@ -29,6 +29,9 @@ import ToQUBO
 export ToQUBO
 
 include("wrapper.jl")
+include("karp21.jl")
+
+export Karp21
 
 function source_model(model::JuMP.Model)
     return JuMP.get_attribute(model, ToQUBO.Attributes.SourceModel())
