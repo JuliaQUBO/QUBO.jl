@@ -8,6 +8,7 @@ documentation:
           - "CHANGELOG*"
           - "NEWS*"
           - "CITATION.cff"
+          - "CITATION.bib"
           - "LICENSE*"
           - "papers/**"
           - ".github/ISSUE_TEMPLATE/**"

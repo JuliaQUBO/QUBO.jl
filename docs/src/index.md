@@ -201,3 +201,51 @@ set_attribute.(c, Ref(ToQUBO.Attributes.ConstraintEncodingPenaltyHint()), rho)
     </div>
 </div>
 ```
+
+## Citing QUBO.jl
+<!-- citation-policy:start -->
+For general use of `QUBO.jl` and the broader `JuliaQUBO` ecosystem, cite the
+[published journal article](https://doi.org/10.1080/10556788.2026.2702926). The
+earlier [arXiv preprint](https://arxiv.org/abs/2307.02577) remains available,
+but the journal article is the version of record.
+
+For a direct software citation, use the
+[Zenodo concept DOI](https://doi.org/10.5281/zenodo.7909165). The concept DOI
+is the evergreen identifier for `QUBO.jl`, resolves to the latest archived
+release, and is the DOI recorded in `CITATION.cff`. When reproducibility
+requires an exact release, cite the matching Zenodo version DOI instead; the
+latest publicly archived Zenodo record under this concept is `v0.2.0` at
+[10.5281/zenodo.7954543](https://doi.org/10.5281/zenodo.7954543).
+
+The BibTeX entries below cite the ecosystem article and the `v0.2.0` software
+archive. Replace the `@software` entry's `doi` and `url` with the concept DOI
+when an evergreen software citation is preferred:
+
+```bibtex
+@article{qubojl:2026,
+  author       = {Maciel Xavier, Pedro and Ripper, Pedro and Andrade, Tiago and Dias Garcia, Joaquim and Maculan, Nelson and Bernal Neira, David E.},
+  title        = {{QUBO.jl: A Julia Ecosystem for Quadratic Unconstrained Binary Optimization}},
+  journal      = {Optimization Methods and Software},
+  year         = {2026},
+  pages        = {1--24},
+  doi          = {10.1080/10556788.2026.2702926},
+  url          = {https://doi.org/10.1080/10556788.2026.2702926}
+}
+
+@software{qubo:2023,
+  author       = {Maciel Xavier, Pedro and Ripper, Pedro and Andrade, Tiago and Dias Garcia, Joaquim and Maculan, Nelson and Bernal Neira, David E.},
+  title        = {{QUBO.jl}},
+  year         = {2023},
+  publisher    = {Zenodo},
+  version      = {v0.2.0},
+  doi          = {10.5281/zenodo.7954543},
+  url          = {https://doi.org/10.5281/zenodo.7954543},
+  note         = {Evergreen concept DOI: 10.5281/zenodo.7909165}
+}
+```
+
+Machine-readable metadata is in
+[`CITATION.cff`](https://github.com/JuliaQUBO/QUBO.jl/blob/main/CITATION.cff),
+with BibTeX in
+[`CITATION.bib`](https://github.com/JuliaQUBO/QUBO.jl/blob/main/CITATION.bib).
+<!-- citation-policy:end -->

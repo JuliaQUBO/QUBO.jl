@@ -31,6 +31,12 @@ jobs:
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
+      - name: Validate CITATION.cff
+        if: matrix.version == '1' && matrix.os == 'ubuntu-latest'
+        run: |
+          python3 -m venv "${RUNNER_TEMP}/cffconvert"
+          "${RUNNER_TEMP}/cffconvert/bin/pip" install --quiet 'cffconvert==2.0.0'
+          "${RUNNER_TEMP}/cffconvert/bin/cffconvert" --validate --infile CITATION.cff
       - uses: julia-actions/cache@v3
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
