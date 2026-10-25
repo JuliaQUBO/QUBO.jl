@@ -329,6 +329,34 @@ function test_karp21()
         optimize!(mc_adj_model)
         _assert_best_feasible(mc_adj_model)
         @test objective_value(mc_adj_model) ≈ 5.0
+
+        # Input validation & edge-case checks
+        @test_throws ArgumentError Karp21.satisfiability(2, [Int[]])
+        @test_throws ArgumentError Karp21.zero_one_integer_programming(zeros(0, 2), Float64[])
+        @test_throws ArgumentError Karp21.set_cover(Int[], [[1]])
+        @test_throws ArgumentError Karp21.set_cover([1, 2], [[1, 3]])
+        @test_throws ArgumentError Karp21.exact_cover(Int[], [[1]])
+        @test_throws ArgumentError Karp21.exact_cover([1, 2], [[1, 3]])
+        @test_throws ArgumentError Karp21.hamiltonian_path(3, [(1, 2), (2, 3)]; start_vertex = 0)
+        @test_throws ArgumentError Karp21.hamiltonian_path(3, [(1, 2), (2, 3)]; end_vertex = 4)
+        @test_throws ArgumentError Karp21.hamiltonian_path(3, [(1, 2), (2, 3)]; start_vertex = 2, end_vertex = 2)
+        @test_throws ArgumentError Karp21.steiner_tree(13, [(i, i + 1) for i in 1:12], [1, 13])
+        @test_throws ArgumentError Karp21.three_dimensional_matching([(0, 1, 1)])
+        @test_throws ArgumentError Karp21.three_dimensional_matching([(1, 1, 3)]; num_z = 2)
+        @test_throws ArgumentError Karp21.knapsack([-1, 2], [3, 4], 5)
+
+        # Steiner tree with an isolated non-terminal vertex (vertex 3 has no incident edges)
+        st_iso_model = Karp21.steiner_tree(
+            3,
+            [(1, 2)],
+            [1, 2];
+            weights = [2.0],
+            optimizer = _exact_toqubo_optimizer(),
+        )
+        optimize!(st_iso_model)
+        _assert_best_feasible(st_iso_model)
+        @test round.(Int, value.(st_iso_model[:x])) == [1, 1, 0]
+        @test round.(Int, value.(st_iso_model[:y])) == [1]
     end
 
     return nothing

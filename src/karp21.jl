@@ -120,6 +120,7 @@ function satisfiability(
     n = Int(num_variables)
     n >= 1 || throw(ArgumentError("num_variables must be at least 1"))
     isempty(clauses) && throw(ArgumentError("clauses must not be empty"))
+    any(isempty, clauses) && throw(ArgumentError("clauses must not contain empty clauses"))
 
     model = _new_model(optimizer)
     JuMP.@variable(model, x[1:n], Bin)
@@ -183,6 +184,7 @@ function zero_one_integer_programming(
     optimizer = nothing,
 )
     m, n = size(A)
+    (m >= 1 && n >= 1) || throw(ArgumentError("matrix A must be non-empty, got size $(size(A))"))
     length(b) == m || throw(ArgumentError("b length ($(length(b))) must match row count of A ($(m))"))
     obj_c = isnothing(c) ? zeros(Float64, n) : _default_weights(n, c)
 
@@ -370,9 +372,15 @@ function set_cover(
     weights::Union{Nothing, AbstractVector{<:Real}} = nothing,
     optimizer = nothing,
 )
+    !isempty(universe) || throw(ArgumentError("universe must not be empty"))
     m = length(subsets)
     m >= 1 || throw(ArgumentError("subsets must not be empty"))
     w = _default_weights(m, weights)
+    universe_set = Set(universe)
+    for (j, s) in enumerate(subsets)
+        all(elem -> elem in universe_set, s) ||
+            throw(ArgumentError("subset $(j) contains elements outside universe"))
+    end
     subset_sets = [Set(s) for s in subsets]
 
     for e in universe
@@ -606,10 +614,17 @@ function hamiltonian_path(
     JuMP.@variable(model, x[1:n, 1:n], Bin)
 
     if !isnothing(start_vertex)
-        JuMP.@constraint(model, fixed_start, x[Int(start_vertex), 1] == 1)
+        sv = Int(start_vertex)
+        (1 <= sv <= n) || throw(ArgumentError("start_vertex must be in 1:$(n), got $(sv)"))
+        JuMP.@constraint(model, fixed_start, x[sv, 1] == 1)
     end
     if !isnothing(end_vertex)
-        JuMP.@constraint(model, fixed_end, x[Int(end_vertex), n] == 1)
+        ev = Int(end_vertex)
+        (1 <= ev <= n) || throw(ArgumentError("end_vertex must be in 1:$(n), got $(ev)"))
+        if !isnothing(start_vertex) && n > 1 && Int(start_vertex) == ev
+            throw(ArgumentError("start_vertex and end_vertex must be distinct when num_vertices > 1"))
+        end
+        JuMP.@constraint(model, fixed_end, x[ev, n] == 1)
     end
 
     JuMP.@constraint(model, vertex_once[v in 1:n], sum(x[v, pos] for pos in 1:n) == 1)
@@ -803,9 +818,15 @@ function exact_cover(
     weights::Union{Nothing, AbstractVector{<:Real}} = nothing,
     optimizer = nothing,
 )
+    !isempty(universe) || throw(ArgumentError("universe must not be empty"))
     m = length(subsets)
     m >= 1 || throw(ArgumentError("subsets must not be empty"))
     w = isnothing(weights) ? zeros(Float64, m) : _default_weights(m, weights)
+    universe_set = Set(universe)
+    for (j, s) in enumerate(subsets)
+        all(elem -> elem in universe_set, s) ||
+            throw(ArgumentError("subset $(j) contains elements outside universe"))
+    end
     subset_sets = [Set(s) for s in subsets]
 
     for e in universe
@@ -891,6 +912,8 @@ function steiner_tree(
     isempty(term_set) && throw(ArgumentError("terminals must not be empty"))
     all(t -> 1 <= t <= n, term_set) ||
         throw(ArgumentError("all terminals must be in 1:$(n)"))
+    (length(term_set) >= 2 && n > 12) &&
+        throw(ArgumentError("steiner_tree cut formulation requires num_vertices <= 12, got $(n)"))
 
     model = _new_model(optimizer)
     JuMP.@variable(model, x[1:n], Bin)
@@ -901,20 +924,32 @@ function steiner_tree(
         JuMP.@constraint(model, x[t] == 1)
     end
 
-    for (e_idx, (u, v)) in enumerate(norm_edges)
-        !(u in term_lookup) && JuMP.@constraint(model, y[e_idx] <= x[u])
-        !(v in term_lookup) && JuMP.@constraint(model, y[e_idx] <= x[v])
-    end
+    if length(term_set) == 1
+        for v in 1:n
+            !(v in term_lookup) && JuMP.@constraint(model, x[v] == 0)
+        end
+        for e_idx in 1:m
+            JuMP.@constraint(model, y[e_idx] == 0)
+        end
+    else
+        for (e_idx, (u, v)) in enumerate(norm_edges)
+            !(u in term_lookup) && JuMP.@constraint(model, y[e_idx] <= x[u])
+            !(v in term_lookup) && JuMP.@constraint(model, y[e_idx] <= x[v])
+        end
 
-    JuMP.@constraint(model, tree_size, sum(y) == sum(x) - 1)
+        JuMP.@constraint(model, tree_size, sum(y) == sum(x) - 1)
 
-    if length(term_set) >= 2 && n <= 10
         root = first(term_set)
         other_terminals = setdiff(term_set, [root])
         non_root_vertices = [v for v in 1:n if v != root]
         num_non_root = length(non_root_vertices)
         candidate_cuts = Vector{Int}[]
         seen_cuts = Set{Vector{Int}}()
+        nonterminal_cuts = Dict{Int, Vector{Vector{Int}}}(
+            v => Vector{Int}[] for v in 1:n if !(v in term_lookup)
+        )
+        nonterminal_disconnected = Set{Int}()
+
         for mask in 0:((1 << num_non_root) - 1)
             S = Set{Int}([root])
             for bit in 1:num_non_root
@@ -922,19 +957,30 @@ function steiner_tree(
                     push!(S, non_root_vertices[bit])
                 end
             end
+            cut_edges = Int[
+                e_idx for (e_idx, (u, v)) in enumerate(norm_edges)
+                if (u in S) != (v in S)
+            ]
             if any(t -> !(t in S), other_terminals)
-                cut_edges = Int[
-                    e_idx for (e_idx, (u, v)) in enumerate(norm_edges)
-                    if (u in S) != (v in S)
-                ]
                 isempty(cut_edges) &&
                     throw(ArgumentError("graph does not connect all terminals"))
                 if !(cut_edges in seen_cuts)
                     push!(seen_cuts, cut_edges)
                     push!(candidate_cuts, cut_edges)
                 end
+            else
+                for v in 1:n
+                    if !(v in S) && !(v in term_lookup)
+                        if isempty(cut_edges)
+                            push!(nonterminal_disconnected, v)
+                        else
+                            push!(nonterminal_cuts[v], cut_edges)
+                        end
+                    end
+                end
             end
         end
+
         sort!(candidate_cuts; by = length)
         minimal_cuts = Vector{Int}[]
         for cut in candidate_cuts
@@ -945,6 +991,25 @@ function steiner_tree(
                     JuMP.@constraint(model, y[only(cut)] == 1)
                 else
                     JuMP.@constraint(model, sum(y[e_idx] for e_idx in cut) >= 1)
+                end
+            end
+        end
+
+        for v in 1:n
+            !(v in term_lookup) || continue
+            if v in nonterminal_disconnected
+                JuMP.@constraint(model, x[v] == 0)
+            else
+                v_cuts = unique(nonterminal_cuts[v])
+                sort!(v_cuts; by = length)
+                kept_v_cuts = Vector{Int}[]
+                for cut in v_cuts
+                    cut_set = Set(cut)
+                    any(term_cut -> issubset(term_cut, cut_set), minimal_cuts) && continue
+                    if !any(prev -> issubset(prev, cut_set), kept_v_cuts)
+                        push!(kept_v_cuts, cut)
+                        JuMP.@constraint(model, x[v] <= sum(y[e_idx] for e_idx in cut))
+                    end
                 end
             end
         end
@@ -981,6 +1046,12 @@ function three_dimensional_matching(
     nx = isnothing(num_x) ? maximum(t[1] for t in parsed) : Int(num_x)
     ny = isnothing(num_y) ? maximum(t[2] for t in parsed) : Int(num_y)
     nz = isnothing(num_z) ? maximum(t[3] for t in parsed) : Int(num_z)
+    (nx >= 1 && ny >= 1 && nz >= 1) ||
+        throw(ArgumentError("coordinate bounds (num_x, num_y, num_z) must be at least 1, got ($(nx), $(ny), $(nz))"))
+    for (idx, (xi, yj, zk)) in enumerate(parsed)
+        (1 <= xi <= nx && 1 <= yj <= ny && 1 <= zk <= nz) ||
+            throw(ArgumentError("triple $(idx) = ($(xi), $(yj), $(zk)) is outside 1:$(nx) × 1:$(ny) × 1:$(nz)"))
+    end
     w = _default_weights(t_count, weights)
 
     model = _new_model(optimizer)
@@ -1024,6 +1095,7 @@ function knapsack(
     n = length(weights)
     n >= 1 || throw(ArgumentError("weights must not be empty"))
     length(values) == n || throw(ArgumentError("values length ($(length(values))) must match weights length ($(n))"))
+    all(w -> w >= 0, weights) || throw(ArgumentError("weights must be non-negative"))
     capacity >= 0 || throw(ArgumentError("capacity must be non-negative"))
 
     model = _new_model(optimizer)
