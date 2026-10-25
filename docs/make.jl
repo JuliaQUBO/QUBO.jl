@@ -25,6 +25,7 @@ makedocs(;
             "Knapsack" => "examples/knapsack.md",
             "Prime Factorization" => "examples/prime_factorization.md",
             "Portfolio Optimization" => "examples/portfolio_optimization.md",
+            "Karp-21 Problem Library" => "examples/karp21.md",
         ],
     ],
     workdir  = @__DIR__
