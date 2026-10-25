@@ -1,6 +1,8 @@
 using TOML
 using Pkg
 
+include(joinpath(@__DIR__, "..", "scripts", "verify_zenodo_release.jl"))
+
 _compat_entries(value::AbstractString) = strip.(split(value, ','))
 
 function test_package_metadata()
@@ -74,10 +76,11 @@ function test_package_metadata()
             docs_index = read_norm("docs", "src", "index.md")
             license_text = read_norm("LICENSE")
             checklist = read_norm(".github", "RELEASE_CHECKLIST.md")
+            workflow = read_norm(".github", "workflows", "zenodo.yml")
 
             concept_doi = "10.5281/zenodo.7909165"
-            version_doi = "10.5281/zenodo.7954543"
-            archived_version = "0.2.0"
+            version_doi = "10.5281/zenodo.23649024"
+            archived_version = "0.6.4"
             article_doi = "10.1080/10556788.2026.2702926"
 
             @test occursin("The QUBO Julia module is licensed under the MPL version 2.0:", license_text)
@@ -123,8 +126,24 @@ function test_package_metadata()
             @test occursin(concept_doi, checklist)
             @test occursin("Can manage", checklist)
             @test occursin("JuliaQUBO/QUBO.jl#66", checklist)
+            @test occursin("Zenodo release verification", checklist)
             @test occursin("cffconvert --validate --infile CITATION.cff", checklist)
             @test occursin("cffconvert\" --validate --infile CITATION.cff", ci)
+            @test occursin(r"(?m)^\s*release:\s*$", workflow)
+            @test occursin(r"(?m)^\s*-\s*published\s*$", workflow)
+            @test occursin(r"(?m)^\s*workflow_run:\s*$", workflow)
+            @test occursin(r"(?m)^\s*-\s*TagBot\s*$", workflow)
+            @test occursin("scripts/verify_zenodo_release.jl", workflow)
+
+            rec(; concept = "7909165", version = "v0.6.4", doi = version_doi) = Dict{String,Any}(
+                "conceptrecid" => concept,
+                "doi" => doi,
+                "metadata" => Dict{String,Any}("version" => version),
+            )
+            @test ZenodoReleaseVerification.check_record(rec(), "v0.6.4").ok
+            @test !ZenodoReleaseVerification.check_record(rec(; version = "v0.2.0"), "v0.6.4").ok
+            @test !ZenodoReleaseVerification.check_record(rec(; concept = "9999999"), "v0.6.4").ok
+            @test !ZenodoReleaseVerification.check_record(rec(; doi = concept_doi), "v0.6.4").ok
         end
     end
 

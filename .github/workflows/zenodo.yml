@@ -1,0 +1,55 @@
+name: Zenodo release verification
+
+on:
+  release:
+    types:
+      - published
+  workflow_run:
+    workflows:
+      - TagBot
+    types:
+      - completed
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "GitHub release tag expected in the latest Zenodo record (defaults to Project.toml / latest GitHub release)"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify Zenodo archive
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ZENODO_VERIFY_ATTEMPTS: "12"
+      ZENODO_VERIFY_DELAY_SECONDS: "30"
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: julia-actions/setup-julia@v3
+        with:
+          version: "1.10"
+      - name: Resolve expected release tag
+        id: release_tag
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_TAG: ${{ github.event.release.tag_name || inputs.release_tag }}
+        run: |
+          tag="${INPUT_TAG}"
+          if [ -z "${tag}" ]; then
+            project_tag="v$(julia -e 'using TOML; print(TOML.parsefile("Project.toml")["version"])')"
+            latest_release="$(gh release view --repo "${GITHUB_REPOSITORY}" --json tagName --jq .tagName)"
+            if [ "${latest_release}" != "${project_tag}" ]; then
+              echo "Latest GitHub release is '${latest_release}', expected '${project_tag}' from Project.toml." >&2
+              exit 1
+            fi
+            tag="${project_tag}"
+          fi
+          echo "tag=${tag}" >> "${GITHUB_OUTPUT}"
+      - name: Compare the release with Zenodo
+        run: julia --project=. scripts/verify_zenodo_release.jl "${{ steps.release_tag.outputs.tag }}"
+
