@@ -35,12 +35,14 @@ routine release.
 
 ## After publishing the GitHub release
 
-- [ ] Once deposit management access or the GitHub-to-Zenodo release integration
-      is active for concept record `7909165`, confirm that Zenodo published a
-      **new version** under `10.5281/zenodo.7909165` matching the official
-      GitHub release tag and version, `MPL-2.0` license,
-      `https://github.com/JuliaQUBO/QUBO.jl` repository URL, and Julia package
-      UUID (`ce8c2e91-a970-4681-856b-16178c24a30c`).
+- [ ] Confirm that the `Zenodo release verification` GitHub Actions workflow
+      (`.github/workflows/zenodo.yml`) passed, or run
+      `julia --project=. scripts/verify_zenodo_release.jl <release-tag>` to
+      verify that Zenodo published a **new version** under
+      `10.5281/zenodo.7909165` matching the official GitHub release tag and
+      version, `MPL-2.0` license, `https://github.com/JuliaQUBO/QUBO.jl`
+      repository URL, and Julia package UUID
+      (`ce8c2e91-a970-4681-856b-16178c24a30c`).
 - [ ] Verify the version DOI resolves to that exact archive and the concept DOI
       resolves to the latest archived release:
 

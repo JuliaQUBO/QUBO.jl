@@ -214,10 +214,10 @@ For a direct software citation, use the
 is the evergreen identifier for `QUBO.jl`, resolves to the latest archived
 release, and is the DOI recorded in `CITATION.cff`. When reproducibility
 requires an exact release, cite the matching Zenodo version DOI instead; the
-latest publicly archived Zenodo record under this concept is `v0.2.0` at
-[10.5281/zenodo.7954543](https://doi.org/10.5281/zenodo.7954543).
+latest publicly archived Zenodo record under this concept is `v0.6.4` at
+[10.5281/zenodo.23649024](https://doi.org/10.5281/zenodo.23649024).
 
-The BibTeX entries below cite the ecosystem article and the `v0.2.0` software
+The BibTeX entries below cite the ecosystem article and the `v0.6.4` software
 archive. Replace the `@software` entry's `doi` and `url` with the concept DOI
 when an evergreen software citation is preferred:
 
@@ -237,9 +237,9 @@ when an evergreen software citation is preferred:
   title        = {{QUBO.jl}},
   year         = {2023},
   publisher    = {Zenodo},
-  version      = {v0.2.0},
-  doi          = {10.5281/zenodo.7954543},
-  url          = {https://doi.org/10.5281/zenodo.7954543},
+  version      = {v0.6.4},
+  doi          = {10.5281/zenodo.23649024},
+  url          = {https://doi.org/10.5281/zenodo.23649024},
   note         = {Evergreen concept DOI: 10.5281/zenodo.7909165}
 }
 ```
