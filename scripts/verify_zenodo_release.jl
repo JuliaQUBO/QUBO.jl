@@ -2,7 +2,9 @@
 
 module ZenodoReleaseVerification
 
-import Downloads
+const _Downloads = Base.require(
+    Base.PkgId(Base.UUID("f43a241f-c20a-4ad4-852c-f6b1247861c6"), "Downloads"),
+)
 
 const CONCEPT_RECORD_ID = "7909165"
 const CONCEPT_DOI = "10.5281/zenodo.$CONCEPT_RECORD_ID"
@@ -225,7 +227,7 @@ end
 
 function fetch_record(url::AbstractString)
     output = IOBuffer()
-    response = Downloads.request(url; output, timeout = 30, throw = false)
+    response = _Downloads.request(url; output, timeout = 30, throw = false)
     hasproperty(response, :status) || error(sprint(showerror, response))
     response.status == 200 || error("Zenodo returned HTTP $(response.status).")
 
