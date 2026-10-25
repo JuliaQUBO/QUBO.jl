@@ -10,7 +10,7 @@ function test_package_metadata()
         compat = project["compat"]
 
         @test compat["julia"] == "1.10"
-        @test project["version"] == "0.6.3"
+        @test project["version"] == "0.6.4"
         @test all(
             version -> version in _compat_entries(compat["QUBOTools"]),
             ("0.13", "0.14", "0.15", "0.16"),
