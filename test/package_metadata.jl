@@ -64,6 +64,68 @@ function test_package_metadata()
         @test occursin("package-ecosystem: \"github-actions\"", dependabot)
         @test occursin("interval: \"weekly\"", dependabot)
         @test occursin("interval: \"monthly\"", dependabot)
+
+        @testset "Citation and release metadata" begin
+            read_norm(parts...) = replace(read(joinpath(root, parts...), String), "\r\n" => "\n")
+
+            citation_cff = read_norm("CITATION.cff")
+            citation_bib = strip(read_norm("CITATION.bib"))
+            readme = read_norm("README.md")
+            docs_index = read_norm("docs", "src", "index.md")
+            license_text = read_norm("LICENSE")
+            checklist = read_norm(".github", "RELEASE_CHECKLIST.md")
+
+            concept_doi = "10.5281/zenodo.7909165"
+            version_doi = "10.5281/zenodo.7954543"
+            archived_version = "0.2.0"
+            article_doi = "10.1080/10556788.2026.2702926"
+
+            @test occursin("The QUBO Julia module is licensed under the MPL version 2.0:", license_text)
+            @test occursin(r"(?m)^license:\s*MPL-2\.0\s*$", citation_cff)
+            @test occursin("version: \"$(project["version"])\"", citation_cff)
+            @test occursin("doi: \"$concept_doi\"", citation_cff)
+            @test occursin("value: \"$version_doi\"", citation_cff)
+            @test occursin("description: \"Zenodo DOI for version $archived_version\"", citation_cff)
+            @test occursin("doi: \"$article_doi\"", citation_cff)
+            @test !occursin("0000-0000-0000-0000", citation_cff)
+
+            @test occursin("@article{qubojl:2026,", citation_bib)
+            @test occursin("doi          = {$article_doi}", citation_bib)
+            @test occursin("@software{qubo:2023,", citation_bib)
+            @test occursin("version      = {v$archived_version}", citation_bib)
+            @test occursin("doi          = {$version_doi}", citation_bib)
+            @test occursin("note         = {Evergreen concept DOI: $concept_doi}", citation_bib)
+
+            @test occursin("badge/DOI/$concept_doi.svg", readme)
+            @test occursin("https://doi.org/$concept_doi", readme)
+            @test !occursin("zenodo.org/badge/614041491.svg", readme)
+
+            marker_start = "<!-- citation-policy:start -->"
+            marker_end = "<!-- citation-policy:end -->"
+            readme_parts = split(readme, marker_start; limit = 2)
+            docs_parts = split(docs_index, marker_start; limit = 2)
+            @test length(readme_parts) == 2
+            @test length(docs_parts) == 2
+            readme_section = strip(split(readme_parts[2], marker_end; limit = 2)[1])
+            docs_section = strip(split(docs_parts[2], marker_end; limit = 2)[1])
+            @test readme_section == docs_section
+
+            bib_match = match(r"(?ms)```bibtex\s*\n(.*?)\n```", readme_section)
+            @test bib_match !== nothing
+            @test strip(only(bib_match.captures)) == citation_bib
+
+            prose = replace(readme_section, r"(?ms)```bibtex\s*\n.*?\n```" => "")
+            @test occursin(article_doi, prose)
+            @test occursin(concept_doi, prose)
+            @test occursin(version_doi, prose)
+            @test occursin("`v$archived_version`", prose)
+
+            @test occursin(concept_doi, checklist)
+            @test occursin("Can manage", checklist)
+            @test occursin("JuliaQUBO/QUBO.jl#66", checklist)
+            @test occursin("cffconvert --validate --infile CITATION.cff", checklist)
+            @test occursin("cffconvert\" --validate --infile CITATION.cff", ci)
+        end
     end
 
     return nothing
