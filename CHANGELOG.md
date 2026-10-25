@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.4 (2026-10-25)
+
+- Add the JuMP-native `QUBO.Karp21` constrained problem library covering all 21
+  Karp NP-complete problems with `ToQUBO.jl` compilation and MQT QAO
+  (`arXiv:2406.12840`) parity (#68, #69, #101).
+- Add `QUBODecomposition.jl` and `QUBOPreprocessing.jl` ecosystem discovery,
+  aggregate documentation manuals, and two-tier registry canaries (#99, #100).
+- Standardize `QUBO.jl` citation metadata (`CITATION.cff`, `CITATION.bib`),
+  Zenodo concept/version DOI guidance, and `.github/RELEASE_CHECKLIST.md` (#66,
+  #102).
+
 ## 0.6.3 (2026-10-12)
 
 - Support registered ToQUBO 0.7.1 and later 0.7 patch releases while retaining
