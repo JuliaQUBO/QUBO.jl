@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 280" width="100%" height="auto" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <rect width="860" height="280" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="430" y="30" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">Solution Audit Summary: Certified Ground States vs. Heuristic Solutions</text>
+
+  <!-- Left Panel: Certified Ground States -->
+  <rect x="25" y="50" width="390" height="205" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+  <text x="220" y="75" text-anchor="middle" font-size="14" font-weight="700" fill="#15803d">564 Certified Optimal Solutions (100% Sound)</text>
+
+  <!-- Bars for Certified Optimal -->
+  <text x="45" y="108" font-size="12" fill="#334155">Certificate Checks (6,292)</text>
+  <rect x="235" y="95" width="150" height="18" rx="4" fill="#16a34a"/>
+  <text x="310" y="108" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">100% Valid (0 Failures)</text>
+
+  <text x="45" y="143" font-size="12" fill="#334155">Proven Optimal (364)</text>
+  <rect x="235" y="130" width="150" height="18" rx="4" fill="#16a34a"/>
+  <text x="310" y="143" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">364 / 364 Match (0 Err)</text>
+
+  <text x="45" y="178" font-size="12" fill="#334155">Strong Reconstruct Energy</text>
+  <rect x="235" y="165" width="150" height="18" rx="4" fill="#16a34a"/>
+  <text x="310" y="178" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">564 / 564 Exact (ΔE = 0.0)</text>
+
+  <text x="45" y="213" font-size="12" fill="#334155">Weak Reconstruct Energy</text>
+  <rect x="235" y="200" width="150" height="18" rx="4" fill="#16a34a"/>
+  <text x="310" y="213" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">564 / 564 Exact (ΔE = 0.0)</text>
+
+  <text x="220" y="242" text-anchor="middle" font-size="11" fill="#64748b">364 proven_optimal=1 records + 200 exact brute-force n=16 ground states</text>
+
+  <!-- Right Panel: Suboptimal Heuristic Audit -->
+  <rect x="445" y="50" width="390" height="205" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+  <text x="640" y="75" text-anchor="middle" font-size="14" font-weight="700" fill="#b45309">1,770 Suboptimal / Heuristic Solutions Audited</text>
+
+  <text x="465" y="108" font-size="12" fill="#334155">Instances Solved (n=0)</text>
+  <rect x="650" y="95" width="115" height="18" rx="4" fill="#16a34a"/>
+  <text x="772" y="108" font-size="11.5" font-weight="700" fill="#15803d">12 / 14</text>
+
+  <text x="465" y="143" font-size="12" fill="#334155">Structured Models Reduced</text>
+  <rect x="650" y="130" width="145" height="18" rx="4" fill="#d97706"/>
+  <text x="802" y="143" font-size="11.5" font-weight="700" fill="#92400e">282 / 485</text>
+
+  <text x="465" y="178" font-size="12" fill="#334155">Strictly Improved (Strong / Weak)</text>
+  <rect x="650" y="165" width="45" height="18" rx="4" fill="#2563eb"/>
+  <rect x="698" y="165" width="75" height="18" rx="4" fill="#60a5fa"/>
+  <text x="780" y="178" font-size="11.5" font-weight="700" fill="#1e40af">17 / 43</text>
+
+  <text x="465" y="213" font-size="12" fill="#334155">Witness Probing Deductions</text>
+  <rect x="650" y="200" width="120" height="18" rx="4" fill="#7c3aed"/>
+  <text x="777" y="213" font-size="11.5" font-weight="700" fill="#5b21b6">58 sols (225 vars)</text>
+
+  <text x="640" y="242" text-anchor="middle" font-size="11" fill="#64748b">12 strong / 14 weak instances solved completely to n=0; 0 objective regressions</text>
+</svg>
