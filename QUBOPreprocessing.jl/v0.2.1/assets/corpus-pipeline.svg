@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 300" width="100%" height="auto" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <rect width="860" height="300" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="430" y="30" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">QUBOPreprocessing.jl — 7-Phase Certified Reduction &amp; Audit Pipeline</text>
+
+  <!-- Corpus Input -->
+  <rect x="20" y="55" width="170" height="90" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+  <text x="105" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#0369a1">QUBOLib.jl + QOBLIB</text>
+  <text x="105" y="98" text-anchor="middle" font-size="11.5" fill="#0c4a6e">6,292 QUBO Instances</text>
+  <text x="105" y="116" text-anchor="middle" font-size="11" fill="#0c4a6e">433/433 QOBLIB 100% Match</text>
+  <text x="105" y="133" text-anchor="middle" font-size="11" fill="#0c4a6e">2,134 Solution Records</text>
+
+  <!-- Arrow 1 -->
+  <line x1="190" y1="100" x2="220" y2="100" stroke="#475569" stroke-width="2"/>
+  <polygon points="220,95 230,100 220,105" fill="#475569"/>
+
+  <!-- 7-Phase Engine -->
+  <rect x="230" y="50" width="380" height="100" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="420" y="72" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8">Certified Preprocessing Engine (8 Lean 4 Theorems)</text>
+  <text x="420" y="92" text-anchor="middle" font-size="11" fill="#1e3a8a">1. Dominance  •  2. Pair Relations (+Co-Flip/SCC)  •  3. Elim (deg ≤ 2 &amp; Blocks)</text>
+  <text x="420" y="110" text-anchor="middle" font-size="11" fill="#1e3a8a">4. Walsh Deg-3 (α₁₂₃=0)  •  5. Roof Duality  •  6. Submodular  •  7. Max-Cut  •  Probing</text>
+  <text x="420" y="132" text-anchor="middle" font-size="11" font-weight="600" fill="#1e40af">Hardware fma IEEE-754 Intervals + O(deg(i)) Exact Rational Fallback</text>
+
+  <!-- Arrow 2 -->
+  <line x1="610" y1="100" x2="640" y2="100" stroke="#475569" stroke-width="2"/>
+  <polygon points="640,95 650,100 640,105" fill="#475569"/>
+
+  <!-- Reduced Output -->
+  <rect x="650" y="55" width="190" height="90" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="745" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#15803d">Reduced Models</text>
+  <text x="745" y="98" text-anchor="middle" font-size="11.5" fill="#14532d">282 / 485 Structured (58.1%)</text>
+  <text x="745" y="116" text-anchor="middle" font-size="11" fill="#14532d">-12,883 Strong / -15,432 Weak Vars</text>
+  <text x="745" y="133" text-anchor="middle" font-size="11" fill="#14532d">12 Strong / 14 Weak Solved (n=0)</text>
+
+  <!-- Downward Arrows to Audits -->
+  <line x1="330" y1="150" x2="230" y2="185" stroke="#475569" stroke-width="1.8"/>
+  <polygon points="229,180 222,188 233,189" fill="#475569"/>
+
+  <line x1="510" y1="150" x2="610" y2="185" stroke="#475569" stroke-width="1.8"/>
+  <polygon points="607,189 618,188 611,180" fill="#475569"/>
+
+  <!-- Ground State Audit Box -->
+  <rect x="40" y="190" width="360" height="90" rx="8" fill="#f0fdf4" stroke="#15803d" stroke-width="1.5"/>
+  <text x="220" y="213" text-anchor="middle" font-size="13" font-weight="700" fill="#166534">Certified Ground-State Audit (564 Optimal Records)</text>
+  <text x="220" y="233" text-anchor="middle" font-size="11.5" fill="#14532d">• 364 / 364 proven_optimal=1 Ground States Preserved</text>
+  <text x="220" y="251" text-anchor="middle" font-size="11.5" fill="#14532d">• 0 Certificate Verification Failures Across All 6,292 Models</text>
+  <text x="220" y="269" text-anchor="middle" font-size="11.5" font-weight="600" fill="#14532d">• 0.0 Max Energy Error after reconstruct (Strong &amp; Weak)</text>
+
+  <!-- Suboptimal Repair Box -->
+  <rect x="440" y="190" width="400" height="90" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="640" y="213" text-anchor="middle" font-size="13" font-weight="700" fill="#b45309">Suboptimal Heuristic Audit &amp; Repair (1,770 Records)</text>
+  <text x="640" y="233" text-anchor="middle" font-size="11.5" fill="#78350f">• 17 Heuristic Solutions Strictly Improved in Strong Mode</text>
+  <text x="640" y="251" text-anchor="middle" font-size="11.5" fill="#78350f">• 43 Heuristic Solutions Strictly Improved in Weak Mode</text>
+  <text x="640" y="269" text-anchor="middle" font-size="11.5" font-weight="600" fill="#78350f">• +225 Variables Deduced via Witness-Guided probe_variables!</text>
+</svg>
