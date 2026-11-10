@@ -5,7 +5,7 @@ on:
     workflows: [CI, Documentation, Ecosystem Canary, Doc Preview Cleanup]
     types: [completed]
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '47 9 * * *'
   workflow_dispatch:
 
 permissions:
@@ -20,7 +20,13 @@ concurrency:
 
 jobs:
   merge:
-    if: github.repository == 'JuliaQUBO/QUBO.jl'
+    if: >-
+      github.repository == 'JuliaQUBO/QUBO.jl' &&
+      (github.event_name != 'workflow_run' ||
+       (github.event.workflow_run.conclusion == 'success' &&
+        (github.event.workflow_run.actor.login == 'dependabot[bot]' ||
+         startsWith(github.event.workflow_run.head_branch, 'dependabot/') ||
+         github.event.workflow_run.head_branch == 'main')))
     runs-on: ubuntu-latest
     steps:
       - name: Checkout trusted main
