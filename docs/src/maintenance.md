@@ -191,7 +191,7 @@ request `@dependabot rebase`, then wait for CI on the new head. The automation
 does not merge a behind branch using its older green checks.
 
 The workflow runs after CI, documentation, canary, and cleanup completion, with
-a 15-minute scheduled reconciliation and a manual dispatch for missed events or
+a daily scheduled reconciliation and a manual dispatch for missed events or
 older open PRs. It executes only trusted `main` code and needs no personal-token
 secret. The built-in Actions token does not trigger ordinary push or PR-close
 workflows after merging, so the automation explicitly dispatches preview cleanup,
